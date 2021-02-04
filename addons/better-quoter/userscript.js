@@ -154,7 +154,7 @@ export default async function ({ addon, global, console }) {
       )
         textarea.value += `[quote=${
           blockpost.querySelector(".black.username").innerText
-        }]${getSelectionBBCode()}[/quote]`;
+        }]${addon.settings.get("snip")+getSelectionBBCode()+addon.settings.get("snip")}[/quote]`;
       else copy_paste(blockpost.id);
       textarea.scrollIntoView(false);
       textarea.focus();
