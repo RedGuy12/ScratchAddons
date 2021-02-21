@@ -18,13 +18,13 @@
     }
   ],
   "settings": [
-  {
-    "name": "Snip text (BBcode supported)",
-    "id": "snip",
-    "type": "string",
-    "default": "~snip~"
-  },
-    ],
+    {
+      "name": "Snip text (BBcode supported)",
+      "id": "snip",
+      "type": "string",
+      "default": "~snip~"
+    }
+  ],
   "tags": ["forums", "community"],
   "l10n": true,
   "info": [
