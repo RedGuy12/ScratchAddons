@@ -17,12 +17,14 @@
       "matches": ["https://scratch.mit.edu/discuss/topic/*"]
     }
   ],
+  "settings": [
   {
     "name": "Snip text (BBcode supported)",
     "id": "snip",
     "type": "string",
     "default": "~snip~"
   },
+    ]
   "tags": ["forums", "community"],
   "l10n": true,
   "info": [
