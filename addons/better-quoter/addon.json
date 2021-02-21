@@ -24,7 +24,7 @@
     "type": "string",
     "default": "~snip~"
   },
-    ]
+    ],
   "tags": ["forums", "community"],
   "l10n": true,
   "info": [
