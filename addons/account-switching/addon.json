@@ -1,41 +1,38 @@
 {
-	"$schema": "https://raw.githubusercontent.com/ScratchAddons/manifest-schema/master/1/1.7.json",
-	"name": "Account Switching",
-	"description": "Tab in the popup for easy switching between accounts.",
-	"tags": [
-		"community",
-		"beta"
-	],
-	"settings": [
-		{
-			"name": "Find accounts",
-			"id": "detection",
-			"type": "select",
-			"default": "auto",
-			"potentialValues": [
-				{
-					"id": "auto",
-					"name": "Automatically detect"
-				},
-				{
-					"id": "manually",
-					"name": "Manually specify"
-				}
-			]
-		}
-	],
-	"persistentScripts": ["userscript.js"],
-	"credits": [
-		{
-			"name": "RedGuy12",
-			"link": "https://paul-s-reid.com/web-dev/"
-		}
-	],
-	"enabledByDefault": false,
-	"l10n": true,
-	"popup": {
-		"icon": "../../images/icons/users.svg",
-		"name": "Accounts",
-		"fullscreen": false
-	}
+  "$schema": "https://raw.githubusercontent.com/ScratchAddons/manifest-schema/master/1/1.7.json",
+  "name": "Account Switching",
+  "description": "Tab in the popup for easy switching between accounts.",
+  "tags": ["community", "beta"],
+  "settings": [
+    {
+      "name": "Find accounts",
+      "id": "detection",
+      "type": "select",
+      "default": "auto",
+      "potentialValues": [
+        {
+          "id": "auto",
+          "name": "Automatically detect"
+        },
+        {
+          "id": "manually",
+          "name": "Manually specify"
+        }
+      ]
+    }
+  ],
+  "persistentScripts": ["userscript.js"],
+  "credits": [
+    {
+      "name": "RedGuy12",
+      "link": "https://paul-s-reid.com/web-dev/"
+    }
+  ],
+  "enabledByDefault": false,
+  "l10n": true,
+  "popup": {
+    "icon": "../../images/icons/users.svg",
+    "name": "Accounts",
+    "fullscreen": false
+  }
 }
