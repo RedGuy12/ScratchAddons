@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Scratch Addons - Account switching</title>
+		<script src="../../webpages/set-lang.js" defer></script>
+		<link rel="stylesheet" href="popup.css" />
+		<link href="../../libraries/Sora.css" rel="stylesheet" />
+		<script src="../../libraries/vue.js" defer></script>
+		<script src="./popup.js" type="module"></script>
+	</head>
+
+	<body style="display: none" v-show="loaded">
+		<h1 style="display: none" v-show="loaded && users.length < 2">{{signin}}</h1>
+		<div class="user" v-show="loaded && users.length > 1" v-for="user of users">
+			<button type="button" @click="changeAcc(user)" class="username">{{user.username}}</button>
+			<img class="remove" src="../../images/icons/close.svg" @click="removeAcc(user)"/>
+		</div>
+	</body>
+
+</html>

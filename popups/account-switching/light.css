@@ -1,0 +1,19 @@
+body {
+	background: #fff;
+}
+
+.user {
+	color: #222;
+	border: 1px solid #cfcfcf;
+	background: #f7f7f7;
+	box-shadow: 0 2px 5px #0000001a;
+}
+
+.remove {
+	filter: brightness(0);
+}
+
+
+.username:hover, .remove:hover {
+	background: #a5a5a5;
+}
