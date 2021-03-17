@@ -23,7 +23,7 @@ export default async ({ addon, console, msg }) => {
       Object.assign(document.createElement("li"), {
         className: addon.tab.scratchClass("menu_menu", "menu_right"),
         innerText: c.name,
-        onclick: c.func
+        onclick: c.func,
       })
     );
   });
