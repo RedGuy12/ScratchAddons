@@ -1,0 +1,19 @@
+{
+  "name": "Project Converter",
+  "description": "Adds a \"convert\" button to the editor to convert it to various other file formats, such as .exe.",
+  "tags": ["editor"],
+  "userscripts": [
+    {
+      "url": "userscript.js",
+      "matches": ["https://scratch.mit.edu/projects/*"]
+    }
+  ],
+  "userstyles": [
+    {
+      "url": "style.css",
+      "matches": ["https://scratch.mit.edu/projects/*"]
+    }
+  ],
+  "enabledByDefault": false,
+  "l10n": true
+}
