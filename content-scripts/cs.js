@@ -48,7 +48,7 @@ const cs = {
       );
     });
   },
-  setStorage(arg){
+  setStorage(arg) {
     chrome.runtime.sendMessage(arg);
   },
 };

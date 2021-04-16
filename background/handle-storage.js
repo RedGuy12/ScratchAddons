@@ -36,7 +36,7 @@ if (typeof scratchAddons !== "undefined") {
 
   // Setting values
   chrome.runtime.onMessage.addListener(async (request, _, sendResponse) => {
-    if(typeof request.addonStorageValue !== "undefined") sendResponse(await setStorage(request));
+    if (typeof request.addonStorageValue !== "undefined") sendResponse(await setStorage(request));
   });
 }
 export default async function setStorage(request) {
