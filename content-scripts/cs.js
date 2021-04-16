@@ -48,6 +48,9 @@ const cs = {
       );
     });
   },
+  setStorage(arg){
+    chrome.runtime.sendMessage(arg);
+  },
 };
 Comlink.expose(cs, Comlink.windowEndpoint(comlinkIframe1.contentWindow, comlinkIframe2.contentWindow));
 

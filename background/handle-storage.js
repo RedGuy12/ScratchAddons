@@ -1,4 +1,4 @@
-export const promisify = (callbackFn) => (...args) => new Promise((resolve) => callbackFn(...args, resolve));
+const promisify = (callbackFn) => (...args) => new Promise((resolve) => callbackFn(...args, resolve));
 const storageGet = async (mode) => {
   return await promisify(chrome.storage[mode].get.bind(chrome.storage[mode]))(null);
 };
@@ -35,11 +35,11 @@ if (typeof scratchAddons !== "undefined") {
   scratchAddons.globalState.addonStorage.cookie = init(await cookieGet());
 
   // Setting values
-  chrome.runtime.onMessageExternal.addListener(async (request, _, sendResponse) => {
-    sendResponse(await setStorage(request, sendResponse));
+  chrome.runtime.onMessage.addListener(async (request, _, sendResponse) => {
+    if(typeof request.addonStorageValue !== "undefined") sendResponse(await setStorage(request));
   });
 }
-export async function setStorage(request) {
+export default async function setStorage(request) {
   // the stuff that matters: set the value
   // it needs to be here because the event handler does not have access to chrome.storage in userscripts
   var id = request.addonStorageID;
@@ -48,7 +48,7 @@ export async function setStorage(request) {
   var key = id.split("/"); // seperate key into stored ID and addon ID
   var storage = scratchAddons.globalState.addonStorage[mode];
   storage[key[0]] ?? (storage[key[0]] = {}); // just in case the addon has not had any other stored values before
-  storage[key[0]][key[1]] = value; // set in scratchAddons.globalStagte.addonStorage
+  storage[key[0]][key[1]] = value; // set in scratchAddons.globalState.addonStorage
   scratchAddons.globalState.addonStorage[mode] = storage;
   await (mode == "cookie" ? cookieSet(id, value) : storageSet(id, value, mode)); // set it in chrome.storage/document.cookie
   return {

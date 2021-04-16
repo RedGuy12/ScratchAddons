@@ -1,5 +1,5 @@
 import Listenable from "./Listenable.js";
-import { promisify, setStorage } from "../../background/handle-storage.js";
+import setStorage from "../../background/handle-storage.js";
 
 /**
  * Manages storage.
@@ -9,7 +9,6 @@ export default class Storage extends Listenable {
   constructor(addonObject) {
     super();
     this._addonId = addonObject.self.id;
-    this._extentionId = scratchAddons.eventTargets.self[0].lib.split("/")[2];
   }
   /**
    * Gets a stored string.
@@ -67,7 +66,7 @@ export default class Storage extends Listenable {
       });
     } else {
       // content script has no access to chrome apis, ask background page to set for us
-      return await promisify(chrome.runtime.sendMessage)(this._extentionId, {
+      return scratchAddons.methods.setStorage({
         addonStorageID: this._addonId + "/" + storedID,
         addonStorageValue: value,
         addonStorageMode: mode,
