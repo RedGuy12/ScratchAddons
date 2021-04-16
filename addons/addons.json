@@ -78,5 +78,12 @@
   "variable-manager",
   "scratchstats",
   "folders",
-  "block-palette-icons"
+  "block-palette-icons",
+  "custom-block-shape",
+  "2d-color-picker",
+  "drag-drop",
+  "dango-rain",
+  "custom-zoom",
+  "wrap-lists",
+  "blocks2image"
 ]
