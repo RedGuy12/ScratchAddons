@@ -125,6 +125,7 @@ function onDataReady() {
     settings: [],
     tab: [],
     self: [],
+    storage: [],
   };
 
   scratchAddons.methods = {};

@@ -1,0 +1,12 @@
+{
+  "name": "a thing",
+  "description": "for testing",
+  "userscripts": [
+    {
+      "url": "style.js",
+      "matches": ["https://scratch.mit.edu/*"]
+    }
+  ],
+  "tags": ["easterEgg"],
+  "l10n": false
+}

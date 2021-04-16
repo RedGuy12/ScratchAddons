@@ -1,5 +1,4 @@
 import Listenable from "./Listenable.js";
-import setStorage from "../../background/handle-storage.js";
 
 /**
  * Manages storage.
@@ -57,20 +56,22 @@ export default class Storage extends Listenable {
     if (!["sync", "local", "cookie"].includes(mode)) {
       throw new Error("Scratch Addons exception: mode must be one of: sync, local, or cookie");
     }
+    this._setStorage({
+      addonStorageID: this._addonId + "/" + storedID,
+      addonStorageValue: value,
+      addonStorageMode: mode,
+    });
+  }
+  /**
+   * @private
+   */
+  async _setStorage(storage) {
     if (chrome.storage) {
-      // persitant script has access to chrome apis, set directly
-      return await setStorage({
-        addonStorageID: this._addonId + "/" + storedID,
-        addonStorageValue: value,
-        addonStorageMode: mode,
-      });
+      // persistant script has access to chrome apis, set directly
+      return (await import("../../background/handle-storage.js")).default(storage);
     } else {
       // content script has no access to chrome apis, ask background page to set for us
-      return scratchAddons.methods.setStorage({
-        addonStorageID: this._addonId + "/" + storedID,
-        addonStorageValue: value,
-        addonStorageMode: mode,
-      });
+      return scratchAddons.methods.setStorage(storage);
     }
   }
   /**

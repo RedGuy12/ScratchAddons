@@ -56,12 +56,8 @@
     "addons/*",
     "libraries/*",
     "addons-l10n/*/*.json",
-    "images/cs/*",
-    "/background/handle-storage.js"
+    "images/cs/*"
   ],
-  "externally_connectable": {
-    "matches": ["https://scratch.mit.edu/*"]
-  },
   "browser_specific_settings": {
     "gecko": {
       "id": "griffpatch@griffpatch.co.uk"
