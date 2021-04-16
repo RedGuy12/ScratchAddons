@@ -27,8 +27,6 @@ export default class Storage extends Listenable {
       throw new Error("Scratch Addons exception: mode must be one of: sync, local, or cookie");
     }
     return scratchAddons.globalState.addonStorage[mode][this._addonId]?.[storedID];
-    // ?. returns null if the previous value is null, otherwise it will continue evaluating as if it wasn't there. if the next charecter is not a [, then it adds a dot.
-    //like this: object?.key would be treated as object.key if object was not null. object?.["key"] would be object["key"] if object was not null.)
   }
   /**
    * Stores a string.
