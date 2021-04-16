@@ -2,7 +2,7 @@ import Auth from "./Auth.js";
 import Account from "./Account.js";
 import Self from "./Self.js";
 import Settings from "./Settings.js";
- import Storage from "./Storage.js";
+import Storage from "./Storage.js";
 
 /**
  * An addon.
