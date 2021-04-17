@@ -276,7 +276,7 @@
               </div>
               <div class="settings-column" v-bind:class="[!addon._enabled ? 'disabled' : '']">
                 <div class="addon-setting" v-for="setting of addon.settings">
-                  <div class="setting-label" v-html="textParse(setting.name, addon)"></div>
+                  <label class="setting-label" v-html="textParse(setting.name, addon)">
                   <input
                     type="checkbox"
                     class="setting-input check"
@@ -361,6 +361,7 @@
                       <img src="../../images/icons/undo.svg" class="icon-type" />
                     </button>
                   </template>
+                </label>
                   <div class="filter-options" v-if="setting.type === 'select'">
                     <div
                       class="filter-option"

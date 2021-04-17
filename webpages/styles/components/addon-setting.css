@@ -1,10 +1,15 @@
 .addon-setting {
   margin: 10px;
-  margin-right: 20px;
   min-height: 35px;
   display: flex;
   align-items: center;
+  text-align: end;
   flex-wrap: wrap;
+  width: 50%;
+}
+
+.settings-column .addon-setting:hover {
+  background-color: #1c1c1c;
 }
 .setting-input {
   color: var(--accent-5);
@@ -45,13 +50,17 @@
 .setting-input.number {
   border-radius: 20px;
 }
+
+.setting-input:not(.color) {
+  margin-left:  10px;
+}
+
 .setting-label {
-  width: 200px;
   text-transform: uppercase;
   color: var(--accent-4);
   font-weight: 600;
   font-size: 12px;
-  margin-right: 10px;
+  display: block;
 }
 
 .setting-dropdown {

@@ -131,6 +131,8 @@
   margin-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
+  text-align: end;
+  display: table;
 }
 
 .presets-column > .setting-label {
