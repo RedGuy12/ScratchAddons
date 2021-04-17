@@ -1,5 +1,5 @@
 import downloadBlob from "../../libraries/download-blob.js";
-const NEW_ADDONS = ["drag-drop", "custom-block-shape"];
+const NEW_ADDONS = ["custom-zoom", "wrap-lists", "initialise-sprite-position"];
 
 Vue.directive("click-outside", {
   priority: 700,
@@ -31,9 +31,11 @@ const ColorInput = Vue.extend({
       canCloseOutside: false,
       formats: "",
       opening: false,
+      loadColorPicker: false, // #2090 tempfix
     };
   },
   ready() {
+    if (!this.loadColorPicker) return;
     if (this.no_alpha) {
       this.formats = "hex,rgb,hsv,hsl";
     } else {
@@ -47,8 +49,14 @@ const ColorInput = Vue.extend({
       }
     });
   },
+  computed: {
+    noAlphaString() {
+      return String(this.no_alpha);
+    },
+  },
   methods: {
     toggle(addon, setting, value = !this.isOpen) {
+      if (!this.loadColorPicker) return;
       this.isOpen = value;
       this.opening = true;
       this.$root.closePickers({ isTrusted: true }, this);
@@ -69,10 +77,14 @@ const ColorInput = Vue.extend({
   watch: {
     value() {
       this.color = this.value;
-      this.$els.pickr._valueChanged();
+      // ?. is #2090 tempfix, 4 lines below as well
+      this.$els.pickr?._valueChanged();
     },
     isOpen() {
-      this.$els.pickr._valueChanged();
+      this.$els.pickr?._valueChanged();
+    },
+    loadColorPicker() {
+      this.$options.ready[0].call(this);
     },
   },
 });
