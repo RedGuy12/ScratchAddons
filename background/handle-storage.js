@@ -1,4 +1,4 @@
-const promisify = (arr, key) => async (...args) => await (new Promise((resolve) => arr[key].bind(arr)(...args, resolve)));
+const promisify = (arr, key) => async (...args) => await new Promise((resolve) => arr[key].bind(arr)(...args, resolve));
 export async function setUpStorage() {
   if (typeof scratchAddons !== "undefined") {
     const init = (storage) => {
