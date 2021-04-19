@@ -139,9 +139,6 @@ function onDataReady() {
   scratchAddons.methods.copyImage = async (dataURL) => {
     return _cs_.copyImage(dataURL);
   };
-  scratchAddons.methods.setStorage = async (arg) => {
-    return _cs_.setStorage(arg);
-  };
 
   scratchAddons.sharedObserver = new SharedObserver();
 
