@@ -1,5 +1,5 @@
 import downloadBlob from "../../libraries/download-blob.js";
-const NEW_ADDONS = ["custom-zoom", "wrap-lists", "initialise-sprite-position"];
+const NEW_ADDONS = ["editor-dark-mode", "custom-zoom", "initialise-sprite-position"];
 
 Vue.directive("click-outside", {
   priority: 700,
@@ -403,24 +403,6 @@ const vue = (window.vue = new Vue({
         ? this.selectedTab === "easterEgg" || addonManifest._wasEverEnabled
         : true;
 
-      // April fools
-      if (!this._dangoForceWasEverTrue) this._dangoForceWasEverTrue = this.addonSettings["dango-rain"].force;
-      if (addonManifest._addonId === "dango-rain") {
-        const now = new Date().getTime() / 1000;
-        if (this.selectedTab === "easterEgg") {
-          // Work normally
-          return matchesTag && matchesSearch && matchesEasterEgg;
-        } else if (now < 1617364800 && now > 1617192000) {
-          // If it's April Fools Day, show even if disabled
-          return matchesTag && matchesSearch;
-        } else if (addonManifest._wasEverEnabled && this._dangoForceWasEverTrue) {
-          // If it's not April Fools Day but dangos are forced, show.
-          // Using this._dangoForceWasEverTrue to avoid addon poofing
-          // if setting was enabled on load and it's then disabled
-          return matchesTag && matchesSearch;
-        } else return false;
-      }
-
       return matchesTag && matchesSearch && matchesEasterEgg;
     },
     stopPropagation(e) {
@@ -710,6 +692,7 @@ chrome.runtime.sendMessage("getSettingsInfo", async ({ manifests, addonsEnabled,
     manifest._enabled = addonsEnabled[addonId];
     manifest._addonId = addonId;
     manifest._expanded = document.body.classList.contains("iframe") ? false : manifest._enabled;
+    if (NEW_ADDONS.includes(addonId)) manifest._expanded = false;
     manifest._tags = {};
     manifest._tags.recommended = manifest.tags.includes("recommended");
     manifest._tags.beta = manifest.tags.includes("beta");
@@ -754,6 +737,13 @@ chrome.runtime.sendMessage("getSettingsInfo", async ({ manifests, addonsEnabled,
     if (hash) {
       window.location.hash = "";
       window.location.hash = hash;
+      // For v1.13.0, TODO: remove in v1.14.0
+      if (
+        hash === "#addon-editor-dark-mode" &&
+        vue.manifests.find((m) => m._addonId === "editor-dark-mode")._enabled === true
+      ) {
+        vue.manifests.find((m) => m._addonId === "editor-dark-mode")._expanded = true;
+      }
     }
   }, 0);
 });
