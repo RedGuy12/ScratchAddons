@@ -8,6 +8,7 @@ scratchAddons.eventTargets = {
   settings: [],
   tab: [],
   self: [],
+  storage: [],
 };
 
 const pendingPromises = {};

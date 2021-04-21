@@ -48,8 +48,31 @@ const cs = {
       );
     });
   },
-  setStorage(arg) {
-    return chrome.runtime.sendMessage(arg);
+  setStorage(id, value, mode) {
+    chrome.runtime.sendMessage("getMsgCount");
+    return "hi";
+    // the stuff that matters: set the value
+    var storage = scratchAddons.globalState.addonStorage[mode][this._addonId] ?? {};
+    storage[id] = value; // set in scratchAddons.globalState.addonStorage
+    scratchAddons.globalState.addonStorage[mode][this._addonId] = storage;
+    return mode === "cookie"
+      ? promisify(
+          chrome.cookies,
+          "set"
+        )({
+          url: "https://scratch.mit.edu",
+          name: "scratchAddonsAddonStorage",
+          secure: false,
+          expirationDate: 2147483647,
+          value: JSON.stringify(scratchAddons.globalState.addonStorage[mode]),
+        })
+      : promisify(chrome.storage[mode], "set")({ addonStorage: scratchAddons.globalState.addonStorage[mode] }); // set it in chrome.storage/document.cookie
+
+    return new Promise((resolve) => {
+      import(chrome.runtime.getURL("addon-api/common/Storage.js")).then(({ setStorage }) => {
+        resolve(setStorage(...args));
+      });
+    });
   },
 };
 Comlink.expose(cs, Comlink.windowEndpoint(comlinkIframe1.contentWindow, comlinkIframe2.contentWindow));

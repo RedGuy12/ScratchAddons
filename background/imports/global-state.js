@@ -19,6 +19,34 @@ const _globalState = {
   },
 };
 
+(async function () {
+  // Initialize scratchAddons.globalState.addonStorage from chrome.storage and chrome.cookies
+  const promisify = (arr, key) => (...args) => new Promise((resolve) => arr[key].bind(arr)(...args, resolve));
+
+  // get from chrome.storage.sync
+  _globalState.addonStorage.sync = (
+    await promisify(chrome.storage.sync, "get")("addonStorage")
+  ).addonStorage ?? {};
+
+  // get from chrome.storage.local
+  _globalState.addonStorage.local = (
+    await promisify(chrome.storage.local, "get")("addonStorage")
+  ).addonStorage ?? {};
+
+  // get from chrome.cookies
+  _globalState.addonStorage.cookie = JSON.parse(
+    (
+      await promisify(
+        chrome.cookies,
+        "get"
+      )({
+        name: "scratchAddonsAddonStorage",
+        url: "https://scratch.mit.edu",
+      })
+    ).value
+  ) ?? {};
+})();
+
 class StateProxy {
   constructor(name = "scratchAddons.globalState") {
     this.name = name;
