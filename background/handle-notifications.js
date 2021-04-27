@@ -1,29 +1,31 @@
 const periods = [
   {
     name: chrome.i18n.getMessage("15min"),
-    mins: 15,
+    mins: 15
   },
   {
     name: chrome.i18n.getMessage("1hour"),
-    mins: 60,
+    mins: 60
   },
   {
     name: chrome.i18n.getMessage("8hours"),
-    mins: 480,
+    mins: 480
   },
   {
     name: chrome.i18n.getMessage("24hours"),
-    mins: 1440,
+    mins: 1440
   },
   {
     name: chrome.i18n.getMessage("untilEnabled"),
-    mins: Infinity,
+    mins: Infinity
   },
 ];
 
 chrome.storage.local.get("muted", (obj) => {
-  if (obj.muted) contextMenuMuted();
-  else contextMenuUnmuted();
+  if (obj.muted) { contextMenuMuted();
+  } else { contextMenuUnmuted();
+  }
+
   scratchAddons.muted = obj.muted;
 });
 
@@ -39,50 +41,58 @@ chrome.contextMenus.onClicked.addListener(({ parentMenuItemId, menuItemId }) => 
     contextMenuUnmuted();
     unmute();
   }
+
 });
 
 function contextMenuUnmuted() {
-  if (currentMenuItem === "unmute") chrome.contextMenus.remove("unmute");
+  if (currentMenuItem === "unmute") { chrome.contextMenus.remove("unmute");
+  }
+
   currentMenuItem = "mute";
   chrome.contextMenus.create({
     id: "mute",
     title: chrome.i18n.getMessage("muteFor"),
-    contexts: ["browser_action"],
+    contexts: ["browser_action"]
   });
   for (const period of periods) {
     chrome.contextMenus.create({
       id: `mute_${period.mins}`,
       title: period.name,
       parentId: "mute",
-      contexts: ["browser_action"],
+      contexts: ["browser_action"]
     });
   }
+
   chrome.browserAction.setIcon({
     path: {
       16: "../images/icon-16.png",
-      32: "../images/icon-32.png",
-    },
+      32: "../images/icon-32.png"
+    }
   });
 }
 
 function contextMenuMuted() {
-  if (currentMenuItem === "mute") chrome.contextMenus.remove("mute");
+  if (currentMenuItem === "mute") { chrome.contextMenus.remove("mute");
+  }
+
   currentMenuItem = "unmute";
   chrome.contextMenus.create({
     id: "unmute",
     title: chrome.i18n.getMessage("unmute"),
-    contexts: ["browser_action"],
+    contexts: ["browser_action"]
   });
   chrome.browserAction.setIcon({
     path: {
       16: "../images/icon-gray-16.png",
-      32: "../images/icon-gray-32.png",
-    },
+      32: "../images/icon-gray-32.png"
+    }
   });
 }
 
 function muteForMins(mins) {
-  if (mins !== Infinity) chrome.alarms.create("muted", { delayInMinutes: mins });
+  if (mins !== Infinity) { chrome.alarms.create("muted", { delayInMinutes: mins });
+  }
+
   scratchAddons.muted = true;
   scratchAddons.localEvents.dispatchEvent(new CustomEvent("badgeUpdateNeeded"));
   chrome.storage.local.set({ muted: true });
@@ -99,4 +109,5 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     unmute();
     contextMenuUnmuted();
   }
+
 });

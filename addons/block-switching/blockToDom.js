@@ -24,9 +24,9 @@
 
 /* eslint-disable */
 
-const INPUT_VALUE = 1;
+const INPUT_VALUE    = 1;
 const NEXT_STATEMENT = 3;
-const DUMMY_INPUT = 5;
+const DUMMY_INPUT    = 5;
 
 // Partially implements goog.dom.createDom.
 const createDom = function (tagName, /* unused */ _params, children) {
@@ -35,6 +35,7 @@ const createDom = function (tagName, /* unused */ _params, children) {
     if (!Array.isArray(children)) {
       children = [children];
     }
+
     for (const child of children) {
       if (typeof child === "string") {
         element.appendChild(document.createTextNode(child));
@@ -43,6 +44,7 @@ const createDom = function (tagName, /* unused */ _params, children) {
       }
     }
   }
+
   return element;
 };
 
@@ -51,6 +53,7 @@ const removeNode = (node) => {
   if (node.parentNode) {
     node.parentNode.removeChild(node);
   }
+
 };
 
 const fieldToDomVariable_ = function (field) {
@@ -64,6 +67,7 @@ const fieldToDomVariable_ = function (field) {
     field.initModel();
     id = field.getValue();
   }
+
   // Get the variable directly from the field, instead of doing a lookup.  This
   // will work even if the variable has already been deleted.  This can happen
   // because the flyout defers deleting blocks until the next time the flyout is
@@ -73,6 +77,7 @@ const fieldToDomVariable_ = function (field) {
   if (!variable) {
     throw Error("Tried to serialize a variable field with no variable.");
   }
+
   var container = createDom("field", null, variable.name);
   container.setAttribute("name", field.name);
   container.setAttribute("id", variable.getId());
@@ -90,6 +95,7 @@ const fieldToDom_ = function (field) {
       return container;
     }
   }
+
   return null;
 };
 
@@ -110,6 +116,7 @@ const blockToDom = function (block, opt_noId) {
   if (!opt_noId) {
     element.setAttribute("id", block.id);
   }
+
   if (block.mutationToDom) {
     // Custom data for an advanced block.
     var mutation = block.mutationToDom();
@@ -139,6 +146,7 @@ const blockToDom = function (block, opt_noId) {
       } else if (input.type == NEXT_STATEMENT) {
         container = createDom("statement");
       }
+
       var shadow = input.connection.getShadowDom();
       if (shadow && (!childBlock || !childBlock.isShadow())) {
         var shadowClone = cloneShadow_(shadow);
@@ -147,33 +155,42 @@ const blockToDom = function (block, opt_noId) {
         if (opt_noId && shadowClone.getAttribute("id")) {
           shadowClone.removeAttribute("id");
         }
+
         container.appendChild(shadowClone);
       }
+
       if (childBlock) {
         container.appendChild(blockToDom(childBlock, opt_noId));
         empty = false;
       }
     }
+
     container.setAttribute("name", input.name);
     if (!empty) {
       element.appendChild(container);
     }
   }
+
   if (block.inputsInlineDefault != block.inputsInline) {
     element.setAttribute("inline", block.inputsInline);
   }
+
   if (block.isCollapsed()) {
     element.setAttribute("collapsed", true);
   }
+
   if (block.disabled) {
     element.setAttribute("disabled", true);
   }
+
   if (!block.isDeletable() && !block.isShadow()) {
     element.setAttribute("deletable", false);
   }
+
   if (!block.isMovable() && !block.isShadow()) {
     element.setAttribute("movable", false);
   }
+
   if (!block.isEditable()) {
     element.setAttribute("editable", false);
   }
@@ -183,6 +200,7 @@ const blockToDom = function (block, opt_noId) {
     var container = createDom("next", null, blockToDom(nextBlock, opt_noId));
     element.appendChild(container);
   }
+
   var shadow = block.nextConnection && block.nextConnection.getShadowDom();
   if (shadow && (!nextBlock || !nextBlock.isShadow())) {
     container.appendChild(cloneShadow_(shadow));
@@ -205,6 +223,7 @@ const scratchCommentToDom_ = function (block, element) {
       } else {
         hw = block.comment.getBubbleSize();
       }
+
       commentElement.setAttribute("h", hw.height);
       commentElement.setAttribute("w", hw.width);
       var xy = block.comment.getXY();
@@ -212,6 +231,7 @@ const scratchCommentToDom_ = function (block, element) {
       commentElement.setAttribute("y", xy.y);
       commentElement.setAttribute("minimized", block.comment.isMinimized());
     }
+
     element.appendChild(commentElement);
   }
 };
@@ -227,15 +247,16 @@ const cloneShadow_ = function (shadow) {
     } else {
       while (node && !node.nextSibling) {
         textNode = node;
-        node = node.parentNode;
+        node     = node.parentNode;
         if (textNode.nodeType == 3 && textNode.data.trim() == "" && node.firstChild != textNode) {
           // Prune whitespace after a tag.
           removeNode(textNode);
         }
       }
+
       if (node) {
         textNode = node;
-        node = node.nextSibling;
+        node     = node.nextSibling;
         if (textNode.nodeType == 3 && textNode.data.trim() == "") {
           // Prune whitespace before a tag.
           removeNode(textNode);
@@ -243,12 +264,13 @@ const cloneShadow_ = function (shadow) {
       }
     }
   }
+
   return shadow;
 };
 
 const blockToDomWithXY = (block) => {
-  const xml = blockToDom(block, false);
-  const position = block.getRelativeToSurfaceXY();
+  const xml            = blockToDom(block, false);
+  const position       = block.getRelativeToSurfaceXY();
   xml.setAttribute("x", Math.round(block.workspace.RTL ? -position.x : position.x));
   xml.setAttribute("y", Math.round(position.y));
   return xml;

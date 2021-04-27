@@ -1,1 +1,3 @@
-{"bitmap-copy/@info-norightclick":"„Kliknięcie prawym przyciskiem myszy → kopiowanie” nie jest obsługiwane. Musisz nacisnąć Ctrl + C, gdy wybrany jest obraz bitmapowy."}
+{
+	"bitmap-copy/@info-norightclick": "„Kliknięcie prawym przyciskiem myszy → kopiowanie” nie jest obsługiwane. Musisz nacisnąć Ctrl + C, gdy wybrany jest obraz bitmapowy."
+}

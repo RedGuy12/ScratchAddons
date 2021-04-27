@@ -4,9 +4,9 @@ export default async function ({ addon, global, console }) {
     var selection = window.getSelection();
     if (selection.rangeCount > 0) {
       // if something is selected
-      let range = selection.getRangeAt(0);
+      let range           = selection.getRangeAt(0);
       var clonedSelection = range.cloneContents();
-      var html = document.createElement("div");
+      var html            = document.createElement("div");
       html.appendChild(clonedSelection);
     } else {
       // nothing is selected
@@ -15,7 +15,8 @@ export default async function ({ addon, global, console }) {
 
     // new lines
     let lineBreaks = html.querySelectorAll("br");
-    for (let br of lineBreaks) br.insertAdjacentText("afterend", "\n");
+    for (let br of lineBreaks) { br.insertAdjacentText("afterend", "\n");
+    }
 
     // images and smileys
     let smilieReplaces = Object.assign(Object.create(null), {
@@ -30,13 +31,12 @@ export default async function ({ addon, global, console }) {
       lol: ":lol:",
       mad: ":mad:",
       roll: ":rolleyes",
-      cool: ":cool:",
+      cool: ":cool:"
     });
 
     let imgs = html.querySelectorAll("img");
     for (let img of imgs) {
-      if (
-        /\/\/cdn\.scratch\.mit\.edu\/scratchr2\/static\/__[a-z0-9]{32}__\/djangobb_forum\/img\/smilies\/[a-z_]{3,9}\.png/.test(
+      if (/\/\/cdn\.scratch\.mit\.edu\/scratchr2\/static\/__[a-z0-9]{32}__\/djangobb_forum\/img\/smilies\/[a-z_]{3,9}\.png/.test(
           img.src
         )
       ) {
@@ -45,8 +45,10 @@ export default async function ({ addon, global, console }) {
             document.createTextNode(smilieReplaces[img.src.split("smilies/")[1].split(".")[0]]),
             img
           );
-        } else img.parentNode.insertBefore(document.createTextNode(`[img${img.src}[/img]`), img);
-      } else img.parentNode.insertBefore(document.createTextNode(`[img]${img.src}[/img]`), img);
+        } else { img.parentNode.insertBefore(document.createTextNode(`[img${img.src}[/img]`), img);
+        }
+      } else { img.parentNode.insertBefore(document.createTextNode(`[img]${img.src}[/img]`), img);
+      }
     }
 
     // bold, italic, underline, strikethrough, big, small and color
@@ -56,9 +58,9 @@ export default async function ({ addon, global, console }) {
       big: "big",
       small: "small",
       underline: "u",
-      strikethrough: "s",
+      strikethrough: "s"
     };
-    let spans = html.querySelectorAll("span");
+    let spans      = html.querySelectorAll("span");
     for (let span of spans) {
       if (span.className.startsWith("bb-")) {
         span.insertAdjacentText("afterbegin", `[${bbReplaces[span.className.slice(3)]}]`);
@@ -81,8 +83,10 @@ export default async function ({ addon, global, console }) {
             .split(/, ?/)
             .map((x) => Number(x));
 
-          span.insertAdjacentText("afterbegin", `[color=${rgbToHex(...rgbValues).toUpperCase()}]`);
-        } else span.insertAdjacentText("afterbegin", `[color=${color}]`);
+          span.insertAdjacentText("afterbegin", `[color =${rgbToHex(...rgbValues).toUpperCase()}]`);
+        } else { span.insertAdjacentText("afterbegin", `[color =${color}]`);
+        }
+
         span.insertAdjacentText("beforeend", "[/color]");
       }
     }
@@ -91,7 +95,7 @@ export default async function ({ addon, global, console }) {
     // todo: try and gues where dictionary/wiki/wp etc. tags are being used?
     let links = html.querySelectorAll("a");
     for (let link of links) {
-      link.insertAdjacentText("afterbegin", `[url=${link.href}]`);
+      link.insertAdjacentText("afterbegin", `[url =${link.href}]`);
       link.insertAdjacentText("beforeend", "[/url]");
     }
 
@@ -107,9 +111,9 @@ export default async function ({ addon, global, console }) {
     // lists
     let lis = html.querySelectorAll("li");
     for (let li of lis) li.textContent = `[*]${li.textContent}`;
-    let uls = html.querySelectorAll("ul");
+    let uls                            = html.querySelectorAll("ul");
     for (let ul of uls) ul.textContent = `[list]\n${ul.textContent}[/list]\n`;
-    let ols = html.querySelectorAll("ol");
+    let ols                            = html.querySelectorAll("ol");
     for (let ol of ols) ol.textContent = `[list=1]\n${ol.textContent}[/list]\n`;
 
     // scratchblocks - just get rid of them for now
@@ -142,22 +146,24 @@ export default async function ({ addon, global, console }) {
     let quoteButton = await addon.tab.waitForElement(".postquote a", { markAsSeen: true });
     quoteButton.setAttribute("onclick", "return false");
     quoteButton.addEventListener("mouseup", (e) => {
-      let blockpost = quoteButton.closest(".blockpost");
-      let selection = window.getSelection();
+      let blockpost    = quoteButton.closest(".blockpost");
+      let selection    = window.getSelection();
       let selectionStr = selection.toString();
-      if (
-        selectionStr &&
-        selection.anchorNode &&
-        blockpost.contains(selection.anchorNode) &&
-        selection.focusNode &&
-        blockpost.contains(selection.focusNode)
+      if (selectionStr
+          && selection.anchorNode
+          && blockpost.contains(selection.anchorNode)
+          && selection.focusNode
+          && blockpost.contains(selection.focusNode)
       )
         textarea.value += `[quote=${
           blockpost.querySelector(".black.username").innerText
         }]${getSelectionBBCode()}[/quote]`;
-      else copy_paste(blockpost.id);
+      else { copy_paste(blockpost.id);
+      }
+
       textarea.scrollIntoView(false);
       textarea.focus();
     });
   }
+
 }

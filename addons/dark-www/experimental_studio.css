@@ -1,46 +1,58 @@
 /* Studios */
 #gallery-cover-image {
-  border-color: #606060;
+    border-color: #606060;
 }
+
 #tabs {
-  height: 30px;
-  background: var(--scratchr2-dark-boxbg, transparent);
+    height: 30px;
+    background: var(--scratchr2-dark-boxbg, transparent);
 }
+
 #tabs li {
-  border: none;
-  background: transparent;
+    border: none;
+    background: transparent;
 }
+
 #tabs li a {
-  color: #fff;
+    color: #FFF;
 }
+
 #tabs li:hover a {
-  border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 3px solid rgba(255, 255, 255, 0.2);
 }
+
 #tabs li.active a {
-  background: #282828;
+    background: #282828;
 }
+
 .box .box-content .action-bar .inner {
-  border: none;
+    border: none;
 }
+
 .box .box-content .action-bar.white .inner {
-  background: transparent;
+    background: transparent;
 }
+
 #explore-bar #explore-header {
-  background: #282828;
-  color: #fff;
+    background: #282828;
+    color: #FFF;
 }
+
 #explore-bar #open,
 #explore-bar #close {
-  filter: none;
+    filter: none;
 }
+
 .media-grid.projects .project.thumb.item {
-  background: #282828;
+    background: #282828;
 }
+
 #comments .more-replies {
-  background-color: #202020;
-  box-shadow: 0 -25px 20px -10px #000;
+    background-color: #202020;
+    box-shadow: 0 -25px 20px -10px #000;
 }
+
 ul.curators li {
-  background: #282828;
-  border: none;
+    background: #282828;
+    border: none;
 }

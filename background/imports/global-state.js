@@ -9,9 +9,9 @@ const _globalState = {
     userId: null,
     xToken: null,
     csrfToken: null,
-    scratchLang: null,
+    scratchLang: null
   },
-  addonSettings: {},
+  addonSettings: {}
 };
 
 class StateProxy {
@@ -19,7 +19,9 @@ class StateProxy {
     this.name = name;
   }
   get(target, key) {
-    if (key === "_target") return target;
+    if (key === "_target") { return target;
+    }
+
     if (typeof target[key] === "object" && target[key] !== null) {
       return new Proxy(target[key], new StateProxy(`${this.name}.${key}`));
     } else {
@@ -28,7 +30,7 @@ class StateProxy {
   }
   set(target, key, value) {
     const oldValue = target[key];
-    target[key] = value;
+    target[key]    = value;
     messageForAllTabs({ newGlobalState: _globalState });
 
     if (JSON.stringify(oldValue) !== JSON.stringify(value)) {
@@ -51,7 +53,7 @@ function messageForAllTabs(message) {
 }
 
 function stateChange(parentObjectPath, key, value) {
-  const objectPath = `${parentObjectPath}.${key}`;
+  const objectPath    = `${parentObjectPath}.${key}`;
   const objectPathArr = objectPath.split(".").slice(2);
   console.log(`%c${objectPath}`, "font-weight: bold;", "is now: ", objectPathArr[0] === "auth" ? "[redacted]" : value);
   if (objectPathArr[0] === "auth" && key !== "scratchLang") {
@@ -62,13 +64,15 @@ function stateChange(parentObjectPath, key, value) {
     const settingsEventTarget = scratchAddons.eventTargets.settings.find(
       (eventTarget) => eventTarget._addonId === objectPathArr[1]
     );
-    if (settingsEventTarget) settingsEventTarget.dispatchEvent(new CustomEvent("change"));
+    if (settingsEventTarget) { settingsEventTarget.dispatchEvent(new CustomEvent("change"));
+    }
+
     messageForAllTabs({
       fireEvent: {
         target: "settings",
         name: "change",
-        addonId: objectPathArr[1],
-      },
+        addonId: objectPathArr[1]
+      }
     });
   }
 }

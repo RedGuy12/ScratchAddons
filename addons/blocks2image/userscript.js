@@ -8,7 +8,7 @@ export default async function ({ addon, global, console, msg }) {
 
   function eventMouseDown(e) {
     if (e.button === 2) {
-      let blockSvg = e.target.closest("[data-id]");
+      let blockSvg     = e.target.closest("[data-id]");
       let isBackground = !blockSvg && e.target.closest("svg.blocklySvg");
       if (blockSvg || isBackground) {
         let dataId = blockSvg && blockSvg.getAttribute("data-id");
@@ -18,29 +18,32 @@ export default async function ({ addon, global, console, msg }) {
             if (!widget) {
               return;
             }
+
             let blocklyContextMenu = widget.querySelector("div.blocklyContextMenu");
             if (!blocklyContextMenu) {
               return;
             }
+
             if (isBackground) {
               buttonItem.forEach((item, index) => {
                 const wrapperItem = document.createElement("div");
-                wrapperItem.id = `blocks2imgCommand${index + 1}`;
+                wrapperItem.id    = `blocks2imgCommand${index + 1}`;
                 wrapperItem.classList.add("goog-menuitem", "blocks2img");
-                wrapperItem.onmouseenter = () => wrapperItem.classList.add("goog-menuitem-highlight");
-                wrapperItem.onmouseleave = () => wrapperItem.classList.remove("goog-menuitem-highlight");
+                wrapperItem.onmouseenter     = () => wrapperItem.classList.add("goog-menuitem-highlight");
+                wrapperItem.onmouseleave     = () => wrapperItem.classList.remove("goog-menuitem-highlight");
                 wrapperItem.style.userSelect = "none";
                 if (index === 0) {
                   wrapperItem.style.borderTop = "1px solid hsla(0, 0%, 0%, 0.15)";
                   // resolve borderTop style conflict with goog-menuitem-highlight class
-                  wrapperItem.style.borderBottom = "1px solid transparent";
-                  wrapperItem.style.paddingTop = "4px";
+                  wrapperItem.style.borderBottom  = "1px solid transparent";
+                  wrapperItem.style.paddingTop    = "4px";
                   wrapperItem.style.paddingBottom = "3px";
                 }
+
                 const menuItem = document.createElement("div");
                 menuItem.classList.add("goog-menuitem-content");
                 menuItem.style.userSelect = "user-select: none";
-                menuItem.textContent = item;
+                menuItem.textContent      = item;
                 wrapperItem.append(menuItem);
                 wrapperItem.onclick = () => {
                   hidePopups();
@@ -52,13 +55,13 @@ export default async function ({ addon, global, console, msg }) {
 
             if (blocklyContextMenu.children.length < 15) {
               blocklyContextMenu.style.maxHeight = "none";
-              widget.style.height = blocklyContextMenu.getBoundingClientRect().height + 12 + "px";
+              widget.style.height                = blocklyContextMenu.getBoundingClientRect().height + 12 + "px";
               blocklyContextMenu.style.maxHeight = "";
             }
 
             function hidePopups() {
               const currentWorkspace = Blockly.getMainWorkspace();
-              const element = currentWorkspace.getToolbox().HtmlDiv;
+              const element          = currentWorkspace.getToolbox().HtmlDiv;
               element.dispatchEvent(new MouseEvent("mousedown", { relatedTarget: element, bubbles: true }));
               element.dispatchEvent(new MouseEvent("mouseup", { relatedTarget: element, bubbles: true }));
             }
@@ -70,7 +73,7 @@ export default async function ({ addon, global, console, msg }) {
 
   while (true) {
     let blocklyWorkspace = await addon.tab.waitForElement("g.blocklyWorkspace", {
-      markAsSeen: true,
+      markAsSeen: true
     });
 
     // insert contextmenu
@@ -109,7 +112,7 @@ export default async function ({ addon, global, console, msg }) {
     svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
     svg.setAttribute("version", "1.1");
 
-    let style = document.createElement("style");
+    let style         = document.createElement("style");
     style.textContent = `
     .blocklyText {
         fill: #fff;
@@ -129,13 +132,14 @@ export default async function ({ addon, global, console, msg }) {
     } else {
       svg = allBlocks(svg, style, isExportPNG);
     }
+
     // resolve nbsp whitespace
-    let texts = Array.from(svg.getElementsByTagName("text"));
+    let texts        = Array.from(svg.getElementsByTagName("text"));
     texts.forEach((text) => {
       text.innerHTML = text.innerHTML.replace(/&nbsp;/g, " ");
     });
     // resolve image path
-    let images = Array.from(svg.getElementsByTagName("image"));
+    let images     = Array.from(svg.getElementsByTagName("image"));
     let scratchURL = window.location.origin;
 
     images.forEach((item) => {
@@ -153,6 +157,7 @@ export default async function ({ addon, global, console, msg }) {
       } else if (item.getAttribute("xlink:href").indexOf("static/") === 0) {
         item.setAttribute("xlink:href", scratchURL + "/" + item.getAttribute("xlink:href"));
       }
+
     });
     let tmp = document.createElement("div");
     tmp.appendChild(svg);
@@ -169,7 +174,8 @@ export default async function ({ addon, global, console, msg }) {
       alert(msg("error_blocks_unselected"));
       throw new Error("Can not found selected blocks");
     }
-    svgchild = svgchild.cloneNode(true);
+
+    svgchild       = svgchild.cloneNode(true);
     let dataShapes = svgchild.getAttribute("data-shapes");
     svgchild.setAttribute(
       "transform",
@@ -182,7 +188,7 @@ export default async function ({ addon, global, console, msg }) {
 
   function allBlocks(svg, style, isExportPNG) {
     let svgchild = document.querySelector("svg.blocklySvg g.blocklyBlockCanvas");
-    svgchild = svgchild.cloneNode(true);
+    svgchild     = svgchild.cloneNode(true);
 
     let xArr = [];
     let yArr = [];
@@ -190,6 +196,7 @@ export default async function ({ addon, global, console, msg }) {
       alert(msg("error_blocks_not_added"));
       throw new Error("Workspace is empty");
     }
+
     svgchild.childNodes.forEach((g) => {
       let x = g.getAttribute("transform").match(/translate\((.*?),(.*?)\)/)[1] || 0;
       let y = g.getAttribute("transform").match(/translate\((.*?),(.*?)\)/)[2] || 0;
@@ -212,13 +219,13 @@ export default async function ({ addon, global, console, msg }) {
     const saveLink = document.createElement("a");
     document.body.appendChild(saveLink);
 
-    const data = new Blob([text], { type: "text" });
-    const url = window.URL.createObjectURL(data);
+    const data    = new Blob([text], { type: "text" });
+    const url     = window.URL.createObjectURL(data);
     saveLink.href = url;
 
     // File name: project-DATE-TIME
-    const date = new Date();
-    const timestamp = `${date.toLocaleDateString()}-${date.toLocaleTimeString()}`;
+    const date        = new Date();
+    const timestamp   = `${date.toLocaleDateString()}-${date.toLocaleTimeString()}`;
     saveLink.download = `block_${timestamp}.svg`;
     saveLink.click();
     window.URL.revokeObjectURL(url);
@@ -234,28 +241,28 @@ export default async function ({ addon, global, console, msg }) {
     document.body.append(iframe);
     iframe.contentDocument.write(div.innerHTML);
     let { width, height } = iframe.contentDocument.body.querySelector("svg g").getBoundingClientRect();
-    height = height + 20 * 2; //  hat block height restore
+    height                = height + 20 * 2; //  hat block height restore
     svg.setAttribute("width", width + "px");
     svg.setAttribute("height", height + "px");
 
     let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
+    let ctx    = canvas.getContext("2d");
 
     let img = document.createElement("img");
 
     img.setAttribute("src", "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(div.innerHTML))));
     img.onload = function () {
       canvas.height = img.height;
-      canvas.width = img.width;
+      canvas.width  = img.width;
       ctx.drawImage(img, 0, 0, img.width, img.height);
       // Now is done
-      let dataURL = canvas.toDataURL("image/png");
-      let link = document.createElement("a");
-      const date = new Date();
+      let dataURL     = canvas.toDataURL("image/png");
+      let link        = document.createElement("a");
+      const date      = new Date();
       const timestamp = `${date.toLocaleDateString()}-${date.toLocaleTimeString()}`;
 
       link.download = `block_${timestamp}.png`;
-      link.href = dataURL;
+      link.href     = dataURL;
       link.click();
       iframe.remove();
     };

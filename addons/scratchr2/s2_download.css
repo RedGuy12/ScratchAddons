@@ -1,65 +1,77 @@
 html,
 body {
-  margin: 0;
-  background: #fcfcfc;
-  color: #575e75;
+    margin: 0;
+    background: #FCFCFC;
+    color: #575E75;
 }
+
 .box {
-  width: 100%;
-  border-radius: 0;
-  box-shadow: none;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
 }
+
 .box .box-head {
-  display: none;
+    display: none;
 }
+
 .box,
 .box .box-content {
-  border: none;
-  background: transparent;
+    border: none;
+    background: transparent;
 }
+
 .box .box-header {
-  background: #4d97ff;
+    background: #4D97FF;
 }
+
 .box .box-header h2 {
-  width: 942px;
-  margin: auto;
-  padding-top: 25px;
-  padding-bottom: 29px;
-  color: #fff;
-  font-size: 40px;
-  line-height: 1.7em;
+    width: 942px;
+    margin: auto;
+    padding-top: 25px;
+    padding-bottom: 29px;
+    color: #FFF;
+    font-size: 40px;
+    line-height: 1.7em;
 }
+
 .box .box-content > :not(.box-header) {
-  width: 942px;
-  margin-left: auto;
-  margin-right: auto;
+    width: 942px;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .lg-msg::before {
-  content: "Scratch 2.0 is outdated. The current version of Scratch, 3.0, can be downloaded from https://scratch.mit.edu/download.";
-  display: block;
-  margin-bottom: 20px;
-  font-weight: bold;
+    content: "Scratch 2.0 is outdated. The current version of Scratch, 3.0, can be downloaded from https://scratch.mit.edu/download.";
+    display: block;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
+
 .columns {
-  display: flex;
+    display: flex;
 }
+
 .columns > * {
-  flex-grow: 1;
-  flex-basis: 0;
-  margin: 7px;
-  padding: 8px;
-  border-radius: 4px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+    flex-basis: 0;
+    margin: 7px;
+    padding: 8px;
+    border-radius: 4px;
+    background: #FFF;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
+
 .columns h3 {
-  color: #575e75;
+    color: #575E75;
 }
+
 a {
-  color: #4d97ff;
-  font-weight: bold;
-  text-decoration: none;
+    color: #4D97FF;
+    font-weight: bold;
+    text-decoration: none;
 }
+
 a:hover {
-  color: #4280d7;
+    color: #4280D7;
 }

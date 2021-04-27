@@ -8,6 +8,7 @@ function viewSource(post, msg) {
       if (event.target.originalHTML === undefined) {
         event.target.originalHTML = body.firstElementChild;
       }
+
       body.removeChild(body.firstElementChild);
       const source = document.createElement("div");
       body.insertBefore(source, body.firstElementChild);
@@ -17,6 +18,7 @@ function viewSource(post, msg) {
         source.innerText = event.target.sourceText;
         return;
       }
+
       event.target.setAttribute("data-state", "loading");
       source.innerText = msg("loading");
       fetch("https://scratch.mit.edu/discuss/post/" + post.id.substring(1) + "/source/").then(function (res) {
@@ -27,7 +29,7 @@ function viewSource(post, msg) {
       });
     } else if (event.target.getAttribute("data-state") === "source") {
       event.target.innerText = msg("source-button");
-      event.target.title = msg("source-button-tooltip");
+      event.target.title     = msg("source-button-tooltip");
       event.target.setAttribute("data-state", "post");
       body.removeChild(body.firstElementChild);
       body.insertBefore(event.target.originalHTML, body.firstElementChild);
@@ -37,22 +39,23 @@ function viewSource(post, msg) {
 
 export default async function ({ addon, console, msg }) {
   while (true) {
-    const post = await addon.tab.waitForElement(".blockpost", { markAsSeen: true });
-    const actionRow = post.querySelector(".postfootright ul");
+    const post       = await addon.tab.waitForElement(".blockpost", { markAsSeen: true });
+    const actionRow  = post.querySelector(".postfootright ul");
     const sourceItem = document.createElement("li");
-    const quoteItem = actionRow.querySelector(".postquote");
+    const quoteItem  = actionRow.querySelector(".postquote");
     if (quoteItem) {
       actionRow.insertBefore(sourceItem, quoteItem);
     } else {
       actionRow.appendChild(sourceItem);
     }
+
     sourceItem.appendChild(document.createTextNode("| "));
     const sourceButton = document.createElement("a");
     sourceItem.appendChild(sourceButton);
     sourceItem.appendChild(document.createTextNode(" "));
-    sourceButton.href = "#";
+    sourceButton.href      = "#";
     sourceButton.innerText = msg("source-button");
-    sourceButton.title = msg("source-button-tooltip");
+    sourceButton.title     = msg("source-button-tooltip");
     sourceButton.setAttribute("data-state", "post");
     sourceButton.addEventListener("click", viewSource(post, msg));
   }

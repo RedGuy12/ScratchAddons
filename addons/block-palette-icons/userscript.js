@@ -2,7 +2,7 @@
 export default async function ({ addon, global, console }) {
   while (true) {
     await addon.tab.waitForElement(".scratchCategoryMenu", {
-      markAsSeen: true,
+      markAsSeen: true
     });
 
     /*
@@ -19,12 +19,14 @@ export default async function ({ addon, global, console }) {
       "variables_icon",
       "block_icon",
     ];
-    if (document.querySelector(".scratchCategoryId-lists")) icons.splice(8, 0, "list_icon");
+    if (document.querySelector(".scratchCategoryId-lists")) { icons.splice(8, 0, "list_icon");
+    }
+
     //For each .scratchCategoryItemBubble add an icon
     document.querySelectorAll(".scratchCategoryItemBubble").forEach((item, i) => {
       let k = document.createElement("img");
       k.src = `${addon.self.dir}/icons/${icons[i]}.svg`;
-      k.id = "sa-category-icon";
+      k.id  = "sa-category-icon";
       addon.tab.displayNoneWhileDisabled(k);
 
       item.appendChild(k);

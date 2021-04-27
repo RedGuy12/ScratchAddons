@@ -2,12 +2,12 @@ export default async function ({ addon, global, console }) {
   // The hierarchy is:
   // blocklyDropDownDiv (position, background color, etc.) -> blocklyDropDownContent (scrollbar) -> blocklyDropdownMenu (items)
   // The capitalization of dropdown is inconsistent in blockly too.
-  let blocklyDropDownDiv = null;
+  let blocklyDropDownDiv     = null;
   let blocklyDropDownContent = null;
-  let blocklyDropdownMenu = null;
+  let blocklyDropdownMenu    = null;
 
   function createSearchBar(node) {
-    blocklyDropdownMenu = node;
+    blocklyDropdownMenu       = node;
     blocklyDropdownMenu.focus = () => {}; // no-op focus() so it can't steal it from the search bar
 
     // Lock the width of the dropdown before adding the search bar, as sometimes adding the searchbar changes the width.
@@ -30,8 +30,8 @@ export default async function ({ addon, global, console }) {
     if (!hasScrollBar) {
       const blocklyDropDownArrow = blocklyDropDownDiv.querySelector(".blocklyDropDownArrow");
       if (blocklyDropDownArrow.classList.contains("arrowBottom")) {
-        const searchBarHeight = searchBar.offsetHeight;
-        blocklyDropDownDiv.style.transform += ` translateY(-${searchBarHeight}px)`;
+        const searchBarHeight                = searchBar.offsetHeight;
+        blocklyDropDownDiv.style.transform  += ` translateY(-${searchBarHeight}px)`;
         blocklyDropDownArrow.style.transform = `translateY(${searchBarHeight}px) ${blocklyDropDownArrow.style.transform}`;
       }
     }
@@ -43,7 +43,7 @@ export default async function ({ addon, global, console }) {
     blocklyDropdownMenu = null;
     // Reset all the things we changed about the dropdown menu.
     // This matters because there's other types of dropdowns such as angle selectors where a search bar doesn't make sense.
-    blocklyDropDownContent.style.width = "";
+    blocklyDropDownContent.style.width  = "";
     blocklyDropDownContent.style.height = "";
   }
 
@@ -62,9 +62,9 @@ export default async function ({ addon, global, console }) {
     const itemTop = item.offsetTop;
     const itemEnd = itemTop + item.offsetHeight;
 
-    const scrollTop = blocklyDropDownContent.scrollTop;
+    const scrollTop    = blocklyDropDownContent.scrollTop;
     const scrollHeight = blocklyDropDownContent.offsetHeight;
-    const scrollEnd = scrollTop + scrollHeight;
+    const scrollEnd    = scrollTop + scrollHeight;
 
     if (scrollTop > itemTop) {
       blocklyDropDownContent.scrollTop = itemTop;
@@ -76,9 +76,9 @@ export default async function ({ addon, global, console }) {
   function handleInputEvent(event) {
     const value = event.target.value.toLowerCase();
     for (const item of getItems()) {
-      const text = item.textContent.toLowerCase();
+      const text   = item.textContent.toLowerCase();
       const hidden = !text.includes(value);
-      item.hidden = hidden;
+      item.hidden  = hidden;
     }
   }
 
@@ -88,6 +88,7 @@ export default async function ({ addon, global, console }) {
     if (!selected) {
       return null;
     }
+
     const block = Blockly.getMainWorkspace().getBlockById(selected.dataset.id);
     return block;
   }
@@ -105,12 +106,11 @@ export default async function ({ addon, global, console }) {
       }
 
       const selectedBlock = getSelectedBlock();
-      const items = getItems();
+      const items         = getItems();
       if (event.target.value === "" && selectedBlock) {
-        if (
-          selectedBlock.type === "event_broadcast" ||
-          selectedBlock.type === "event_broadcastandwait" ||
-          selectedBlock.type === "event_whenbroadcastreceived"
+        if (selectedBlock.type === "event_broadcast"
+            || selectedBlock.type === "event_broadcastandwait"
+            || selectedBlock.type === "event_whenbroadcastreceived"
         ) {
           // The top item of these dropdowns is always "New message"
           // When pressing enter on an empty search bar, we close the dropdown instead of making a new broadcast.
@@ -118,12 +118,14 @@ export default async function ({ addon, global, console }) {
           return;
         }
       }
+
       for (const item of items) {
         if (!item.hidden) {
           selectItem(item, true);
           break;
         }
       }
+
       // If there is no top value, just leave the dropdown open.
     } else if (event.key === "Escape") {
       closeDropDown();
@@ -146,7 +148,7 @@ export default async function ({ addon, global, console }) {
       }
 
       const lastIndex = items.length - 1;
-      let newIndex = 0;
+      let newIndex    = 0;
       if (event.key === "ArrowDown") {
         if (selectedIndex === -1 || selectedIndex === lastIndex) {
           newIndex = 0;
@@ -169,6 +171,7 @@ export default async function ({ addon, global, console }) {
     if (blocklyDropdownMenu) {
       return Array.from(blocklyDropdownMenu.children).filter((child) => child.tagName !== "INPUT");
     }
+
     return [];
   }
 
@@ -176,7 +179,7 @@ export default async function ({ addon, global, console }) {
     return addon.tab.waitForElement(".blocklyDropDownDiv").then(() => document.querySelector(".blocklyDropDownDiv"));
   }
 
-  blocklyDropDownDiv = await findBlocklyDropDownDiv();
+  blocklyDropDownDiv     = await findBlocklyDropDownDiv();
   blocklyDropDownContent = blocklyDropDownDiv.querySelector(".blocklyDropDownContent");
 
   const observer = new MutationObserver((mutationList) => {
@@ -189,6 +192,7 @@ export default async function ({ addon, global, console }) {
             break;
           }
         }
+
         // Look for a dropdown being removed.
         for (const node of mutation.removedNodes) {
           if (node.classList && node.classList.contains("blocklyDropdownMenu")) {
@@ -198,8 +202,9 @@ export default async function ({ addon, global, console }) {
         }
       }
     }
+
   });
   observer.observe(blocklyDropDownContent, {
-    childList: true,
+    childList: true
   });
 }

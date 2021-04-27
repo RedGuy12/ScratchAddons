@@ -1,32 +1,33 @@
 import Addon from "../../addon-api/background/Addon.js";
 
 export default async function runPersistentScripts(addonId) {
-  const manifest = scratchAddons.manifests.find((obj) => obj.addonId === addonId).manifest;
+  const manifest    = scratchAddons.manifests.find((obj) => obj.addonId === addonId).manifest;
   const permissions = manifest.permissions || [];
-  if (manifest.persistentScripts)
+  if (manifest.persistentScripts) {
     executePersistentScripts({ addonId, permissions, scriptUrls: manifest.persistentScripts });
+  }
 }
 
 async function executePersistentScripts({ addonId, permissions, scriptUrls }) {
-  const addonObjReal = new Addon({ id: addonId, permissions });
+  const addonObjReal      = new Addon({ id: addonId, permissions });
   const addonObjRevocable = Proxy.revocable(addonObjReal, {});
-  const addonObj = addonObjRevocable.proxy;
+  const addonObj          = addonObjRevocable.proxy;
   scratchAddons.addonObjects.push(addonObjReal);
-  const clearTimeoutFunc = (timeoutId) => {
+  const clearTimeoutFunc    = (timeoutId) => {
     addonObjReal._timeouts.splice(
       addonObjReal._timeouts.findIndex((x) => x === timeoutId),
       1
     );
     return clearTimeout(timeoutId);
   };
-  const clearIntervalFunc = (intervalId) => {
+  const clearIntervalFunc   = (intervalId) => {
     addonObjReal._intervals.splice(
       addonObjReal._intervals.findIndex((x) => x === intervalId),
       1
     );
     return clearInterval(intervalId);
   };
-  const setTimeoutFunc = function (func, interval) {
+  const setTimeoutFunc      = function (func, interval) {
     const timeoutId = setTimeout(function () {
       func();
       clearTimeoutFunc(timeoutId);
@@ -34,7 +35,7 @@ async function executePersistentScripts({ addonId, permissions, scriptUrls }) {
     addonObjReal._timeouts.push(timeoutId);
     return timeoutId;
   };
-  const setIntervalFunc = function (func, interval) {
+  const setIntervalFunc     = function (func, interval) {
     const intervalId = setInterval(function () {
       func();
     }, interval);
@@ -48,11 +49,11 @@ async function executePersistentScripts({ addonId, permissions, scriptUrls }) {
     );
     addonObjRevocable.revoke();
   };
-  addonObjReal._restart = () => {
+  addonObjReal._restart     = () => {
     addonObjReal._kill();
     executePersistentScripts({ addonId, permissions, scriptUrls });
   };
-  const globalObj = Object.create(null);
+  const globalObj           = Object.create(null);
 
   for (const scriptPath of scriptUrls) {
     const scriptUrl = chrome.runtime.getURL(`/addons/${addonId}/${scriptPath}`);
@@ -61,11 +62,11 @@ async function executePersistentScripts({ addonId, permissions, scriptUrls }) {
       "color:red; font-weight: bold; font-size: 1.2em;"
     );
     const module = await import(chrome.runtime.getURL(`addons/${addonId}/${scriptPath}`));
-    const log = console.log.bind(console, `%c[${addonId}]`, "color:darkorange; font-weight: bold;");
-    const warn = console.warn.bind(console, `%c[${addonId}]`, "color:darkorange font-weight: bold;");
-    const msg = (key, placeholders) =>
+    const log    = console.log.bind(console, `%c[${addonId}]`, "color:darkorange; font-weight: bold;");
+    const warn   = console.warn.bind(console, `%c[${addonId}]`, "color:darkorange font-weight: bold;");
+    const msg    = (key, placeholders) =>
       scratchAddons.l10n.get(key.startsWith("/") ? key.slice(1) : `${addonId}/${key}`, placeholders);
-    msg.locale = scratchAddons.l10n.locale;
+    msg.locale   = scratchAddons.l10n.locale;
     module.default({
       addon: addonObj,
       global: globalObj,
@@ -74,7 +75,7 @@ async function executePersistentScripts({ addonId, permissions, scriptUrls }) {
       setInterval: setIntervalFunc,
       clearTimeout: clearTimeoutFunc,
       clearInterval: clearIntervalFunc,
-      msg,
+      msg
     });
   }
 }

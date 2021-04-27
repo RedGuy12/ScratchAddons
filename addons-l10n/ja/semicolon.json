@@ -1,1 +1,4 @@
-{"semicolon/@name":"セミコロンのバグ","semicolon/@description":"有名なセミコロンのバグを追加する。"}
+{
+	"semicolon/@name": "セミコロンのバグ",
+	"semicolon/@description": "有名なセミコロンのバグを追加する。"
+}

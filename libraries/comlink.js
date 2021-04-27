@@ -16,15 +16,15 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
-  const proxyMarker = Symbol("Comlink.proxy");
+  const proxyMarker    = Symbol("Comlink.proxy");
   const createEndpoint = Symbol("Comlink.endpoint");
-  const releaseProxy = Symbol("Comlink.releaseProxy");
-  const throwMarker = Symbol("Comlink.thrown");
-  const isObject = (val) => (typeof val === "object" && val !== null) || typeof val === "function";
+  const releaseProxy   = Symbol("Comlink.releaseProxy");
+  const throwMarker    = Symbol("Comlink.thrown");
+  const isObject       = (val) => (typeof val === "object" && val !== null) || typeof val === "function";
   /**
    * Internal transfer handle to handle objects marked to proxy.
    */
-  const proxyTransferHandler = {
+  const proxyTransferHandler     = {
       canHandle: (val) => isObject(val) && val[proxyMarker],
       serialize(obj) {
           const { port1, port2 } = new MessageChannel();
@@ -34,7 +34,7 @@
       deserialize(port) {
           port.start();
           return wrap(port);
-      },
+      }
   };
   /**
    * Internal transfer handler to handle thrown exceptions.
@@ -49,21 +49,23 @@
                   value: {
                       message: value.message,
                       name: value.name,
-                      stack: value.stack,
-                  },
+                      stack: value.stack
+                  }
               };
           }
           else {
               serialized = { isError: false, value };
           }
+
           return [serialized, []];
       },
       deserialize(serialized) {
           if (serialized.isError) {
               throw Object.assign(new Error(serialized.value.message), serialized.value);
           }
+
           throw serialized.value;
-      },
+      }
   };
   /**
    * Allows customizing the serialization of certain values.
@@ -77,11 +79,12 @@
           if (!ev || !ev.data) {
               return;
           }
+
           const { id, type, path } = Object.assign({ path: [] }, ev.data);
-          const argumentList = (ev.data.argumentList || []).map(fromWireValue);
+          const argumentList       = (ev.data.argumentList || []).map(fromWireValue);
           let returnValue;
           try {
-              const parent = path.slice(0, -1).reduce((obj, prop) => obj[prop], obj);
+              const parent   = path.slice(0, -1).reduce((obj, prop) => obj[prop], obj);
               const rawValue = path.reduce((obj, prop) => obj[prop], obj);
               switch (type) {
                   case 0 /* GET */:
@@ -92,7 +95,7 @@
                   case 1 /* SET */:
                       {
                           parent[path.slice(-1)[0]] = fromWireValue(ev.data.value);
-                          returnValue = true;
+                          returnValue               = true;
                       }
                       break;
                   case 2 /* APPLY */:
@@ -123,6 +126,7 @@
           catch (value) {
               returnValue = { value, [throwMarker]: 0 };
           }
+
           Promise.resolve(returnValue)
               .catch((value) => {
               return { value, [throwMarker]: 0 };
@@ -135,6 +139,7 @@
                   ep.removeEventListener("message", callback);
                   closeEndPoint(ep);
               }
+
           });
       });
       if (ep.start) {
@@ -145,8 +150,9 @@
       return endpoint.constructor.name === "MessagePort";
   }
   function closeEndPoint(endpoint) {
-      if (isMessagePort(endpoint))
+      if (isMessagePort(endpoint)) {
           endpoint.close();
+      }
   }
   function wrap(ep, target) {
       return createProxy(ep, [], target);
@@ -158,30 +164,33 @@
   }
   function createProxy(ep, path = [], target = function () { }) {
       let isProxyReleased = false;
-      const proxy = new Proxy(target, {
+      const proxy         = new Proxy(target, {
           get(_target, prop) {
               throwIfProxyReleased(isProxyReleased);
               if (prop === releaseProxy) {
                   return () => {
                       return requestResponseMessage(ep, {
                           type: 5 /* RELEASE */,
-                          path: path.map((p) => p.toString()),
+                          path: path.map((p) => p.toString())
                       }).then(() => {
                           closeEndPoint(ep);
                           isProxyReleased = true;
                       });
                   };
               }
+
               if (prop === "then") {
                   if (path.length === 0) {
                       return { then: () => proxy };
                   }
+
                   const r = requestResponseMessage(ep, {
                       type: 0 /* GET */,
-                      path: path.map((p) => p.toString()),
+                      path: path.map((p) => p.toString())
                   }).then(fromWireValue);
                   return r.then.bind(r);
               }
+
               return createProxy(ep, [...path, prop]);
           },
           set(_target, prop, rawValue) {
@@ -192,7 +201,7 @@
               return requestResponseMessage(ep, {
                   type: 1 /* SET */,
                   path: [...path, prop].map((p) => p.toString()),
-                  value,
+                  value
               }, transferables).then(fromWireValue);
           },
           apply(_target, _thisArg, rawArgumentList) {
@@ -200,18 +209,20 @@
               const last = path[path.length - 1];
               if (last === createEndpoint) {
                   return requestResponseMessage(ep, {
-                      type: 4 /* ENDPOINT */,
+                      type: 4 /* ENDPOINT */
                   }).then(fromWireValue);
               }
+
               // We just pretend that `bind()` didn’t happen.
               if (last === "bind") {
                   return createProxy(ep, path.slice(0, -1));
               }
+
               const [argumentList, transferables] = processArguments(rawArgumentList);
               return requestResponseMessage(ep, {
                   type: 2 /* APPLY */,
                   path: path.map((p) => p.toString()),
-                  argumentList,
+                  argumentList
               }, transferables).then(fromWireValue);
           },
           construct(_target, rawArgumentList) {
@@ -220,9 +231,9 @@
               return requestResponseMessage(ep, {
                   type: 3 /* CONSTRUCT */,
                   path: path.map((p) => p.toString()),
-                  argumentList,
+                  argumentList
               }, transferables).then(fromWireValue);
-          },
+          }
       });
       return proxy;
   }
@@ -245,7 +256,7 @@
       return {
           postMessage: (msg, transferables) => w.postMessage(msg, targetOrigin, transferables),
           addEventListener: context.addEventListener.bind(context),
-          removeEventListener: context.removeEventListener.bind(context),
+          removeEventListener: context.removeEventListener.bind(context)
       };
   }
   function toWireValue(value) {
@@ -256,16 +267,17 @@
                   {
                       type: 3 /* HANDLER */,
                       name,
-                      value: serializedValue,
+                      value: serializedValue
                   },
                   transferables,
               ];
           }
       }
+
       return [
           {
               type: 0 /* RAW */,
-              value,
+              value
           },
           transferCache.get(value) || [],
       ];
@@ -285,12 +297,14 @@
               if (!ev.data || !ev.data.id || ev.data.id !== id) {
                   return;
               }
+
               ep.removeEventListener("message", l);
               resolve(ev.data);
           });
           if (ep.start) {
               ep.start();
           }
+
           ep.postMessage(Object.assign({ id }, msg), transfers);
       });
   }
@@ -301,15 +315,15 @@
           .join("-");
   }
 
-  exports.createEndpoint = createEndpoint;
-  exports.expose = expose;
-  exports.proxy = proxy;
-  exports.proxyMarker = proxyMarker;
-  exports.releaseProxy = releaseProxy;
-  exports.transfer = transfer;
+  exports.createEndpoint   = createEndpoint;
+  exports.expose           = expose;
+  exports.proxy            = proxy;
+  exports.proxyMarker      = proxyMarker;
+  exports.releaseProxy     = releaseProxy;
+  exports.transfer         = transfer;
   exports.transferHandlers = transferHandlers;
-  exports.windowEndpoint = windowEndpoint;
-  exports.wrap = wrap;
+  exports.windowEndpoint   = windowEndpoint;
+  exports.wrap             = wrap;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

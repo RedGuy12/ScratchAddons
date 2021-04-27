@@ -1,1 +1,4 @@
-{"drag-drop/@name":"Dateien ziehen","drag-drop/@description":"Lässt dich Dateien vom Dateimanager zur Figuren-, Kostüm- und Klangliste ziehen."}
+{
+	"drag-drop/@name": "Dateien ziehen",
+	"drag-drop/@description": "Lässt dich Dateien vom Dateimanager zur Figuren-, Kostüm- und Klangliste ziehen."
+}

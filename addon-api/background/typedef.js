@@ -1,11 +1,14 @@
-/** @typedef {import("./Addon.js").default} BackgroundScriptAddon */
+/**
+ * @typedef {import("./Addon.js").default} BackgroundScriptAddon
+ */
 // prettier-ignore
 /**
  * Background scripts must default-export an async function
  * that takes this object as a sole argument, e.g.
  * export default async function (util)
  * Note that commonly it is done by using detructing syntax.
- * @typedef {object} BackgroundScriptUtilities
+ *
+ * @typedef  {object} BackgroundScriptUtilities
  * @property {BackgroundScriptAddon} addon - APIs for addons
  * @property {function} setInterval - Works like setInterval but with addon unloading support.
  * @property {function} clearInterval - Works like clearInterval but with addon unloading support.

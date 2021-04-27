@@ -1,10 +1,11 @@
 .preview .sa-project-info {
-  display: inline-block;
-  margin-left: 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  text-align: right;
+    display: inline-block;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-align: right;
 }
+
 .preview .project-buttons > * {
-  vertical-align: middle;
+    vertical-align: middle;
 }

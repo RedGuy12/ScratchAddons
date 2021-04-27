@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ScratchAddons/manifest-schema/master/1/1.7.json",
+  "name": "WYSIWYG (visual) forum post editor",
+  "description": "Lets you write and edit forum posts visually instead of writing BBCode.",
+  "credits": [{ "name": "RedGuy7", "link": "https://paul-s-reid.com/web-dev/" }],
+  "l10n": true,
+  "tags": ["beta", "community", "forums"],
+  "userscripts": [{ "matches": ["https://scratch.mit.edu/discuss/*"], "url": "userscript.js" }],
+  "userstyles": [{ "matches": ["https://scratch.mit.edu/discuss/*"], "url": "userstyle.css" }]
+}

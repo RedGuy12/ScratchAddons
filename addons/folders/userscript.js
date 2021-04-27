@@ -20,7 +20,7 @@ export default async function ({ addon, global, console, msg }) {
   const SVG_NS = "http://www.w3.org/2000/svg";
 
   const TYPE_SPRITES = 1;
-  const TYPE_ASSETS = 2;
+  const TYPE_ASSETS  = 2;
 
   // We run too early, will be set later
   let vm;
@@ -40,10 +40,11 @@ export default async function ({ addon, global, console, msg }) {
    * getFolderFromName("A//b") === "A"
    */
   const getFolderFromName = (name) => {
-    const idx = name.indexOf(DIVIDER);
+    const idx             = name.indexOf(DIVIDER);
     if (idx === -1 || idx === 0) {
       return null;
     }
+
     return name.substr(0, idx);
   };
 
@@ -52,10 +53,11 @@ export default async function ({ addon, global, console, msg }) {
    * getNameWithoutFolder("A//b") === "b"
    */
   const getNameWithoutFolder = (name) => {
-    const idx = name.indexOf(DIVIDER);
+    const idx                = name.indexOf(DIVIDER);
     if (idx === -1 || idx === 0) {
       return name;
     }
+
     return name.substr(idx + DIVIDER.length);
   };
 
@@ -66,10 +68,11 @@ export default async function ({ addon, global, console, msg }) {
    * setFolderOfName("c//B", null) === "B"
    */
   const setFolderOfName = (name, folder) => {
-    const basename = getNameWithoutFolder(name);
+    const basename      = getNameWithoutFolder(name);
     if (folder) {
       return `${folder}${DIVIDER}${basename}`;
     }
+
     return basename;
   };
 
@@ -77,41 +80,50 @@ export default async function ({ addon, global, console, msg }) {
     return !name.includes(DIVIDER) && !name.endsWith("/");
   };
 
-  const RESERVED_NAMES = ["_mouse_", "_stage_", "_edge_", "_myself_", "_random_"];
+  const RESERVED_NAMES    = ["_mouse_", "_stage_", "_edge_", "_myself_", "_random_"];
   const ensureNotReserved = (name) => {
-    if (name === "") return "2";
+    if (name === "") { return "2";
+    }
+
     if (RESERVED_NAMES.includes(name)) return `${name}2`;
     return name;
   };
 
   const untilInEditor = () => {
-    if (addon.tab.editorMode === "editor") return;
+    if (addon.tab.editorMode === "editor") { return;
+    }
+
     return new Promise((resolve, reject) => {
       const handler = () => {
         if (addon.tab.editorMode === "editor") {
           resolve();
           addon.tab.removeEventListener("urlChange", handler);
         }
+
       };
       addon.tab.addEventListener("urlChange", handler);
     });
   };
 
   const getSortableHOCFromElement = (el) => {
-    const nearestSpriteSelector = el.closest("[class*='sprite-selector_sprite-selector']");
+    const nearestSpriteSelector   = el.closest("[class*='sprite-selector_sprite-selector']");
     if (nearestSpriteSelector) {
       return nearestSpriteSelector[reactInternalKey].child.sibling.child.stateNode;
     }
+
     const nearestAssetPanelWrapper = el.closest('[class*="asset-panel_wrapper"]');
     if (nearestAssetPanelWrapper) {
       return nearestAssetPanelWrapper[reactInternalKey].child.child.stateNode;
     }
+
     throw new Error("cannot find SortableHOC");
   };
 
   const getBackpackFromElement = (el) => {
-    const gui = el.closest('[class*="gui_editor-wrapper"]');
-    if (!gui) throw new Error("cannot find Backpack");
+    const gui                  = el.closest('[class*="gui_editor-wrapper"]');
+    if (!gui) { throw new Error("cannot find Backpack");
+    }
+
     return gui[reactInternalKey].child.sibling.child.stateNode;
   };
 
@@ -120,7 +132,7 @@ export default async function ({ addon, global, console, msg }) {
   };
 
   /**
-   * @typedef {Object} ItemData
+   * @typedef  {Object} ItemData
    * @property {string} realName
    * @property {number} realIndex
    * @property {string} inFolder
@@ -135,6 +147,7 @@ export default async function ({ addon, global, console, msg }) {
     if (item && item.name && typeof item.name === "object") {
       return item.name;
     }
+
     return null;
   };
 
@@ -143,27 +156,27 @@ export default async function ({ addon, global, console, msg }) {
     encodeDataURI() {
       // Doesn't actually need to be a data: URI
       return addon.self.dir + "/folder.svg";
-    },
+    }
   };
 
   // https://github.com/LLK/scratch-gui/blob/develop/src/components/asset-panel/icon--sound.svg
   const imageIconSource = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="100px" height="100px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="Sound" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M12.4785058,12.6666667 C12.3144947,12.6666667 12.1458852,12.6272044 11.9926038,12.5440517 C11.537358,12.2960031 11.3856094,11.7562156 11.6553847,11.3376335 C12.1688774,10.5371131 12.1688774,9.54491867 11.6553847,8.74580756 C11.3856094,8.32581618 11.537358,7.78602861 11.9926038,7.53798001 C12.452448,7.29275014 13.0379829,7.43086811 13.3046926,7.84804076 C14.1737981,9.20103311 14.1737981,10.8809986 13.3046926,12.233991 C13.1268862,12.5130457 12.806528,12.6666667 12.4785058,12.6666667 Z M15.3806784,13.8333333 C15.2408902,13.8333333 15.0958763,13.796281 14.9665396,13.7182064 C14.5785295,13.485306 14.4491928,12.9784829 14.6791247,12.5854634 C15.5949331,11.0160321 15.5949331,9.065491 14.6791247,7.49738299 C14.4491928,7.10436352 14.5785295,6.59621712 14.9665396,6.36331669 C15.3558562,6.13438616 15.8549129,6.26274605 16.0848448,6.65444223 C17.3050517,8.74260632 17.3050517,11.3389168 16.0848448,13.4270809 C15.9319924,13.6890939 15.6602547,13.8333333 15.3806784,13.8333333 Z M10.3043478,5.62501557 L10.3043478,13.873675 C10.3043478,14.850934 9.10969849,15.3625101 8.36478311,14.7038052 L6.7566013,13.2797607 C6.18712394,12.7762834 5.44499329,12.4968737 4.67362297,12.4968737 L4.3923652,12.4968737 C3.62377961,12.4968737 3,11.8935108 3,11.1470686 L3,8.36646989 C3,7.62137743 3.62377961,7.01666471 4.3923652,7.01666471 L4.65830695,7.01666471 C5.42967727,7.01666471 6.17180792,6.73725504 6.74128529,6.23377771 L8.36478311,4.79623519 C9.10969849,4.13753026 10.3043478,4.64910643 10.3043478,5.62501557 Z" id="Combined-Shape" fill="#575E75"></path>
+<svg width              ="100px" height="100px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink">
+    <g id               ="Sound" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d         ="M12.4785058,12.6666667 C12.3144947,12.6666667 12.1458852,12.6272044 11.9926038,12.5440517 C11.537358,12.2960031 11.3856094,11.7562156 11.6553847,11.3376335 C12.1688774,10.5371131 12.1688774,9.54491867 11.6553847,8.74580756 C11.3856094,8.32581618 11.537358,7.78602861 11.9926038,7.53798001 C12.452448,7.29275014 13.0379829,7.43086811 13.3046926,7.84804076 C14.1737981,9.20103311 14.1737981,10.8809986 13.3046926,12.233991 C13.1268862,12.5130457 12.806528,12.6666667 12.4785058,12.6666667 Z M15.3806784,13.8333333 C15.2408902,13.8333333 15.0958763,13.796281 14.9665396,13.7182064 C14.5785295,13.485306 14.4491928,12.9784829 14.6791247,12.5854634 C15.5949331,11.0160321 15.5949331,9.065491 14.6791247,7.49738299 C14.4491928,7.10436352 14.5785295,6.59621712 14.9665396,6.36331669 C15.3558562,6.13438616 15.8549129,6.26274605 16.0848448,6.65444223 C17.3050517,8.74260632 17.3050517,11.3389168 16.0848448,13.4270809 C15.9319924,13.6890939 15.6602547,13.8333333 15.3806784,13.8333333 Z M10.3043478,5.62501557 L10.3043478,13.873675 C10.3043478,14.850934 9.10969849,15.3625101 8.36478311,14.7038052 L6.7566013,13.2797607 C6.18712394,12.7762834 5.44499329,12.4968737 4.67362297,12.4968737 L4.3923652,12.4968737 C3.62377961,12.4968737 3,11.8935108 3,11.1470686 L3,8.36646989 C3,7.62137743 3.62377961,7.01666471 4.3923652,7.01666471 L4.65830695,7.01666471 C5.42967727,7.01666471 6.17180792,6.73725504 6.74128529,6.23377771 L8.36478311,4.79623519 C9.10969849,4.13753026 10.3043478,4.64910643 10.3043478,5.62501557 Z" id="Combined-Shape" fill="#575E75"></path>
     </g>
 </svg>`;
-  const soundIconHref = `data:image/svg+xml;base64,${btoa(imageIconSource)}`;
+  const soundIconHref   = `data: image/svg+xml;base64,${btoa(imageIconSource)}`;
 
   let folderColorStylesheet = null;
-  const folderColors = Object.create(null);
+  const folderColors        = Object.create(null);
   const getFolderColorClass = (folderName) => {
-    const mulberry32 = (a) => {
+    const mulberry32        = (a) => {
       // https://stackoverflow.com/a/47593316
       return function () {
         var t = (a += 0x6d2b79f5);
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        t     = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^   = t + Math.imul(t ^ (t >>> 7), t | 61);
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
       };
     };
@@ -176,12 +189,13 @@ export default async function ({ addon, global, console, msg }) {
         hash = 31 * hash + str.charCodeAt(i);
         hash = hash | 0;
       }
+
       return hash;
     };
 
     const random = (str) => {
       const seed = hashCode(str);
-      const rng = mulberry32(seed);
+      const rng  = mulberry32(seed);
       // Run RNG a few times to get more random numbers, otherwise similar seeds tend to give somewhat similar results
       rng();
       rng();
@@ -195,129 +209,139 @@ export default async function ({ addon, global, console, msg }) {
         folderColorStylesheet = document.createElement("style");
         document.head.appendChild(folderColorStylesheet);
       }
-      const hue = random(folderName) * 360;
-      const color = `hsla(${hue}deg, 100%, 85%, 0.5)`;
-      const id = Object.keys(folderColors).length;
-      const className = `sa-folders-color-${id}`;
-      folderColors[folderName] = className;
-      folderColorStylesheet.textContent += `.${className}{background-color:${color} !important;}`;
-      folderColorStylesheet.textContent += `.${className}[class*="sprite-selector_raised"]:not([class*="sa-folders-folder"]){background-color:hsla(${hue}deg, 100%, 77%, 1) !important;}`;
+
+      const hue                          = random(folderName) * 360;
+      const color                        = `hsla(${hue}deg, 100%, 85%, 0.5)`;
+      const id                           = Object.keys(folderColors).length;
+      const className                    = `sa-folders-color-${id}`;
+      folderColors[folderName]           = className;
+      folderColorStylesheet.textContent += `.${className}{background-color: ${color} !important;}`;
+      folderColorStylesheet.textContent += `.${className}[class*="sprite-selector_raised"]:not([class*="sa-folders-folder"]){background-color: hsla(${hue}deg, 100%, 77%, 1) !important;}`;
     }
     return folderColors[folderName];
   };
 
   const fixOrderOfItemsInFolders = (items) => {
-    const folders = Object.create(null);
-    const result = [];
+    const folders                = Object.create(null);
+    const result                 = [];
     for (const item of items) {
-      const name = item.getName ? item.getName() : item.name;
+      const name   = item.getName ? item.getName() : item.name;
       const folder = getFolderFromName(name);
       if (typeof folder === "string") {
         if (!folders[folder]) {
           folders[folder] = [];
           result.push(folders[folder]);
         }
+
         folders[folder].push(item);
       } else {
         result.push(item);
       }
     }
+
     const flatResult = result.flat();
     for (let i = 0; i < items.length; i++) {
       if (result[i] !== items[i]) {
         return { items: flatResult, changed: true };
       }
     }
+
     return { items: flatResult, changed: false };
   };
 
-  const fixTargetOrder = () => {
+  const fixTargetOrder       = () => {
     const { items, changed } = fixOrderOfItemsInFolders(vm.runtime.targets);
     if (changed) {
       vm.runtime.targets = items;
       vm.emitTargetsUpdate();
     }
+
   };
 
-  const fixCostumeOrder = (target = vm.editingTarget) => {
+  const fixCostumeOrder      = (target = vm.editingTarget) => {
     const { items, changed } = fixOrderOfItemsInFolders(target.sprite.costumes);
     if (changed) {
       target.sprite.costumes = items;
       vm.emitTargetsUpdate();
     }
+
   };
 
-  const fixSoundOrder = (target = vm.editingTarget) => {
+  const fixSoundOrder        = (target = vm.editingTarget) => {
     const { items, changed } = fixOrderOfItemsInFolders(target.sprite.sounds);
     if (changed) {
       target.sprite.sounds = items;
       vm.emitTargetsUpdate();
     }
+
   };
 
   const verifySortableHOC = (sortableHOCInstance) => {
-    const SortableHOC = sortableHOCInstance.constructor;
-    if (
-      Array.isArray(sortableHOCInstance.props.items) &&
-      (typeof sortableHOCInstance.props.selectedId === "string" ||
-        typeof sortableHOCInstance.props.selectedItemIndex === "number") &&
-      typeof sortableHOCInstance.containerBox !== "undefined" &&
-      typeof SortableHOC.prototype.componentDidMount === "undefined" &&
-      typeof SortableHOC.prototype.componentDidUpdate === "undefined" &&
-      typeof SortableHOC.prototype.handleAddSortable === "function" &&
-      typeof SortableHOC.prototype.handleRemoveSortable === "function" &&
-      typeof SortableHOC.prototype.setRef === "function"
-    )
+    const SortableHOC     = sortableHOCInstance.constructor;
+    if (Array.isArray(sortableHOCInstance.props.items)
+        && (typeof sortableHOCInstance.props.selectedId === "string"
+        || typeof sortableHOCInstance.props.selectedItemIndex === "number")
+        && typeof sortableHOCInstance.containerBox !== "undefined"
+        && typeof SortableHOC.prototype.componentDidMount === "undefined"
+        && typeof SortableHOC.prototype.componentDidUpdate === "undefined"
+        && typeof SortableHOC.prototype.handleAddSortable === "function"
+        && typeof SortableHOC.prototype.handleRemoveSortable === "function"
+        && typeof SortableHOC.prototype.setRef === "function"
+    ) {
       return;
+    }
+
     throw new Error("Can not comprehend SortableHOC");
   };
 
   const verifySpriteSelectorItem = (spriteSelectorItemInstance) => {
-    const SpriteSelectorItem = spriteSelectorItemInstance.constructor;
-    if (
-      typeof spriteSelectorItemInstance.props.asset === "object" &&
-      typeof spriteSelectorItemInstance.props.name === "string" &&
-      typeof spriteSelectorItemInstance.props.dragType === "string" &&
-      typeof SpriteSelectorItem.prototype.handleClick === "function" &&
-      typeof SpriteSelectorItem.prototype.setRef === "function" &&
-      typeof SpriteSelectorItem.prototype.handleDrag === "function" &&
-      typeof SpriteSelectorItem.prototype.handleDragEnd === "function" &&
-      typeof SpriteSelectorItem.prototype.handleDelete === "function" &&
-      typeof SpriteSelectorItem.prototype.handleDuplicate === "function" &&
-      typeof SpriteSelectorItem.prototype.handleExport === "function"
-    )
+    const SpriteSelectorItem     = spriteSelectorItemInstance.constructor;
+    if (typeof spriteSelectorItemInstance.props.asset === "object"
+        && typeof spriteSelectorItemInstance.props.name === "string"
+        && typeof spriteSelectorItemInstance.props.dragType === "string"
+        && typeof SpriteSelectorItem.prototype.handleClick === "function"
+        && typeof SpriteSelectorItem.prototype.setRef === "function"
+        && typeof SpriteSelectorItem.prototype.handleDrag === "function"
+        && typeof SpriteSelectorItem.prototype.handleDragEnd === "function"
+        && typeof SpriteSelectorItem.prototype.handleDelete === "function"
+        && typeof SpriteSelectorItem.prototype.handleDuplicate === "function"
+        && typeof SpriteSelectorItem.prototype.handleExport === "function"
+    ) {
       return;
+    }
+
     throw new Error("Can not comprehend SpriteSelectorItem");
   };
 
   const verifyVM = (vm) => {
     const target = vm.runtime.targets[0];
-    if (
-      typeof vm.installTargets === "function" &&
-      typeof vm.reorderTarget === "function" &&
-      typeof target.reorderCostume === "function" &&
-      typeof target.reorderSound === "function" &&
-      typeof target.addCostume === "function" &&
-      typeof target.addSound === "function"
-    )
+    if (typeof vm.installTargets === "function"
+        && typeof vm.reorderTarget === "function"
+        && typeof target.reorderCostume === "function"
+        && typeof target.reorderSound === "function"
+        && typeof target.addCostume === "function"
+        && typeof target.addSound === "function"
+    ) {
       return;
+    }
+
     throw new Error("Can not comprehend VM");
   };
 
   const verifyBackpack = (backpackInstance) => {
-    const Backpack = backpackInstance.constructor;
-    if (
-      typeof Backpack.prototype.handleDrop === "function" &&
-      typeof Backpack.prototype.componentDidUpdate === "undefined"
+    const Backpack     = backpackInstance.constructor;
+    if (typeof Backpack.prototype.handleDrop === "function"
+        && typeof Backpack.prototype.componentDidUpdate === "undefined"
     ) {
       return;
     }
+
     throw new Error("Can not comprehend Backpack");
   };
 
   class Cache {
     constructor() {
-      this.map = new Map();
+      this.map  = new Map();
       this.used = [];
     }
 
@@ -356,11 +380,11 @@ export default async function ({ addon, global, console, msg }) {
   const patchSortableHOC = (SortableHOC, type) => {
     // SortableHOC should be: https://github.com/LLK/scratch-gui/blob/29d9851778febe4e69fa5111bf7559160611e366/src/lib/sortable-hoc.jsx#L8
 
-    const itemCache = new Cache();
-    const folderItemCache = new Cache();
+    const itemCache        = new Cache();
+    const folderItemCache  = new Cache();
     const folderAssetCache = new Cache();
 
-    const PREVIEW_SIZE = 80;
+    const PREVIEW_SIZE      = 80;
     const PREVIEW_POSITIONS = [
       // x, y
       [0, 0],
@@ -370,11 +394,11 @@ export default async function ({ addon, global, console, msg }) {
     ];
 
     const createFolderPreview = (items) => {
-      const svg = document.createElementNS(SVG_NS, "svg");
+      const svg               = document.createElementNS(SVG_NS, "svg");
       svg.setAttribute("width", PREVIEW_SIZE);
       svg.setAttribute("height", PREVIEW_SIZE);
       for (let i = 0; i < Math.min(PREVIEW_POSITIONS.length, items.length); i++) {
-        const item = items[i];
+        const item  = items[i];
         const image = document.createElementNS(SVG_NS, "image");
         image.setAttribute("width", PREVIEW_SIZE / 2);
         image.setAttribute("height", PREVIEW_SIZE / 2);
@@ -387,13 +411,15 @@ export default async function ({ addon, global, console, msg }) {
         } else if (item.url) {
           image.setAttribute("href", soundIconHref);
         }
+
         svg.appendChild(image);
       }
+
       return "data:image/svg+xml;," + new XMLSerializer().serializeToString(svg);
     };
 
     const getUniqueIdOfFolderItems = (items) => {
-      let id = "sa_folder&&";
+      let id                       = "sa_folder&&";
       for (let i = 0; i < Math.min(PREVIEW_POSITIONS.length, items.length); i++) {
         const item = items[i];
         if (item.asset) {
@@ -403,41 +429,43 @@ export default async function ({ addon, global, console, msg }) {
         } else if (item.url) {
           id += item.url;
         }
+
         id += "&&";
       }
+
       return id;
     };
 
-    const processItems = (openFolders, props) => {
+    const processItems  = (openFolders, props) => {
       const processItem = (item) => {
-        const itemId = item.name;
+        const itemId    = item.name;
 
         let newItem;
         let itemData;
         if (itemCache.has(itemId)) {
-          newItem = itemCache.get(itemId);
+          newItem  = itemCache.get(itemId);
           itemData = newItem.name;
         } else {
           itemData = {
             toString() {
               return `_${item.name}`;
-            },
+            }
           };
-          newItem = {};
+          newItem  = {};
           itemCache.set(itemId, newItem);
         }
 
         const itemFolderName = getFolderFromName(item.name);
 
         Object.assign(newItem, item);
-        itemData.realName = item.name;
+        itemData.realName  = item.name;
         itemData.realIndex = i;
-        itemData.inFolder = itemFolderName;
-        newItem.name = itemData;
+        itemData.inFolder  = itemFolderName;
+        newItem.name       = itemData;
 
         return {
           newItem,
-          itemData,
+          itemData
         };
       };
 
@@ -446,14 +474,14 @@ export default async function ({ addon, global, console, msg }) {
       folderAssetCache.start();
 
       const folderOccurrences = new Map();
-      const items = [];
-      const result = {
-        items,
+      const items             = [];
+      const result            = {
+        items
       };
 
       let i = 0;
       while (i < props.items.length) {
-        const item = props.items[i];
+        const item       = props.items[i];
         const folderName = getFolderFromName(item.name);
 
         if (folderName === null) {
@@ -465,14 +493,15 @@ export default async function ({ addon, global, console, msg }) {
             }
           }
         } else {
-          const isOpen = openFolders.indexOf(folderName) !== -1;
+          const isOpen      = openFolders.indexOf(folderName) !== -1;
           const folderItems = [];
           while (i < props.items.length) {
-            const childItem = props.items[i];
+            const childItem     = props.items[i];
             const processedItem = processItem(childItem);
             if (getFolderFromName(childItem.name) !== folderName) {
               break;
             }
+
             folderItems.push(processedItem.newItem);
             if (type === TYPE_ASSETS) {
               const isSelected = props.selectedItemIndex === i;
@@ -484,15 +513,17 @@ export default async function ({ addon, global, console, msg }) {
                 }
               }
             }
+
             i++;
           }
+
           i--;
 
           const occurrence = folderOccurrences.get(folderName) || 0;
           folderOccurrences.set(folderName, occurrence + 1);
-          const baseUniqueId = getUniqueIdOfFolderItems(folderItems);
-          const itemUniqueId = `${isOpen}&${occurrence}&${folderName}&${baseUniqueId}&`;
-          const reactKey = `&__${occurrence}_${folderName}`;
+          const baseUniqueId  = getUniqueIdOfFolderItems(folderItems);
+          const itemUniqueId  = `${isOpen}&${occurrence}&${folderName}&${baseUniqueId}&`;
+          const reactKey      = `&__${occurrence}_${folderName}`;
           const assetUniqueId = baseUniqueId;
 
           let folderItem;
@@ -506,22 +537,22 @@ export default async function ({ addon, global, console, msg }) {
               id: {
                 toString() {
                   return reactKey;
-                },
-              },
+                }
+              }
             };
             folderData = {
               // Can be used as a react key
               toString() {
                 return reactKey;
-              },
+              }
             };
             folderItemCache.set(itemUniqueId, folderItem);
           }
 
-          folderData.folder = folderName;
+          folderData.folder     = folderName;
           folderData.folderOpen = isOpen;
-          folderItem.items = folderItems;
-          folderItem.name = folderData;
+          folderItem.items      = folderItems;
+          folderItem.name       = folderData;
 
           let folderAsset;
           if (isOpen) {
@@ -534,22 +565,28 @@ export default async function ({ addon, global, console, msg }) {
                 assetId: assetUniqueId,
                 encodeDataURI() {
                   return createFolderPreview(folderItems);
-                },
+                }
               };
               folderAssetCache.set(assetUniqueId, folderAsset);
             }
           }
 
           if (type === TYPE_SPRITES) {
-            if (!folderItem.costume) folderItem.costume = {};
+            if (!folderItem.costume) { folderItem.costume = {};
+            }
+
             folderItem.costume.asset = folderAsset;
             // For sprite items, `id` is used as the drag payload and toString is used as a React key
-            if (!folderItem.id) folderItem.id = {};
+            if (!folderItem.id) { folderItem.id = {};
+            }
+
             folderItem.id.sa_folder_items = folderItems;
-            folderItem.id.toString = () => reactKey;
+            folderItem.id.toString        = () => reactKey;
           } else {
             folderItem.asset = folderAsset;
-            if (!folderItem.dragPayload) folderItem.dragPayload = {};
+            if (!folderItem.dragPayload) { folderItem.dragPayload = {};
+            }
+
             folderItem.dragPayload.sa_folder_items = folderItems;
           }
 
@@ -579,6 +616,7 @@ export default async function ({ addon, global, console, msg }) {
         const selectedItem = sortable.props.items[sortable.props.selectedItemIndex];
         return selectedItem;
       }
+
       return null;
     };
 
@@ -586,7 +624,7 @@ export default async function ({ addon, global, console, msg }) {
       itemCache.clear();
       folderItemCache.clear();
       folderAssetCache.clear();
-      const folders = [];
+      const folders      = [];
       const selectedItem = getSelectedItem(this);
       if (selectedItem && !selectedItem.isStage) {
         const folder = getFolderFromName(selectedItem.name);
@@ -597,8 +635,9 @@ export default async function ({ addon, global, console, msg }) {
           currentAssetFolder = folder;
         }
       }
+
       this.setState({
-        folders,
+        folders
       });
     };
 
@@ -613,19 +652,21 @@ export default async function ({ addon, global, console, msg }) {
           currentAssetFolder = folder;
         }
       }
+
       this.saInitialSetup();
     };
 
     SortableHOC.prototype.componentDidUpdate = function (prevProps, prevState) {
       const selectedItem = getSelectedItem(this);
       if (selectedItem) {
-        const folder = getFolderFromName(selectedItem.name);
+        const folder        = getFolderFromName(selectedItem.name);
         const currentFolder = this.state.folders.includes(folder) ? folder : null;
         if (type === TYPE_SPRITES) {
           currentSpriteFolder = currentFolder;
         } else if (type === TYPE_ASSETS) {
           currentAssetFolder = currentFolder;
         }
+
         let selectedItemChanged;
         if (this.props.selectedId) {
           selectedItemChanged = this.props.selectedId !== prevProps.selectedId;
@@ -635,11 +676,12 @@ export default async function ({ addon, global, console, msg }) {
             prevProps.items[prevProps.selectedItemIndex] &&
             this.props.items[this.props.selectedItemIndex].name !== prevProps.items[prevProps.selectedItemIndex].name;
         }
+
         if (selectedItemChanged) {
           if (!selectedItem.isStage) {
             if (typeof folder === "string" && !this.state.folders.includes(folder)) {
               this.setState((prevState) => ({
-                folders: [...prevState.folders, folder],
+                folders: [...prevState.folders, folder]
               }));
             }
           }
@@ -648,11 +690,11 @@ export default async function ({ addon, global, console, msg }) {
     };
 
     const originalSortableHOCRender = SortableHOC.prototype.render;
-    SortableHOC.prototype.render = function () {
+    SortableHOC.prototype.render    = function () {
       const originalProps = this.props;
-      this.props = {
+      this.props          = {
         ...this.props,
-        ...processItems((this.state && this.state.folders) || [], this.props),
+        ...processItems((this.state && this.state.folders) || [], this.props)
       };
 
       if (type === TYPE_SPRITES) {
@@ -660,8 +702,9 @@ export default async function ({ addon, global, console, msg }) {
       } else if (type === TYPE_ASSETS) {
         currentAssetItems = this.props.items;
       }
+
       const result = originalSortableHOCRender.call(this);
-      this.props = originalProps;
+      this.props   = originalProps;
       return result;
     };
   };
@@ -674,18 +717,18 @@ export default async function ({ addon, global, console, msg }) {
     };
 
     const createMenuItem = (text, callback, border) => {
-      const el = document.createElement("div");
-      el.className = addon.tab.scratchClass(
+      const el           = document.createElement("div");
+      el.className       = addon.tab.scratchClass(
         "context-menu_menu-item",
         border ? "context-menu_menu-item-bordered" : null,
         {
-          others: ["react-contextmenu-item", "sa-folders-contextmenu-item"],
+          others: ["react-contextmenu-item", "sa-folders-contextmenu-item"]
         }
       );
       el.setAttribute("role", "menuitem");
       el.setAttribute("tabindex", "-1");
       el.setAttribute("aria-disabled", "false");
-      el.textContent = text;
+      el.textContent     = text;
       el.addEventListener(
         "click",
         (e) => {
@@ -700,24 +743,26 @@ export default async function ({ addon, global, console, msg }) {
     };
 
     const getAllFolders = (component) => {
-      const result = new Set();
+      const result      = new Set();
       let items;
       if (component.props.dragType === "SPRITE") {
         items = currentSpriteItems;
       } else {
         items = currentAssetItems;
       }
+
       for (const item of items) {
         const data = getItemData(item);
         if (typeof data.folder === "string") {
           result.add(data.folder);
         }
       }
+
       return Array.from(result);
     };
 
     const addContextMenuItems = (component) => {
-      const data = getItemData(component.props);
+      const data              = getItemData(component.props);
       if (!data) {
         return;
       }
@@ -731,7 +776,8 @@ export default async function ({ addon, global, console, msg }) {
       if (oldContainer) {
         oldContainer.remove();
       }
-      const container = document.createElement("div");
+
+      const container     = document.createElement("div");
       container.className = "sa-folders-contextmenu-container";
       menu.appendChild(container);
 
@@ -739,11 +785,12 @@ export default async function ({ addon, global, console, msg }) {
         menu.setAttribute("sa-folders-context-type", "folder");
 
         const renameItems = (newName) => {
-          const isOpen = isFolderOpen(component, data.folder);
+          const isOpen    = isFolderOpen(component, data.folder);
           setFolderOpen(component, data.folder, false);
           if (isOpen && typeof newName === "string") {
             setFolderOpen(component, newName, true);
           }
+
           if (component.props.dragType === "SPRITE") {
             for (const target of vm.runtime.targets) {
               if (target.isOriginal) {
@@ -752,6 +799,7 @@ export default async function ({ addon, global, console, msg }) {
                 }
               }
             }
+
             vm.emitWorkspaceUpdate();
             fixTargetOrder();
           } else if (component.props.dragType === "COSTUME") {
@@ -761,6 +809,7 @@ export default async function ({ addon, global, console, msg }) {
                 vm.renameCostume(i, setFolderOfName(costume.name, newName));
               }
             }
+
             fixCostumeOrder();
           } else if (component.props.dragType === "SOUND") {
             for (let i = 0; i < vm.editingTarget.sprite.sounds.length; i++) {
@@ -769,24 +818,29 @@ export default async function ({ addon, global, console, msg }) {
                 vm.renameSound(i, setFolderOfName(sound.name, newName));
               }
             }
+
             fixSoundOrder();
           }
+
         };
 
         const renameFolder = () => {
-          let newName = prompt(msg("rename-folder-prompt"), data.folder);
+          let newName      = prompt(msg("rename-folder-prompt"), data.folder);
           // Prompt cancelled, do not rename
           if (newName === null) {
             return;
           }
+
           if (!isValidFolderName(newName)) {
             alert(msg("name-not-allowed"));
             return;
           }
+
           // Empty name will remove the folder
           if (!newName) {
             newName = null;
           }
+
           renameItems(newName);
         };
 
@@ -806,29 +860,32 @@ export default async function ({ addon, global, console, msg }) {
             fixTargetOrder();
             vm.emitWorkspaceUpdate();
           } else if (component.props.dragType === "COSTUME") {
-            const data = getItemData(component.props);
+            const data  = getItemData(component.props);
             const index = data.realIndex;
             const asset = vm.editingTarget.sprite.costumes[index];
             vm.renameCostume(vm.editingTarget.sprite.costumes.indexOf(asset), setFolderOfName(asset.name, folder));
             fixCostumeOrder();
           } else if (component.props.dragType === "SOUND") {
-            const data = getItemData(component.props);
+            const data  = getItemData(component.props);
             const index = data.realIndex;
             const asset = vm.editingTarget.sprite.sounds[index];
             vm.renameSound(vm.editingTarget.sprite.sounds.indexOf(asset), setFolderOfName(asset.name, folder));
             fixSoundOrder();
           }
+
         };
 
         const createFolder = () => {
-          const name = prompt(msg("name-prompt"), getNameWithoutFolder(data.realName));
+          const name       = prompt(msg("name-prompt"), getNameWithoutFolder(data.realName));
           if (name === null) {
             return;
           }
+
           if (!isValidFolderName(name)) {
             alert(msg("name-not-allowed"));
             return;
           }
+
           setFolder(name);
         };
 
@@ -838,12 +895,13 @@ export default async function ({ addon, global, console, msg }) {
         if (typeof currentFolder === "string") {
           container.appendChild(createMenuItem(msg("remove-from-folder"), () => setFolder(null)));
         }
+
         for (const folder of getAllFolders(component)) {
           if (folder !== currentFolder) {
             container.appendChild(
               createMenuItem(
                 msg("add-to-folder", {
-                  folder,
+                  folder
                 }),
                 () => setFolder(folder)
               )
@@ -851,51 +909,54 @@ export default async function ({ addon, global, console, msg }) {
           }
         }
       }
+
     };
 
-    const isFolderOpen = (component, folder) => {
+    const isFolderOpen          = (component, folder) => {
       const sortableHOCInstance = getSortableHOCFromElement(component.ref);
-      const folders = (sortableHOCInstance.state && sortableHOCInstance.state.folders) || [];
+      const folders             = (sortableHOCInstance.state && sortableHOCInstance.state.folders) || [];
       return folders.includes(folder);
     };
 
-    const setFolderOpen = (component, folder, open) => {
+    const setFolderOpen         = (component, folder, open) => {
       const sortableHOCInstance = getSortableHOCFromElement(component.ref);
       sortableHOCInstance.setState((prevState) => {
-        let folders = (prevState && prevState.folders) || [];
-        folders = folders.filter((i) => i !== folder);
+        let folders             = (prevState && prevState.folders) || [];
+        folders                 = folders.filter((i) => i !== folder);
         if (open) {
           return {
-            folders: [...folders, folder],
+            folders: [...folders, folder]
           };
         }
+
         return {
-          folders,
+          folders
         };
       });
     };
 
     for (const method of ["handleDelete", "handleDuplicate", "handleExport"]) {
-      const original = SpriteSelectorItem.prototype[method];
+      const original                       = SpriteSelectorItem.prototype[method];
       SpriteSelectorItem.prototype[method] = function (...args) {
         if (typeof this.props.id === "number") {
           const itemData = getItemData(this.props);
           if (itemData) {
             const originalProps = this.props;
-            this.props = {
+            this.props          = {
               ...originalProps,
-              id: itemData.realIndex,
+              id: itemData.realIndex
             };
-            const ret = original.call(this, ...args);
-            this.props = originalProps;
+            const ret           = original.call(this, ...args);
+            this.props          = originalProps;
             return ret;
           }
         }
+
         return original.call(this, ...args);
       };
     }
 
-    const originalHandleDragEnd = SpriteSelectorItem.prototype.handleDragEnd;
+    const originalHandleDragEnd                = SpriteSelectorItem.prototype.handleDragEnd;
     SpriteSelectorItem.prototype.handleDragEnd = function (...args) {
       const itemData = getItemData(this.props);
       if (itemData) {
@@ -903,9 +964,9 @@ export default async function ({ addon, global, console, msg }) {
           // If the item is being dragged onto another group (eg. costume list -> sprite list)
           // then we fake a drag event to make the `index` be the real index
           const originalIndex = this.props.index;
-          const realIndex = itemData.realIndex;
+          const realIndex     = itemData.realIndex;
           if (originalIndex !== realIndex) {
-            const currentOffset = addon.tab.redux.state.scratchGui.assetDrag.currentOffset;
+            const currentOffset       = addon.tab.redux.state.scratchGui.assetDrag.currentOffset;
             const sortableHOCInstance = getSortableHOCFromElement(this.ref);
             if (currentOffset && sortableHOCInstance && sortableHOCInstance.getMouseOverIndex() === null) {
               this.props.index = realIndex;
@@ -915,10 +976,11 @@ export default async function ({ addon, global, console, msg }) {
           }
         }
       }
+
       return originalHandleDragEnd.call(this, ...args);
     };
 
-    const originalHandleClick = SpriteSelectorItem.prototype.handleClick;
+    const originalHandleClick                = SpriteSelectorItem.prototype.handleClick;
     SpriteSelectorItem.prototype.handleClick = function (...args) {
       const e = args[0];
       if (e && !this.noClick) {
@@ -929,19 +991,22 @@ export default async function ({ addon, global, console, msg }) {
             setFolderOpen(this, itemData.folder, !isFolderOpen(this, itemData.folder));
             return;
           }
+
           if (typeof this.props.number === "number" && typeof itemData.realIndex === "number") {
             e.preventDefault();
             if (this.props.onClick) {
               this.props.onClick(itemData.realIndex);
             }
+
             return;
           }
         }
       }
+
       return originalHandleClick.call(this, ...args);
     };
 
-    const originalSetRef = SpriteSelectorItem.prototype.setRef;
+    const originalSetRef                = SpriteSelectorItem.prototype.setRef;
     SpriteSelectorItem.prototype.setRef = function (ref) {
       originalSetRef.call(this, ref);
       if (ref) {
@@ -951,22 +1016,24 @@ export default async function ({ addon, global, console, msg }) {
       }
     };
 
-    const originalRender = SpriteSelectorItem.prototype.render;
+    const originalRender                = SpriteSelectorItem.prototype.render;
     SpriteSelectorItem.prototype.render = function () {
       const itemData = getItemData(this.props);
       if (itemData) {
         const originalProps = this.props;
-        this.props = {
-          ...this.props,
+        this.props          = {
+          ...this.props
         };
 
         if (typeof itemData.realName === "string") {
           this.props.name = getNameWithoutFolder(itemData.realName);
         }
+
         if (typeof this.props.number === "number" && typeof itemData.realIndex === "number") {
           // Convert 0-indexed to 1-indexed
           this.props.number = itemData.realIndex + 1;
         }
+
         if (typeof itemData.folder === "string") {
           this.props.name = itemData.folder;
           if (itemData.folderOpen) {
@@ -974,10 +1041,12 @@ export default async function ({ addon, global, console, msg }) {
           } else {
             this.props.details = msg("closed-folder");
           }
-          this.props.selected = false;
-          this.props.number = null;
+
+          this.props.selected   = false;
+          this.props.number     = null;
           this.props.className += ` ${getFolderColorClass(itemData.folder)} sa-folders-folder`;
         }
+
         if (typeof itemData.inFolder === "string") {
           this.props.className += ` ${getFolderColorClass(itemData.inFolder)}`;
         }
@@ -987,17 +1056,18 @@ export default async function ({ addon, global, console, msg }) {
         this.props = originalProps;
         return result;
       }
+
       return originalRender.call(this);
     };
   };
 
-  const patchVM = () => {
+  const patchVM          = () => {
     const RenderedTarget = vm.runtime.targets[0].constructor;
 
     const originalInstallTargets = vm.installTargets;
-    vm.installTargets = function (...args) {
+    vm.installTargets            = function (...args) {
       if (currentSpriteFolder !== null) {
-        const targets = args[0];
+        const targets      = args[0];
         const wholeProject = args[2];
         if (Array.isArray(targets) && !wholeProject) {
           for (const target of targets) {
@@ -1007,13 +1077,14 @@ export default async function ({ addon, global, console, msg }) {
           }
         }
       }
+
       return originalInstallTargets.call(this, ...args).then((r) => {
         fixTargetOrder();
         return r;
       });
     };
 
-    const originalAddCostume = RenderedTarget.prototype.addCostume;
+    const originalAddCostume            = RenderedTarget.prototype.addCostume;
     RenderedTarget.prototype.addCostume = function (...args) {
       if (currentAssetFolder !== null) {
         const costume = args[0];
@@ -1021,12 +1092,13 @@ export default async function ({ addon, global, console, msg }) {
           costume.name = setFolderOfName(costume.name, currentAssetFolder);
         }
       }
+
       const r = originalAddCostume.call(this, ...args);
       fixCostumeOrder(this);
       return r;
     };
 
-    const originalAddSound = RenderedTarget.prototype.addSound;
+    const originalAddSound            = RenderedTarget.prototype.addSound;
     RenderedTarget.prototype.addSound = function (...args) {
       if (currentAssetFolder !== null) {
         const sound = args[0];
@@ -1034,6 +1106,7 @@ export default async function ({ addon, global, console, msg }) {
           sound.name = setFolderOfName(sound.name, currentAssetFolder);
         }
       }
+
       const r = originalAddSound.call(this, ...args);
       fixSoundOrder(this);
       return r;
@@ -1044,18 +1117,18 @@ export default async function ({ addon, global, console, msg }) {
       itemIndex,
       newIndex
     ) => {
-      itemIndex = clamp(itemIndex, 0, guiItems.length);
-      newIndex = clamp(newIndex, 0, guiItems.length);
+      itemIndex           = clamp(itemIndex, 0, guiItems.length);
+      newIndex            = clamp(newIndex, 0, guiItems.length);
       if (itemIndex === newIndex) {
         return false;
       }
 
-      let assets = getAll();
+      let assets           = getAll();
       const originalAssets = getAll();
 
-      const targetItem = guiItems[itemIndex - (zeroIndexed ? 0 : 1)];
-      const itemAtNewIndex = guiItems[newIndex - (zeroIndexed ? 0 : 1)];
-      const targetItemData = getItemData(targetItem);
+      const targetItem         = guiItems[itemIndex - (zeroIndexed ? 0 : 1)];
+      const itemAtNewIndex     = guiItems[newIndex - (zeroIndexed ? 0 : 1)];
+      const targetItemData     = getItemData(targetItem);
       const itemAtNewIndexData = getItemData(itemAtNewIndex);
 
       if (!targetItemData || !itemAtNewIndexData) {
@@ -1063,7 +1136,7 @@ export default async function ({ addon, global, console, msg }) {
         return false;
       }
 
-      const reorderingItems = typeof targetItemData.folder === "string" ? targetItem.items : [targetItem];
+      const reorderingItems  = typeof targetItemData.folder === "string" ? targetItem.items : [targetItem];
       const reorderingAssets = reorderingItems.map((i) => getVMItemFromGUIItem(i, assets)).filter((i) => i);
       if (typeof itemAtNewIndexData.realIndex === "number") {
         const newTarget = getVMItemFromGUIItem(itemAtNewIndex, assets);
@@ -1083,12 +1156,13 @@ export default async function ({ addon, global, console, msg }) {
       } else if (newIndex === guiItems.length - (zeroIndexed ? 1 : 0)) {
         realNewIndex = assets.length;
       } else if (typeof itemAtNewIndexData.realIndex === "number") {
-        newFolder = typeof itemAtNewIndexData.inFolder === "string" ? itemAtNewIndexData.inFolder : null;
+        newFolder    = typeof itemAtNewIndexData.inFolder === "string" ? itemAtNewIndexData.inFolder : null;
         let newAsset = getVMItemFromGUIItem(itemAtNewIndex, assets);
         if (!newAsset) {
           console.warn("should never happen");
           return false;
         }
+
         realNewIndex = assets.indexOf(newAsset);
         if (newIndex > itemIndex) {
           realNewIndex++;
@@ -1105,14 +1179,15 @@ export default async function ({ addon, global, console, msg }) {
         } else if (itemAtNewIndexData.folderOpen) {
           // A B [C D E] F G
           //   *---^
-          item = itemAtNewIndex.items[0];
+          item      = itemAtNewIndex.items[0];
           newFolder = itemAtNewIndexData.folder;
         } else {
           // A B [C] D E F G
           //   *----^
-          item = itemAtNewIndex.items[itemAtNewIndex.items.length - 1];
+          item   = itemAtNewIndex.items[itemAtNewIndex.items.length - 1];
           offset = 1;
         }
+
         let newAsset = getVMItemFromGUIItem(item, assets);
         if (newAsset) {
           realNewIndex = assets.indexOf(newAsset) + offset;
@@ -1125,6 +1200,7 @@ export default async function ({ addon, global, console, msg }) {
             console.warn("should never happen");
             return false;
           }
+
           realNewIndex = originalAssets.indexOf(newAsset) + offset;
         }
       } else {
@@ -1151,6 +1227,7 @@ export default async function ({ addon, global, console, msg }) {
           const name = asset.getName ? asset.getName() : asset.name;
           rename(asset, setFolderOfName(name, newFolder));
         }
+
         if (onFolderChanged) {
           onFolderChanged();
         }
@@ -1179,7 +1256,7 @@ export default async function ({ addon, global, console, msg }) {
             this.emitWorkspaceUpdate();
           },
           guiItems: currentSpriteItems,
-          zeroIndexed: false,
+          zeroIndexed: false
         },
         targetIndex,
         newIndex
@@ -1199,11 +1276,11 @@ export default async function ({ addon, global, console, msg }) {
             this.renameCostume(this.sprite.costumes.indexOf(item), name);
           },
           getVMItemFromGUIItem: (item, costumes) => {
-            const itemData = getItemData(item);
+            const itemData       = getItemData(item);
             return costumes.find((c) => c.name === itemData.realName);
           },
           guiItems: currentAssetItems,
-          zeroIndexed: true,
+          zeroIndexed: true
         },
         costumeIndex,
         newIndex
@@ -1223,11 +1300,11 @@ export default async function ({ addon, global, console, msg }) {
             this.renameSound(this.sprite.sounds.indexOf(item), name);
           },
           getVMItemFromGUIItem: (item, sounds) => {
-            const itemData = getItemData(item);
+            const itemData     = getItemData(item);
             return sounds.find((c) => c.name === itemData.realName);
           },
           guiItems: currentAssetItems,
-          zeroIndexed: true,
+          zeroIndexed: true
         },
         soundIndex,
         newIndex
@@ -1235,10 +1312,12 @@ export default async function ({ addon, global, console, msg }) {
     };
   };
 
-  const patchBackpack = (backpackInstance) => {
-    const Backpack = backpackInstance.constructor;
+  const patchBackpack                  = (backpackInstance) => {
+    const Backpack                     = backpackInstance.constructor;
     Backpack.prototype.sa_loadNextItem = function () {
-      if (!this.sa_queuedItems) return;
+      if (!this.sa_queuedItems) { return;
+      }
+
       const item = this.sa_queuedItems.pop();
       if (item) {
         let payload;
@@ -1249,15 +1328,17 @@ export default async function ({ addon, global, console, msg }) {
           } else {
             type = "COSTUME";
           }
+
           payload = item.dragPayload;
         } else if (item.id) {
-          type = "SPRITE";
+          type    = "SPRITE";
           payload = item.id;
         }
+
         if (type && payload) {
           originalHandleDrop.call(this, {
             dragType: type,
-            payload: payload,
+            payload: payload
           });
         }
       }
@@ -1269,31 +1350,33 @@ export default async function ({ addon, global, console, msg }) {
       }
     };
 
-    const originalHandleDrop = Backpack.prototype.handleDrop;
+    const originalHandleDrop      = Backpack.prototype.handleDrop;
     Backpack.prototype.handleDrop = function (...args) {
       // When a folder is dropped into the backpack, upload all the items in the folder.
-      const dragInfo = args[0];
+      const dragInfo    = args[0];
       const folderItems = dragInfo && dragInfo.payload && dragInfo.payload.sa_folder_items;
       if (Array.isArray(folderItems)) {
         if (confirm(msg("confirm-backpack-folder"))) {
           this.sa_queuedItems = folderItems;
           this.sa_loadNextItem();
         }
+
         return;
       }
+
       return originalHandleDrop.call(this, ...args);
     };
-    backpackInstance.handleDrop = Backpack.prototype.handleDrop.bind(backpackInstance);
+    backpackInstance.handleDrop   = Backpack.prototype.handleDrop.bind(backpackInstance);
   };
 
   await untilInEditor();
 
   // Sprite list
   {
-    const spriteSelectorItemElement = await addon.tab.waitForElement("[class*='sprite-selector_sprite-wrapper']");
-    vm = addon.tab.traps.vm;
-    reactInternalKey = Object.keys(spriteSelectorItemElement).find((i) => i.startsWith(REACT_INTERNAL_PREFIX));
-    const sortableHOCInstance = getSortableHOCFromElement(spriteSelectorItemElement);
+    const spriteSelectorItemElement  = await addon.tab.waitForElement("[class*='sprite-selector_sprite-wrapper']");
+    vm                               = addon.tab.traps.vm;
+    reactInternalKey                 = Object.keys(spriteSelectorItemElement).find((i) => i.startsWith(REACT_INTERNAL_PREFIX));
+    const sortableHOCInstance        = getSortableHOCFromElement(spriteSelectorItemElement);
     const spriteSelectorItemInstance = spriteSelectorItemElement[reactInternalKey].child.child.child.stateNode;
     verifySortableHOC(sortableHOCInstance);
     verifySpriteSelectorItem(spriteSelectorItemInstance);
@@ -1307,14 +1390,14 @@ export default async function ({ addon, global, console, msg }) {
   // Backpack
   (async () => {
     const backpackContainer = await addon.tab.waitForElement("[class*='backpack_backpack-list_']");
-    const backpackInstance = getBackpackFromElement(backpackContainer);
+    const backpackInstance  = getBackpackFromElement(backpackContainer);
     verifyBackpack(backpackInstance);
     patchBackpack(backpackInstance);
   })();
 
   // Costume and sound list
   {
-    const selectorListItem = await addon.tab.waitForElement("[class*='selector_list-item']");
+    const selectorListItem    = await addon.tab.waitForElement("[class*='selector_list-item']");
     const sortableHOCInstance = getSortableHOCFromElement(selectorListItem);
     verifySortableHOC(sortableHOCInstance);
     patchSortableHOC(sortableHOCInstance.constructor, TYPE_ASSETS);

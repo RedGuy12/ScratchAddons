@@ -9,8 +9,10 @@ export default async function ({ addon, global, console }) {
         if (e.dataTransfer.files.length > 0) {
           onDrop(e.dataTransfer.files);
         }
+
         e.preventDefault();
       }
+
       dropArea.classList.remove(DRAG_OVER_CLASS);
     });
     dropArea.addEventListener("dragover", (e) => {
@@ -18,6 +20,7 @@ export default async function ({ addon, global, console }) {
       if (!e.dataTransfer.types.includes("Files") || !allowDrop()) {
         return;
       }
+
       dropArea.classList.add(DRAG_OVER_CLASS);
       e.preventDefault();
     });
@@ -28,9 +31,9 @@ export default async function ({ addon, global, console }) {
 
   async function foreverDroppable(dropAreaSelector, fileInputSelector) {
     while (true) {
-      const dropArea = await addon.tab.waitForElement(dropAreaSelector, { markAsSeen: true });
-      const fileInput = await addon.tab.waitForElement(fileInputSelector, {
-        markAsSeen: true,
+      const dropArea    = await addon.tab.waitForElement(dropAreaSelector, { markAsSeen: true });
+      const fileInput   = await addon.tab.waitForElement(fileInputSelector, {
+        markAsSeen: true
       });
       droppable(dropArea, (files) => {
         fileInput.files = files;
@@ -60,11 +63,11 @@ export default async function ({ addon, global, console }) {
   async function listMonitorsDroppable() {
     while (true) {
       const listMonitor = await addon.tab.waitForElement('div[class*="monitor_list-monitor"]', { markAsSeen: true });
-      const canDrop = () => {
+      const canDrop     = () => {
         // Don't show drop indicator if in fullscreen/player mode
         return !listMonitor.closest('div[class*="stage_full-screen"], .guiPlayer');
       };
-      const handleDrop = async (files) => {
+      const handleDrop          = async (files) => {
         const contextMenuBefore = document.querySelector("body > .react-contextmenu.react-contextmenu--visible");
         // Simulate a right click on the list monitor
         listMonitor.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true }));
@@ -79,7 +82,7 @@ export default async function ({ addon, global, console }) {
         contextMenu.style.display = "none";
         // Override DOM methods to import the text file directly
         // See: https://github.com/LLK/scratch-gui/blob/develop/src/lib/import-csv.js#L21-L22
-        const appendChild = document.body.appendChild;
+        const appendChild         = document.body.appendChild;
         document.body.appendChild = (fileInput) => {
           // Restore appendChild to <body>
           document.body.appendChild = appendChild;
@@ -92,8 +95,8 @@ export default async function ({ addon, global, console }) {
             fileInput.dispatchEvent(new Event("change"));
             window.requestAnimationFrame(() => {
               window.requestAnimationFrame(() => {
-                contextMenu.style.display = null;
-                contextMenu.style.opacity = 0;
+                contextMenu.style.display       = null;
+                contextMenu.style.opacity       = 0;
                 contextMenu.style.pointerEvents = "none";
               });
             });
@@ -103,6 +106,7 @@ export default async function ({ addon, global, console }) {
             console.error('File input was not immediately given to appendChild upon clicking "Import"!');
             return appendChild(fileInput);
           }
+
         };
         // Simulate clicking on the "Import" option
         contextMenu.children[0].click();
@@ -122,7 +126,7 @@ export default async function ({ addon, global, console }) {
         { markAsSeen: true }
       );
       droppable(answerField, async (files) => {
-        const text = (await Promise.all(Array.from(files, (file) => file.text())))
+        const text      = (await Promise.all(Array.from(files, (file) => file.text())))
           .join("")
           // Match pasting behaviour: remove all newline characters at the end
           .replace(/[\r\n]+$/, "")

@@ -1,12 +1,12 @@
 function createStyle(url) {
   const style = document.createElement("link");
-  style.rel = "stylesheet";
-  style.href = url;
+  style.rel   = "stylesheet";
+  style.href  = url;
   return style;
 }
 
 export default async function ({ addon, console }) {
-  const preview = await addon.tab.waitForElement(".markItUpPreviewFrame");
+  const preview  = await addon.tab.waitForElement(".markItUpPreviewFrame");
   const observer = new MutationObserver(function (records, observer) {
     for (let record of records) {
       if (record.type === "childList") {

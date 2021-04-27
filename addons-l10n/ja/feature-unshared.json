@@ -1,1 +1,4 @@
-{"feature-unshared/@name":"非共有プロジェクトを注目のプロジェクトに設定","feature-unshared/@description":"プロフィールページの「注目のプロジェクト」を非共有プロジェクトにする。"}
+{
+	"feature-unshared/@name": "非共有プロジェクトを注目のプロジェクトに設定",
+	"feature-unshared/@description": "プロフィールページの「注目のプロジェクト」を非共有プロジェクトにする。"
+}

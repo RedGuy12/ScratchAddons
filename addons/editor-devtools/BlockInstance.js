@@ -4,6 +4,6 @@
 export default class BlockInstance {
   constructor(target, block) {
     this.targetId = target.id;
-    this.id = block.id;
+    this.id       = block.id;
   }
 }

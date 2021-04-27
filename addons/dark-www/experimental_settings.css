@@ -1,6 +1,7 @@
 .v-tabs {
-  background: transparent;
+    background: transparent;
 }
+
 .v-tabs li.active a {
-  color: #fff;
+    color: #FFF;
 }

@@ -1,10 +1,10 @@
 function createItem(number, label) {
-  const item = document.createElement("div");
+  const item      = document.createElement("div");
   const numberDiv = document.createElement("div");
   item.appendChild(numberDiv);
   numberDiv.className = "sa-stats-number";
   numberDiv.innerText = number;
-  const labelDiv = document.createElement("div");
+  const labelDiv      = document.createElement("div");
   item.appendChild(labelDiv);
   labelDiv.innerText = label;
   return item;
@@ -12,43 +12,47 @@ function createItem(number, label) {
 
 export default async function ({ addon, msg, console }) {
   const username = location.pathname.split("/")[2];
-  if (!username) return;
-  const content = document.querySelector("#content");
+  if (!username) { return;
+  }
+
+  const content    = document.querySelector("#content");
   const commentBox = document.querySelector(
     "#content > .box:not(#profile-data):not(.slider-carousel-container):not(#page-404)"
   );
-  if (!commentBox) return;
+  if (!commentBox) { return;
+  }
+
   const statsBox = document.createElement("div");
   content.insertBefore(statsBox, commentBox);
   statsBox.className = "box sa-stats slider-carousel-container";
-  const statsHeader = document.createElement("div");
+  const statsHeader  = document.createElement("div");
   statsBox.appendChild(statsHeader);
   statsHeader.className = "box-head";
-  const statsTitle = document.createElement("h4");
+  const statsTitle      = document.createElement("h4");
   statsHeader.appendChild(statsTitle);
   statsTitle.innerText = msg("title");
-  const statsMoreLink = document.createElement("a");
+  const statsMoreLink  = document.createElement("a");
   statsHeader.appendChild(statsMoreLink);
   statsMoreLink.innerText = msg("view-more");
-  statsMoreLink.href = "https://scratchstats.com/" + username;
-  const statsMoreIcon = document.createElement("img");
+  statsMoreLink.href      = "https://scratchstats.com/" + username;
+  const statsMoreIcon     = document.createElement("img");
   statsMoreLink.insertBefore(statsMoreIcon, statsMoreLink.firstChild);
   statsMoreIcon.src = addon.self.dir + "/scratchstats.png";
-  const stats = document.createElement("div");
+  const stats       = document.createElement("div");
   statsBox.appendChild(stats);
   stats.className = "box-content";
   stats.innerText = msg("loading");
 
-  fetch(`https://scratchdb.lefty.one/v3/user/info/${username}`)
+  fetch(`https: //scratchdb.lefty.one/v3/user/info/${username}`)
     .then(async function (response) {
       stats.removeChild(stats.firstChild); // remove loading message
       const followRow = document.createElement("div");
       stats.appendChild(followRow);
       followRow.className = "sa-stats-row";
-      const ranksRow = document.createElement("div");
+      const ranksRow      = document.createElement("div");
       stats.appendChild(ranksRow);
       ranksRow.className = "sa-stats-row";
-      const data = await response.json();
+      const data         = await response.json();
       followRow.appendChild(createItem(data.statistics.followers.toLocaleString(), msg("followers")));
       followRow.appendChild(
         createItem(`#${data.statistics.ranks.followers.toLocaleString()}`, msg("most-followed-global"))
@@ -74,7 +78,7 @@ export default async function ({ addon, msg, console }) {
           msg("most-views")
         )
       );
-      fetch(`https://scratchdb.lefty.one/v3/user/graph/${username}/followers?range=364&segment=6`)
+      fetch(`https: //scratchdb.lefty.one/v3/user/graph/${username}/followers?range=364&segment=6`)
         .then(async function (response) {
           const historyData = await response.json();
           historyData.pop();
@@ -82,8 +86,8 @@ export default async function ({ addon, msg, console }) {
           const canvasContainer = document.createElement("div");
           stats.appendChild(canvasContainer);
           canvasContainer.style.position = "relative";
-          canvasContainer.style.height = "400px";
-          const canvas = document.createElement("canvas");
+          canvasContainer.style.height   = "400px";
+          const canvas                   = document.createElement("canvas");
           canvasContainer.appendChild(canvas);
           new Chart(canvas, {
             type: "scatter",
@@ -97,32 +101,32 @@ export default async function ({ addon, msg, console }) {
                   fill: false,
                   showLine: true,
                   borderColor: "#4d97ff",
-                  lineTension: 0,
+                  lineTension: 0
                 },
-              ],
+              ]
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
               title: {
                 display: true,
-                text: msg("followers-title"),
+                text: msg("followers-title")
               },
               scales: {
                 xAxes: [
                   {
                     ticks: {
-                      callback: (x) => new Date(x).toDateString(),
-                    },
+                      callback: (x) => new Date(x).toDateString()
+                    }
                   },
-                ],
+                ]
               },
               tooltips: {
                 callbacks: {
-                  label: (item) => `${new Date(parseInt(item.label)).toDateString()}: ${item.value}`,
-                },
-              },
-            },
+                  label: (item) => `${new Date(parseInt(item.label)).toDateString()}: ${item.value}`
+                }
+              }
+            }
           });
         })
         .catch(() => stats.appendChild(document.createTextNode(msg("err")))); // appended so basic stats are still there, it's just the chart that's gone

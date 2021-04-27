@@ -10,6 +10,7 @@ export default async function ({ addon, global, console, msg }) {
         document.querySelector("#better-featured-project-name h2").innerText = featuredHeading;
         document.querySelector("#better-featured-project-name h3").innerText = featuredTitle;
       }
+
       if (document.querySelector('#featured-project [data-control="edit"]') !== null) {
         boxHead.appendChild(document.createElement("div")).setAttribute("class", "buttons");
         document
@@ -22,7 +23,7 @@ export default async function ({ addon, global, console, msg }) {
         document.querySelector("#better-change-featured-project").addEventListener("click", function () {
           document.querySelector('#featured-project [data-control="edit"]').click();
           let checkFeaturedProjectModalTimes = 0;
-          var checkFeaturedProjectModal = setInterval(function () {
+          var checkFeaturedProjectModal      = setInterval(function () {
             checkFeaturedProjectModalTimes++;
             if (document.querySelector("#featured-project-modal") !== null) {
               clearInterval(checkFeaturedProjectModal);
@@ -30,12 +31,13 @@ export default async function ({ addon, global, console, msg }) {
                 .querySelector("#featured-project-modal .btn.blue.btn-primary")
                 .addEventListener("click", function () {
                   let checkFeaturedProjectTimes = 0;
-                  let checkFeaturedProjectLink = document.querySelector("#featured-project").href;
-                  var checkFeaturedProject = setInterval(function () {
+                  let checkFeaturedProjectLink  = document.querySelector("#featured-project").href;
+                  var checkFeaturedProject      = setInterval(function () {
                     checkFeaturedProjectTimes++;
                     if (checkFeaturedProjectTimes > 1000) {
                       clearInterval(checkFeaturedProject);
                     }
+
                     if (checkFeaturedProjectLink !== document.querySelector("#featured-project").href) {
                       clearInterval(checkFeaturedProject);
                       document.documentElement.style.setProperty("--featured-thumb", `url("")`);
@@ -49,11 +51,13 @@ export default async function ({ addon, global, console, msg }) {
           }, 10);
         });
       }
+
       boxHead
         .insertAdjacentElement("afterbegin", document.createElement("a"))
         .setAttribute("id", "better-featured-project-overlay");
       document.querySelector("#better-featured-project-overlay").href = featuredLink;
     }
+
     document
       .querySelector(".profile-details .location")
       .insertAdjacentText("beforebegin", `(${document.querySelector(".profile-details span:nth-child(2)").title})`);

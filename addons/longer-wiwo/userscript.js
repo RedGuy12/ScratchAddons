@@ -2,7 +2,7 @@
 // $ is global jQuery instance on scratchr2 pages
 export default async function ({ msg }) {
   const status = $('textarea[name="status"]');
-  const left = $("#status-chars-left").parent();
+  const left   = $("#status-chars-left").parent();
 
   // remove scratch's event listeners
   status.off("input");
@@ -11,7 +11,7 @@ export default async function ({ msg }) {
 
   status.on("input focusin", () => {
     left[0].innerText = msg("left", {
-      number: 255 - status[0].value.length,
+      number: 255 - status[0].value.length
     }); // set "blank chars left"
   });
   status.on("focusin", () => {
@@ -21,5 +21,6 @@ export default async function ({ msg }) {
     left.hide();
   });
 
-  if (status[0]) status[0].maxLength = 255; // disallow more than 255 chars
+  if (status[0]) { status[0].maxLength = 255; // disallow more than 255 chars
+  }
 }

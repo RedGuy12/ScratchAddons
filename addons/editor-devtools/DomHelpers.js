@@ -1,7 +1,7 @@
 export default class DomHelpers {
   constructor(addon) {
     this.addon = addon;
-    this.vm = addon.tab.traps.vm;
+    this.vm    = addon.tab.traps.vm;
     /**
      * @type {eventDetails[]}
      */
@@ -10,9 +10,10 @@ export default class DomHelpers {
 
   /**
    * Simulate a drag and drop programmatically through javascript
-   * @param selectorDrag
-   * @param selectorDrop
-   * @param mouseXY
+   *
+   * @param   selectorDrag
+   * @param   selectorDrop
+   * @param   mouseXY
    * @returns {boolean}
    */
   triggerDragAndDrop(selectorDrag, selectorDrop, mouseXY) {
@@ -31,7 +32,7 @@ export default class DomHelpers {
     }
 
     // calculate positions
-    let pos = elemDrag.getBoundingClientRect();
+    let pos      = elemDrag.getBoundingClientRect();
     let center1X = Math.floor((pos.left + pos.right) / 2);
     let center1Y = Math.floor((pos.top + pos.bottom) / 2);
 
@@ -52,10 +53,11 @@ export default class DomHelpers {
         fireMouseEvent("drag", elemDrag, center2X, center2Y);
         fireMouseEvent("mousemove", elemDrag, center2X, center2Y);
       }
+
       return false;
     }
 
-    pos = elemDrop.getBoundingClientRect();
+    pos          = elemDrop.getBoundingClientRect();
     let center2X = Math.floor((pos.left + pos.right) / 2);
     let center2Y = Math.floor((pos.top + pos.bottom) / 2);
 
@@ -88,6 +90,7 @@ export default class DomHelpers {
     for (const event of this.events) {
       event.dom.removeEventListener(event.event, event.func, event.capture);
     }
+
     this.events = [];
   }
 }
@@ -97,9 +100,9 @@ export default class DomHelpers {
  */
 class eventDetails {
   constructor(dom, event, func, capture) {
-    this.dom = dom;
-    this.event = event;
-    this.func = func;
+    this.dom     = dom;
+    this.event   = event;
+    this.func    = func;
     this.capture = capture;
   }
 }

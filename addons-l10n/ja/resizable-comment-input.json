@@ -1,1 +1,4 @@
-{"resizable-comment-input/@name":"コメント欄のサイズ変更","resizable-comment-input/@description":"プロジェクトページのコメント欄の大きさを変更できるようにする。"}
+{
+	"resizable-comment-input/@name": "コメント欄のサイズ変更",
+	"resizable-comment-input/@description": "プロジェクトページのコメント欄の大きさを変更できるようにする。"
+}

@@ -1,9 +1,9 @@
-let libraryLicenses = {};
+let libraryLicenses   = {};
 let licenseNameToText = {};
 fetch("/libraries/license-info.json")
   .then((res) => res.json())
   .then((o) => {
-    libraryLicenses = o;
+    libraryLicenses   = o;
     return o;
   })
   .then((o) =>

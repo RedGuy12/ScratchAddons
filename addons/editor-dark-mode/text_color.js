@@ -5,9 +5,15 @@ function setCSSVar(name, value) {
 }
 
 function lightDarkVariant(varName, hex, threshold, cr, cg, cb, lr, lg, lb) {
-  if (lr === undefined) lr = cr;
-  if (lg === undefined) lg = cg;
-  if (lb === undefined) lb = cb;
+  if (lr === undefined) { lr = cr;
+  }
+
+  if (lg === undefined) { lg = cg;
+  }
+
+  if (lb === undefined) { lb = cb;
+  }
+
   setCSSVar(
     varName,
     textColor(hex, multiply(hex, { r: cr, g: cg, b: cb }), brighten(hex, { r: lr, g: lg, b: lb }), threshold)
@@ -29,6 +35,7 @@ function testAll(settings) {
   ]) {
     setCSSVar(`${setting}-text`, textColor(settings.get(setting)));
   }
+
   setCSSVar("page-tabHoverFilter", textColor(settings.get("page"), "grayscale(100%)", "brightness(0) invert(1)"));
   setCSSVar("primary-filter", textColor(settings.get("primary"), "brightness(0.4)", "none"));
   setCSSVar("primary-filter2", textColor(settings.get("primary"), "none", "brightness(0) invert(1)"));

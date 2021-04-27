@@ -1,5 +1,5 @@
 export default async function ({ addon, global, console }) {
-  const semicolon = document.createElement("p");
+  const semicolon       = document.createElement("p");
   semicolon.textContent = ";";
   semicolon.classList.add("semicolon");
   document.body.appendChild(semicolon);
@@ -9,6 +9,7 @@ export default async function ({ addon, global, console }) {
     } else {
       semicolon.style.display = "block";
     }
+
   };
   ready();
   addon.tab.addEventListener("urlChange", ready);

@@ -90,29 +90,32 @@ export default async function ({ addon, global, console }) {
   };
 
   Blockly.BlockSvg.prototype.initCatStuff = function () {
-    if (this.hasInitCatStuff) return;
+    if (this.hasInitCatStuff) { return;
+    }
+
     this.hasInitCatStuff = true;
 
     // Ear part of the SVG path for hat blocks
-    var LEFT_EAR_UP = "c-1,-12.5 5.3,-23.3 8.4,-24.8c3.7,-1.8 16.5,13.1 18.4,15.4";
-    var LEFT_EAR_DOWN = "c-5.8,-4.8 -8,-18 -4.9,-19.5c3.7,-1.8 24.5,11.1 31.7,10.1";
-    var RIGHT_EAR_UP = "c1.9,-2.3 14.7,-17.2 18.4,-15.4c3.1,1.5 9.4,12.3 8.4,24.8";
+    var LEFT_EAR_UP    = "c-1,-12.5 5.3,-23.3 8.4,-24.8c3.7,-1.8 16.5,13.1 18.4,15.4";
+    var LEFT_EAR_DOWN  = "c-5.8,-4.8 -8,-18 -4.9,-19.5c3.7,-1.8 24.5,11.1 31.7,10.1";
+    var RIGHT_EAR_UP   = "c1.9,-2.3 14.7,-17.2 18.4,-15.4c3.1,1.5 9.4,12.3 8.4,24.8";
     var RIGHT_EAR_DOWN = "c7.2,1 28,-11.9 31.7,-10.1c3.1,1.5 0.9,14.7 -4.9,19.5";
     // Ears look slightly different for define hat blocks
-    var DEFINE_HAT_LEFT_EAR_UP = "c0,-7.1 3.7,-13.3 9.3,-16.9c1.7,-7.5 5.4,-13.2 7.6,-14.2c2.6,-1.3 10,6 14.6,11.1";
-    var DEFINE_HAT_RIGHT_EAR_UP = "h33c4.6,-5.1 11.9,-12.4 14.6,-11.1c1.9,0.9 4.9,5.2 6.8,11.1c2.6,0,5.2,0,7.8,0";
-    var DEFINE_HAT_LEFT_EAR_DOWN =
+    var DEFINE_HAT_LEFT_EAR_UP    = "c0,-7.1 3.7,-13.3 9.3,-16.9c1.7,-7.5 5.4,-13.2 7.6,-14.2c2.6,-1.3 10,6 14.6,11.1";
+    var DEFINE_HAT_RIGHT_EAR_UP   = "h33c4.6,-5.1 11.9,-12.4 14.6,-11.1c1.9,0.9 4.9,5.2 6.8,11.1c2.6,0,5.2,0,7.8,0";
+    var DEFINE_HAT_LEFT_EAR_DOWN  =
       "c0,-4.6 1.6,-8.9 4.3,-12.3c-2.4,-5.6 -2.9,-12.4 -0.7,-13.4c2.1,-1 9.6,2.6 17,5.8" + "c2.6,0 6.2,0 10.9,0";
     var DEFINE_HAT_RIGHT_EAR_DOWN = "c0,0 25.6,0 44,0c7.4,-3.2 14.8,-6.8 16.9,-5.8c1.2,0.6 1.6,2.9 1.3,5.8";
 
-    var that = this;
-    this.catPath_.ear = Blockly.utils.createSvgElement("path", {}, this.catPath_);
+    var that           = this;
+    this.catPath_.ear  = Blockly.utils.createSvgElement("path", {}, this.catPath_);
     this.catPath_.ear2 = Blockly.utils.createSvgElement("path", {}, this.catPath_);
     if (this.RTL) {
       // Mirror the ears.
       this.catPath_.ear.setAttribute("transform", "scale(-1 1)");
       this.catPath_.ear2.setAttribute("transform", "scale(-1 1)");
     }
+
     this.catPath_.addEventListener("mouseenter", function (event) {
       clearTimeout(that.blinkFn);
       // blink
@@ -141,18 +144,18 @@ export default async function ({ addon, global, console }) {
       that.catPath_.ear.setAttribute("fill-opacity", "0");
       that.catPath_.ear2.setAttribute("fill-opacity", "");
       var bodyPath = that.catPath_.svgBody.getAttribute("d");
-      bodyPath = bodyPath.replace(RIGHT_EAR_UP, RIGHT_EAR_DOWN);
-      bodyPath = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_UP, DEFINE_HAT_RIGHT_EAR_DOWN);
-      bodyPath = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
-      bodyPath = bodyPath.replace(DEFINE_HAT_LEFT_EAR_DOWN, DEFINE_HAT_LEFT_EAR_UP);
+      bodyPath     = bodyPath.replace(RIGHT_EAR_UP, RIGHT_EAR_DOWN);
+      bodyPath     = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_UP, DEFINE_HAT_RIGHT_EAR_DOWN);
+      bodyPath     = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
+      bodyPath     = bodyPath.replace(DEFINE_HAT_LEFT_EAR_DOWN, DEFINE_HAT_LEFT_EAR_UP);
       that.catPath_.svgBody.setAttribute("d", bodyPath);
 
       // reset after a short delay
       that.earFn = setTimeout(function () {
         that.catPath_.ear.setAttribute("fill-opacity", "");
         var bodyPath = that.catPath_.svgBody.getAttribute("d");
-        bodyPath = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
-        bodyPath = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_DOWN, DEFINE_HAT_RIGHT_EAR_UP);
+        bodyPath     = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
+        bodyPath     = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_DOWN, DEFINE_HAT_RIGHT_EAR_UP);
         that.catPath_.svgBody.setAttribute("d", bodyPath);
       }, 50);
     });
@@ -163,18 +166,18 @@ export default async function ({ addon, global, console }) {
       that.catPath_.ear2.setAttribute("fill-opacity", "0");
       that.catPath_.ear.setAttribute("fill-opacity", "");
       var bodyPath = that.catPath_.svgBody.getAttribute("d");
-      bodyPath = bodyPath.replace(LEFT_EAR_UP, LEFT_EAR_DOWN);
-      bodyPath = bodyPath.replace(DEFINE_HAT_LEFT_EAR_UP, DEFINE_HAT_LEFT_EAR_DOWN);
-      bodyPath = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
-      bodyPath = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_DOWN, DEFINE_HAT_RIGHT_EAR_UP);
+      bodyPath     = bodyPath.replace(LEFT_EAR_UP, LEFT_EAR_DOWN);
+      bodyPath     = bodyPath.replace(DEFINE_HAT_LEFT_EAR_UP, DEFINE_HAT_LEFT_EAR_DOWN);
+      bodyPath     = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
+      bodyPath     = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_DOWN, DEFINE_HAT_RIGHT_EAR_UP);
       that.catPath_.svgBody.setAttribute("d", bodyPath);
 
       // reset after a short delay
       that.ear2Fn = setTimeout(function () {
         that.catPath_.ear2.setAttribute("fill-opacity", "");
         var bodyPath = that.catPath_.svgBody.getAttribute("d");
-        bodyPath = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
-        bodyPath = bodyPath.replace(DEFINE_HAT_LEFT_EAR_DOWN, DEFINE_HAT_LEFT_EAR_UP);
+        bodyPath     = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
+        bodyPath     = bodyPath.replace(DEFINE_HAT_LEFT_EAR_DOWN, DEFINE_HAT_LEFT_EAR_UP);
         that.catPath_.svgBody.setAttribute("d", bodyPath);
       }, 50);
     });
@@ -182,30 +185,34 @@ export default async function ({ addon, global, console }) {
       // Set to the correct initial position
       this.svgFace_.style.transform = "translate(-87px, 0px)";
     }
+
     if (this.shouldWatchMouse()) {
       this.windowListener = function (event) {
         var time = Date.now();
-        if (time < that.lastCallTime + that.CALL_FREQUENCY_MS) return;
+        if (time < that.lastCallTime + that.CALL_FREQUENCY_MS) { return;
+        }
+
         that.lastCallTime = time;
-        if (!that.shouldWatchMouse()) return;
+        if (!that.shouldWatchMouse()) { return;
+        }
 
         // mouse watching
         if (that.workspace) {
           // not disposed
-          var xy = that.getCatFacePosition();
+          var xy            = that.getCatFacePosition();
           var mouseLocation = {
             x: event.x / that.workspace.scale,
-            y: event.y / that.workspace.scale,
+            y: event.y / that.workspace.scale
           };
 
-          var dx = mouseLocation.x - xy.x;
-          var dy = mouseLocation.y - xy.y;
+          var dx    = mouseLocation.x - xy.x;
+          var dy    = mouseLocation.y - xy.y;
           var theta = Math.atan2(dx, dy);
 
           // Map the vector from the cat face to the mouse location to a much shorter
           // vector in the same direction, which will be the translation vector for
           // the cat face
-          var delta = Math.sqrt(dx * dx + dy * dy);
+          var delta       = Math.sqrt(dx * dx + dy * dy);
           var scaleFactor = delta / (delta + 1);
 
           // Equation for radius of ellipse at theta for axes with length a and b
@@ -217,7 +224,9 @@ export default async function ({ addon, global, console }) {
           dx = r * scaleFactor * Math.sin(theta);
           dy = r * scaleFactor * Math.cos(theta);
 
-          if (that.RTL) dx -= 87; // Translate face over
+          if (that.RTL) { dx -= 87; // Translate face over
+          }
+
           that.svgFace_.style.transform = "translate(" + dx + "px, " + dy + "px)";
         }
       };
@@ -225,13 +234,14 @@ export default async function ({ addon, global, console }) {
     }
   };
 
-  let workspacePositionRect = null;
+  let workspacePositionRect                     = null;
   Blockly.BlockSvg.prototype.getCatFacePosition = function () {
     // getBoundingClientRect is not performant
     //var offset = that.workspace.getParentSvg().getBoundingClientRect();
     if (!workspacePositionRect) {
       workspacePositionRect = this.workspace.getParentSvg().getBoundingClientRect();
     }
+
     var offset = { x: workspacePositionRect.x, y: workspacePositionRect.y };
 
     if (!this.isInFlyout && this.workspace.getFlyout()) {
@@ -245,6 +255,7 @@ export default async function ({ addon, global, console }) {
     if (this.RTL) {
       xy.x = this.workspace.getWidth() - xy.x - this.width;
     }
+
     // convert to workspace units
     xy.x += offset.x / this.workspace.scale;
     xy.y += offset.y / this.workspace.scale;
@@ -257,35 +268,41 @@ export default async function ({ addon, global, console }) {
       // We've been calculating from the right edge. Convert x to from left edge.
       xy.x = screen.width - xy.x;
     }
+
     return xy;
   };
 
   Blockly.BlockSvg.prototype.shouldWatchMouse = function () {
-    if (!shouldWatchMouseCursor) return false;
+    if (!shouldWatchMouseCursor) { return false;
+    }
+
     // if (window.vmLoadHigh || !window.CAT_CHASE_MOUSE) return false;
-    var xy = this.getCatFacePosition();
-    const MARGIN = 50;
+    var xy             = this.getCatFacePosition();
+    const MARGIN       = 50;
     var blockXOnScreen = xy.x > -MARGIN && xy.x - MARGIN < screen.width / this.workspace.scale;
     var blockYOnScreen = xy.y > -MARGIN && xy.y - MARGIN < screen.height / this.workspace.scale;
     return this.startHat_ && !this.isGlowingStack_ && blockXOnScreen && blockYOnScreen;
   };
 
-  const originalRenderDraw = Blockly.BlockSvg.prototype.renderDraw_;
+  const originalRenderDraw               = Blockly.BlockSvg.prototype.renderDraw_;
   Blockly.BlockSvg.prototype.renderDraw_ = function (...args) {
     if (!this.svgFace_) {
       this.sa_catBlockConstructor();
     }
+
     const r = originalRenderDraw.call(this, ...args);
     if (!this.outputConnection && !this.previousConnection) {
       this.initCatStuff();
     }
+
     if (this.startHat_ && !this.svgFace_.firstChild) {
       this.renderCatFace_();
     }
+
     return r;
   };
 
-  const originalDispose = Blockly.BlockSvg.prototype.dispose;
+  const originalDispose              = Blockly.BlockSvg.prototype.dispose;
   Blockly.BlockSvg.prototype.dispose = function (...args) {
     clearTimeout(this.blinkFn);
     clearTimeout(this.earFn);
@@ -293,10 +310,11 @@ export default async function ({ addon, global, console }) {
     if (this.windowListener) {
       document.removeEventListener("mousemove", this.windowListener);
     }
+
     return originalDispose.call(this, ...args);
   };
 
-  const originalSetGlowStack = Blockly.BlockSvg.prototype.setGlowStack;
+  const originalSetGlowStack              = Blockly.BlockSvg.prototype.setGlowStack;
   Blockly.BlockSvg.prototype.setGlowStack = function (isGlowingStack) {
     if (this.windowListener) {
       if (isGlowingStack) {
@@ -314,16 +332,17 @@ export default async function ({ addon, global, console }) {
         document.addEventListener("mousemove", this.windowListener);
       }
     }
+
     return originalSetGlowStack.call(this, isGlowingStack);
   };
 
   Blockly.BlockSvg.prototype.sa_catBlockConstructor = function () {
     this.catPath_ = Blockly.utils.createSvgElement("g", {}, this.svgGroup_);
 
-    this.svgFace_ = Blockly.utils.createSvgElement("g", {}, this.catPath_);
-    this.catPath_.svgFace = this.svgFace_;
-    this.catPath_.svgBody = this.svgPath_;
-    this.lastCallTime = 0;
+    this.svgFace_          = Blockly.utils.createSvgElement("g", {}, this.catPath_);
+    this.catPath_.svgFace  = this.svgFace_;
+    this.catPath_.svgBody  = this.svgPath_;
+    this.lastCallTime      = 0;
     this.CALL_FREQUENCY_MS = 60;
   };
 
@@ -333,6 +352,7 @@ export default async function ({ addon, global, console }) {
     if (vm.editingTarget) {
       vm.emitWorkspaceUpdate();
     }
+
     const flyout = workspace.getFlyout();
     if (flyout) {
       const flyoutWorkspace = flyout.getWorkspace();

@@ -8,15 +8,15 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
   let vm;
 
   const SMALL_GAP = 8;
-  const BIG_GAP = 24;
+  const BIG_GAP   = 24;
 
   const separateVariablesByType = (toolboxXML) => {
-    const listButtonIndex = toolboxXML.findIndex(
+    const listButtonIndex       = toolboxXML.findIndex(
       (i) => i.getAttribute("callbackkey") === "CREATE_LIST" || i.getAttribute("type") === "data_addtolist"
     );
     return {
       variables: toolboxXML.slice(0, listButtonIndex),
-      lists: toolboxXML.slice(listButtonIndex, toolboxXML.length),
+      lists: toolboxXML.slice(listButtonIndex, toolboxXML.length)
     };
   };
 
@@ -24,7 +24,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     const { variables, lists } = separateVariablesByType(toolboxXML);
 
     const makeLabel = (l10n) => {
-      const label = document.createElement("label");
+      const label   = document.createElement("label");
       label.setAttribute("text", msg(l10n));
       return label;
     };
@@ -34,19 +34,21 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
         for (var i = 0; i < variables.length - 1; i++) {
           variables[i].setAttribute("gap", SMALL_GAP);
         }
+
         variables[i].setAttribute("gap", BIG_GAP);
       }
+
     };
 
     const separateVariablesByScope = (xml) => {
-      const before = [];
-      const global = [];
-      const local = [];
-      const after = [];
+      const before                 = [];
+      const global                 = [];
+      const local                  = [];
+      const after                  = [];
 
       for (const blockXML of xml) {
         if (blockXML.hasAttribute("id")) {
-          const id = blockXML.getAttribute("id");
+          const id       = blockXML.getAttribute("id");
           const variable = workspace.getVariableById(id);
           if (!variable || !variable.isLocal) {
             global.push(blockXML);
@@ -80,12 +82,12 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     return separateVariablesByScope(variables).concat(separateVariablesByScope(lists));
   };
 
-  const moveReportersDown = (toolboxXML) => {
+  const moveReportersDown      = (toolboxXML) => {
     const { variables, lists } = separateVariablesByType(toolboxXML);
 
     const moveReportersToEnd = (xml) => {
-      const reporters = [];
-      const everythingElse = [];
+      const reporters        = [];
+      const everythingElse   = [];
 
       for (const blockXML of xml) {
         if (blockXML.hasAttribute("id") || blockXML.tagName === "BUTTON") {
@@ -111,25 +113,30 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     if (injected) {
       return;
     }
+
     injected = true;
 
     const workspace = Blockly.getMainWorkspace();
-    if (!workspace) throw new Error("expected workspace");
+    if (!workspace) { throw new Error("expected workspace");
+    }
 
     const flyout = workspace.getFlyout();
-    if (!flyout) throw new Error("expected flyout");
+    if (!flyout) { throw new Error("expected flyout");
+    }
 
     vm = addon.tab.traps.vm;
-    if (!vm) throw new Error("expected vm");
+    if (!vm) { throw new Error("expected vm");
+    }
 
     const DataCategory = workspace.toolboxCategoryCallbacks_.VARIABLE;
-    if (!DataCategory) throw new Error("expected data category");
+    if (!DataCategory) { throw new Error("expected data category");
+    }
 
     let variableCategory;
     let listCategory;
 
     const variableCategoryCallback = (workspace) => {
-      let result = DataCategory(workspace);
+      let result                   = DataCategory(workspace);
 
       if (addon.settings.get("moveReportersDown")) {
         result = moveReportersDown(result);
@@ -144,8 +151,8 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
       }
 
       const { variables, lists } = separateVariablesByType(result);
-      variableCategory = variables;
-      listCategory = lists;
+      variableCategory           = variables;
+      listCategory               = lists;
       return variableCategory;
     };
 
@@ -156,7 +163,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
 
     // Each time a new workspace is made, these callbacks are reset, so re-register whenever a flyout is shown.
     // https://github.com/LLK/scratch-blocks/blob/61f02e4cac0f963abd93013842fe536ef24a0e98/core/flyout_base.js#L469
-    const originalShow = flyout.constructor.prototype.show;
+    const originalShow                = flyout.constructor.prototype.show;
     flyout.constructor.prototype.show = function (xml) {
       this.workspace_.registerToolboxCategoryCallback("VARIABLE", variableCategoryCallback);
       this.workspace_.registerToolboxCategoryCallback("LIST", listCategoryCallback);
@@ -168,29 +175,30 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     // https://github.com/LLK/scratch-gui/blob/2ceab00370ad7bd8ecdf5c490e70fd02152b3e2a/src/lib/make-toolbox-xml.js#L763
     // https://github.com/LLK/scratch-vm/blob/a0c11d6d8664a4f2d55632e70630d09ec6e9ae28/src/engine/runtime.js#L1381
     const originalGetBlocksXML = vm.runtime.getBlocksXML;
-    vm.runtime.getBlocksXML = function (target) {
-      const result = originalGetBlocksXML.call(this, target);
+    vm.runtime.getBlocksXML    = function (target) {
+      const result            = originalGetBlocksXML.call(this, target);
       hasSeparateListCategory = addon.settings.get("separateListCategory");
       if (hasSeparateListCategory) {
         result.push({
           id: "data",
           xml: `
           <category
-            name="%{BKY_CATEGORY_VARIABLES}"
-            id="variables"
-            colour="#FF8C1A"
-            secondaryColour="#DB6E00"
-            custom="VARIABLE">
+            name            ="%{BKY_CATEGORY_VARIABLES}"
+            id              ="variables"
+            colour          ="#FF8C1A"
+            secondaryColour ="#DB6E00"
+            custom          ="VARIABLE">
           </category>
           <category
-            name="${safeMsg("list-category")}"
-            id="lists"
-            colour="#FF661A"
-            secondaryColour="#FF5500"
-            custom="LIST">
-          </category>`,
+            name            ="${safeMsg("list-category")}"
+            id              ="lists"
+            colour          ="#FF661A"
+            secondaryColour ="#FF5500"
+            custom          ="LIST">
+          </category>`
         });
       }
+
       return result;
     };
 
@@ -200,6 +208,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     if (vm.editingTarget) {
       vm.emitWorkspaceUpdate();
     }
+
   };
 
   addon.settings.addEventListener("change", (e) => {
@@ -216,6 +225,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
         workspace.refreshToolboxSelection_();
       }
     }
+
   });
 
   if (addon.tab.editorMode === "editor") {
@@ -224,7 +234,9 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
         injectWorkspace();
         clearInterval(interval);
       }
+
     }, 100);
   }
+
   addon.tab.addEventListener("urlChange", () => addon.tab.editorMode === "editor" && injectWorkspace());
 }

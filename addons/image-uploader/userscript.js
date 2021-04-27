@@ -7,25 +7,26 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     document.querySelector("#markItUpId_signature > div > div.markItUpHeader > ul");
 
   var textBox = document.querySelector("#id_body") || document.querySelector("#id_signature");
-  if (!textBox) return;
+  if (!textBox) { return;
+  }
 
   //input  hidden)
-  var uploadInput = document.createElement("input");
+  var uploadInput  = document.createElement("input");
   uploadInput.type = "file";
 
-  uploadInput.accept = "image/*";
+  uploadInput.accept        = "image/*";
   uploadInput.style.display = "none";
 
   //button (the one the user interacts with)
-  var inputButtonContainer = document.createElement("li");
+  var inputButtonContainer       = document.createElement("li");
   inputButtonContainer.className = "markItUpButton markItUpButton17";
 
   var inputButton = document.createElement("a");
-  inputButton.id = "uploadButton";
+  inputButton.id  = "uploadButton";
 
   let progresselement;
 
-  inputButton.title = msg("upload-image");
+  inputButton.title                 = msg("upload-image");
   inputButton.style.backgroundImage =
     "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABVUlEQVQ4jc3SO0tCYRzH8WcOegNtTb2BXkO1SNBuFyJqC1uihhqCNCIH8xKU8BzzcspQEskWC8IWcRCji8WxEnrSCKqh+dvQRTwcybZ+8J3+8Jn+QvyL2byHfDe9c7r/d8CdJlB5JVB5xeZOt10DcKV+gHazuVINQNi9iIUDizJfWdzsXhOQrDeXqOEz3vllvtbAngIgm822DKABJB6b27n/AeZST8zEqyylr4jmT3DsVi0A/a45rQxAOByme+2BzuUbRpOb3L4MIBbLSClNwHa5ua0SALFYDOeZTn/mnI6goke/pmvbsACCpUb+AsJfACASiTB1tULwfZF15Wb+eRDn27gFsHqE2Mh/5skhPDkANE2j/3iWseIkExcOhorD9F32moBh/4iwezEHIKVEKUWtVsMwDOr1OkopE9Bi34CUklAohK7rxONxotEomqa1Bfh++6QPwtgXjMvZERUAAAAASUVORK5CYII=')";
 
@@ -46,9 +47,9 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
 
   uploadInput.addEventListener("change", (e) => {
     //when the input has a new file
-    var file = uploadInput.files[0];
+    var file      = uploadInput.files[0];
     var extension = uploadInput.files[0].name.split(".").pop().toLowerCase();
-    var reader = new FileReader();
+    var reader    = new FileReader();
 
     reader.readAsArrayBuffer(file);
 
@@ -82,6 +83,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
           throw err;
         };
       }
+
     });
   });
 
@@ -120,6 +122,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
         throw err;
       };
     }
+
   });
 
   //cool functions below
@@ -140,7 +143,9 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
 
     for (var i = 0; i < items.length; i++) {
       // Skip content if not image
-      if (!items[i].type.includes("image")) continue;
+      if (!items[i].type.includes("image")) { continue;
+      }
+
       // Retrieve image on clipboard as blob
       var blob = items[i].getAsFile();
 
@@ -151,7 +156,7 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
   }
   async function uploadAssetImage(image, fileType) {
     //this is the stuff that matters
-    progresselement = toolbar.appendChild(document.createElement("li"));
+    progresselement           = toolbar.appendChild(document.createElement("li"));
     progresselement.className = "uploadStatus";
     console.log(image);
 
@@ -162,18 +167,18 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
     progresselement.innerText = msg("uploading");
 
     try {
-      var res = await fetch(`https://assets.scratch.mit.edu/${hash}.${type}`, {
+      var res  = await fetch(`https: //assets.scratch.mit.edu/${hash}.${type}`, {
         body: image,
         method: "POST",
         mode: "cors",
-        credentials: "include",
+        credentials: "include"
       });
       var data = await res.json();
 
       if (data.status === "ok") {
         textFieldEdit.insert(
           textBox,
-          `[img]https://assets.scratch.mit.edu/get_image/.%2E/${data["content-name"]}[/img]`
+          `[img]https: //assets.scratch.mit.edu/get_image/.%2E/${data["content-name"]}[/img]`
         );
         progresselement.remove();
       } else {

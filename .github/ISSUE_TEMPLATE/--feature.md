@@ -1,10 +1,9 @@
 ---
 name: "✨ Feature"
 about: Request for a new feature
-title: ''
-labels: 'type: enhancement, status: needs triage'
-assignees: ''
-
+title: ""
+labels: "type: enhancement, status: needs triage"
+assignees: ""
 ---
 
 **Is your feature request related to a problem? Please describe.**

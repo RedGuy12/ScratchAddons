@@ -18,10 +18,12 @@ export default async function ({ addon, console }) {
               element.previousSibling.textContent += element.textContent;
               element.remove();
             }
+
           });
           element.normalize();
           linkifyTextNode(element);
         }
+
       })();
       break;
 
@@ -44,5 +46,6 @@ export default async function ({ addon, console }) {
         linkifyTag(comment, HTMLSpanElement);
       }
     }
+
   })();
 }

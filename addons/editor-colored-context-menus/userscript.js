@@ -25,8 +25,9 @@ function handleClick(e) {
     // In this case, the block group should immediately follow the rect.
     if (target.tagName === "rect") {
       target = target.nextSibling;
-      block = target && target.closest("[data-id]");
+      block  = target && target.closest("[data-id]");
     }
+
     if (!block) {
       return;
     }
@@ -37,6 +38,7 @@ function handleClick(e) {
   while (blocklyBlock && blocklyBlock.isShadow()) {
     blocklyBlock = blocklyBlock.getParent();
   }
+
   if (!blocklyBlock) {
     return;
   }
@@ -52,10 +54,10 @@ function handleClick(e) {
   }
 
   const fillHex = fill.substr(1);
-  const rgb = parseInt(fillHex, 16);
-  const hsl = rgb2hsl(rgb);
-  hsl[2] = Math.max(hsl[2] - 15, 0);
-  const border = "hsl(" + hsl[0] + ", " + hsl[1] + "%, " + hsl[2] + "%)";
+  const rgb     = parseInt(fillHex, 16);
+  const hsl     = rgb2hsl(rgb);
+  hsl[2]        = Math.max(hsl[2] - 15, 0);
+  const border  = "hsl(" + hsl[0] + ", " + hsl[1] + "%, " + hsl[2] + "%)";
 
   widgetDiv.classList.add("u-contextmenu-colored");
   widgetDiv.style.setProperty("--u-contextmenu-bg", fill);
@@ -90,6 +92,7 @@ function rgb2hsl(rgb) {
       h = (r - g) / c + 4;
       break;
   }
+
   h *= 60;
 
   return [h, s * 100, l * 100];

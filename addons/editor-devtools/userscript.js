@@ -8,24 +8,24 @@ export default async function ({ addon, global, console, msg, safeMsg: m }) {
   }
 
   const helpHTML = `
-<div id="s3devHelpPop" class="${addon.tab.scratchClass("modal_modal-overlay")}">
-<div class="${addon.tab.scratchClass("modal_modal-content")}">
-<div class="${addon.tab.scratchClass("modal_header")}">
-  <div class="${addon.tab.scratchClass("modal_header-item", "modal_header-item-title")}">${m("help-title")}</div>
-  <div class="${addon.tab.scratchClass("modal_header-item", "modal_header-item-close")}">
-    <div class="${addon.tab.scratchClass("close-button_close-button", "close-button_large", {
-      others: "close-button",
+<div id          ="s3devHelpPop" class="${addon.tab.scratchClass("modal_modal-overlay")}">
+<div class       ="${addon.tab.scratchClass("modal_modal-content")}">
+<div class       ="${addon.tab.scratchClass("modal_header")}">
+  <div class   ="${addon.tab.scratchClass("modal_header-item", "modal_header-item-title")}">${m("help-title")}</div>
+  <div class   ="${addon.tab.scratchClass("modal_header-item", "modal_header-item-close")}">
+    <div class ="${addon.tab.scratchClass("close-button_close-button", "close-button_large", {
+      others: "close-button"
     })}">
-	  <img class="${addon.tab.scratchClass(
+	  <img class ="${addon.tab.scratchClass(
       "close-button_close-icon"
     )}" src="/static/assets/cb666b99d3528f91b52f985dfb102afa.svg">
 	</div>
   </div>
 </div>
-<div id="s3devHelpContent">
+<div id       ="s3devHelpContent">
 <p>${m("help-title")} ${m("help-by", {
     ndash: "&ndash;",
-    url: '<a target="_blank" rel="noreferrer noopener" href="https://www.youtube.com/griffpatch">Griffpatch</a>',
+    url: '<a target="_blank" rel="noreferrer noopener" href="https://www.youtube.com/griffpatch">Griffpatch</a>'
   })}</p>
 <hr />
 <h2><strong>${m("code-tab-features")}</strong></h2>
@@ -46,7 +46,7 @@ export default async function ({ addon, global, console, msg, safeMsg: m }) {
 <hr />
 <p>${m(
     "youtube"
-  )} -&nbsp;<a target="_blank" href="https://www.youtube.com/griffpatch">https://www.youtube.com/user/griffpatch</a></p>
+  )} -&nbsp;<a target ="_blank" href="https://www.youtube.com/griffpatch">https: //www.youtube.com/user/griffpatch</a></p>
 </div>
 </div>
 </div>

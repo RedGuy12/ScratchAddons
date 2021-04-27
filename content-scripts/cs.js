@@ -1,11 +1,14 @@
 try {
-  if (window.parent.location.origin !== "https://scratch.mit.edu") throw "Scratch Addons: not first party iframe";
+  if (window.parent.location.origin !== "https://scratch.mit.edu") { throw "Scratch Addons: not first party iframe";
+  }
 } catch {
   throw "Scratch Addons: not first party iframe";
 }
 
 chrome.runtime.sendMessage({ contentScriptReady: { url: location.href } }, (res) => {
-  if (res) onInfoAvailable(res);
+  if (res) { onInfoAvailable(res);
+  }
+
 });
 
 const DOLLARS = ["$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9"];
@@ -14,17 +17,17 @@ const promisify = (callbackFn) => (...args) => new Promise((resolve) => callback
 
 let _page_ = null;
 
-const comlinkIframesDiv = document.createElement("div");
-comlinkIframesDiv.id = "scratchaddons-iframes";
-const comlinkIframe1 = document.createElement("iframe");
-comlinkIframe1.id = "scratchaddons-iframe-1";
+const comlinkIframesDiv      = document.createElement("div");
+comlinkIframesDiv.id         = "scratchaddons-iframes";
+const comlinkIframe1         = document.createElement("iframe");
+comlinkIframe1.id            = "scratchaddons-iframe-1";
 comlinkIframe1.style.display = "none";
-const comlinkIframe2 = comlinkIframe1.cloneNode();
-comlinkIframe2.id = "scratchaddons-iframe-2";
-const comlinkIframe3 = comlinkIframe1.cloneNode();
-comlinkIframe3.id = "scratchaddons-iframe-3";
-const comlinkIframe4 = comlinkIframe1.cloneNode();
-comlinkIframe4.id = "scratchaddons-iframe-4";
+const comlinkIframe2         = comlinkIframe1.cloneNode();
+comlinkIframe2.id            = "scratchaddons-iframe-2";
+const comlinkIframe3         = comlinkIframe1.cloneNode();
+comlinkIframe3.id            = "scratchaddons-iframe-3";
+const comlinkIframe4         = comlinkIframe1.cloneNode();
+comlinkIframe4.id            = "scratchaddons-iframe-4";
 comlinkIframesDiv.appendChild(comlinkIframe1);
 comlinkIframesDiv.appendChild(comlinkIframe2);
 comlinkIframesDiv.appendChild(comlinkIframe3);
@@ -47,17 +50,17 @@ const cs = {
         }
       );
     });
-  },
+  }
 };
 Comlink.expose(cs, Comlink.windowEndpoint(comlinkIframe1.contentWindow, comlinkIframe2.contentWindow));
 
 const pageComlinkScript = document.createElement("script");
-pageComlinkScript.src = chrome.runtime.getURL("libraries/comlink.js");
+pageComlinkScript.src   = chrome.runtime.getURL("libraries/comlink.js");
 document.documentElement.appendChild(pageComlinkScript);
 
 const moduleScript = document.createElement("script");
-moduleScript.type = "module";
-moduleScript.src = chrome.runtime.getURL("content-scripts/inject/module.js");
+moduleScript.type  = "module";
+moduleScript.src   = chrome.runtime.getURL("content-scripts/inject/module.js");
 
 (async () => {
   await new Promise((resolve) => {
@@ -69,35 +72,44 @@ moduleScript.src = chrome.runtime.getURL("content-scripts/inject/module.js");
 document.documentElement.appendChild(moduleScript);
 
 let initialUrl = location.href;
-let path = new URL(initialUrl).pathname.substring(1);
-if (path[path.length - 1] !== "/") path += "/";
+let path       = new URL(initialUrl).pathname.substring(1);
+if (path[path.length - 1] !== "/") { path += "/";
+}
+
 const pathArr = path.split("/");
 if (pathArr[0] === "scratch-addons-extension") {
   if (pathArr[1] === "settings") {
     let url = chrome.runtime.getURL("webpages/settings/index.html");
-    if (location.hash) url += location.hash;
+    if (location.hash) { url += location.hash;
+    }
+
     chrome.runtime.sendMessage({ replaceTabWithUrl: url });
   }
 }
+
 if (path === "discuss/3/topic/add/") {
   window.addEventListener("load", () => forumWarning("forumWarning"));
   let uaElemModified = false;
   const modifyUAElem = () => {
-    if (uaElemModified) return;
+    if (uaElemModified) { return;
+    }
+
     const uaElem = document.getElementById("simple-user-agent");
     if (uaElem) {
       uaElem.textContent = uaElem.textContent.replace("My browser", "My web browser");
       return (uaElemModified = true);
     }
+
   };
   if (!modifyUAElem()) {
     new MutationObserver((mutationsList, observer) => {
       if (modifyUAElem()) {
         observer.disconnect();
       }
+
     }).observe(document.documentElement, {
       subtree: true,
-      childList: true,
+      childList: true
     });
   }
 } else if (path.startsWith("discuss/topic/")) {
@@ -105,6 +117,7 @@ if (path === "discuss/3/topic/add/") {
     if (document.querySelector('div.linkst > ul > li > a[href="/discuss/18/"]')) {
       forumWarning("forumWarningGeneral");
     }
+
   });
 }
 
@@ -113,20 +126,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request === "getInitialUrl") {
     sendResponse(initialUrl);
   }
+
 });
 
 function addStyle(addon) {
-  const allStyles = [...document.querySelectorAll(".scratch-addons-style")];
+  const allStyles   = [...document.querySelectorAll(".scratch-addons-style")];
   const addonStyles = allStyles.filter((el) => el.getAttribute("data-addon-id") === addon.addonId);
 
   const appendByIndex = (el, index) => {
     // Append a style element in the correct place preserving order
     const nextElement = allStyles.find((el) => Number(el.getAttribute("data-addon-index") > index));
-    if (nextElement) document.documentElement.insertBefore(el, nextElement);
-    else {
-      if (document.body) document.documentElement.insertBefore(el, document.body);
-      else document.documentElement.appendChild(el);
+    if (nextElement) { document.documentElement.insertBefore(el, nextElement);
+    } else {
+      if (document.body) { document.documentElement.insertBefore(el, document.body);
+      } else { document.documentElement.appendChild(el);
+      }
     }
+
   };
 
   for (let userstyle of addon.styles) {
@@ -152,7 +168,7 @@ function addStyle(addon) {
       }
 
       const link = document.createElement("link");
-      link.rel = "stylesheet";
+      link.rel   = "stylesheet";
       link.setAttribute("data-addon-id", addon.addonId);
       link.setAttribute("data-addon-index", addon.index);
       link.classList.add("scratch-addons-style");
@@ -178,30 +194,32 @@ function setCssVariables(addonSettings) {
   for (const addonId of Object.keys(addonSettings)) {
     for (const settingName of Object.keys(addonSettings[addonId])) {
       const value = addonSettings[addonId][settingName];
-      if (typeof value === "string" || typeof value === "number")
+      if (typeof value === "string" || typeof value === "number") {
         document.documentElement.style.setProperty(
           `--${addonId.replace(/-([a-z])/g, (g) => g[1].toUpperCase())}-${settingName.replace(/-([a-z])/g, (g) =>
             g[1].toUpperCase()
           )}`,
           addonSettings[addonId][settingName]
         );
+      }
     }
   }
 }
 
 async function onInfoAvailable({ globalState, l10njson, addonsWithUserscripts, addonsWithUserstyles }) {
   // In order for the "everLoadedAddons" not to change when "addonsWithUserscripts" changes, we stringify and parse
-  const everLoadedAddons = JSON.parse(JSON.stringify(addonsWithUserscripts));
+  const everLoadedAddons      = JSON.parse(JSON.stringify(addonsWithUserscripts));
   const disabledDynamicAddons = [];
   setCssVariables(globalState.addonSettings);
   // Just in case, make sure the <head> loaded before injecting styles
-  if (document.head) injectUserstyles(addonsWithUserstyles);
-  else {
+  if (document.head) { injectUserstyles(addonsWithUserstyles);
+  } else {
     const observer = new MutationObserver(() => {
       if (document.head) {
         injectUserstyles(addonsWithUserstyles);
         observer.disconnect();
       }
+
     });
     observer.observe(document.documentElement, { subtree: true, childList: true });
   }
@@ -214,10 +232,10 @@ async function onInfoAvailable({ globalState, l10njson, addonsWithUserscripts, a
     });
   }
 
-  _page_.globalState = globalState;
-  _page_.l10njson = l10njson;
+  _page_.globalState           = globalState;
+  _page_.l10njson              = l10njson;
   _page_.addonsWithUserscripts = addonsWithUserscripts;
-  _page_.dataReady = true;
+  _page_.dataReady             = true;
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.newGlobalState) {
@@ -261,9 +279,10 @@ async function onInfoAvailable({ globalState, l10njson, addonsWithUserscripts, a
       _page_.setMsgCount(request.setMsgCount);
     } else if (request === "getRunningAddons") {
       const userscripts = addonsWithUserscripts.map((obj) => obj.addonId);
-      const userstyles = addonsWithUserstyles.map((obj) => obj.addonId);
+      const userstyles  = addonsWithUserstyles.map((obj) => obj.addonId);
       sendResponse({ userscripts, userstyles, disabledDynamicAddons });
     }
+
   });
 }
 
@@ -275,24 +294,25 @@ function forumWarning(key) {
     var errorList = document.querySelector("form#post > label > ul");
     if (!errorList) {
       let typeArea = postArea.querySelector("strong");
-      errorList = document.createElement("ul");
+      errorList    = document.createElement("ul");
       errorList.classList.add("errorlist");
       postArea.insertBefore(errorList, typeArea);
     }
-    let addonError = document.createElement("li");
-    let reportLink = document.createElement("a");
-    reportLink.href = "https://scratchaddons.com/feedback";
-    reportLink.target = "_blank";
+
+    let addonError       = document.createElement("li");
+    let reportLink       = document.createElement("a");
+    reportLink.href      = "https://scratchaddons.com/feedback";
+    reportLink.target    = "_blank";
     reportLink.innerText = chrome.i18n.getMessage("reportItHere");
-    let text1 = document.createElement("span");
-    text1.innerHTML = escapeHTML(chrome.i18n.getMessage(key, DOLLARS)).replace("$1", reportLink.outerHTML);
+    let text1            = document.createElement("span");
+    text1.innerHTML      = escapeHTML(chrome.i18n.getMessage(key, DOLLARS)).replace("$1", reportLink.outerHTML);
     addonError.appendChild(text1);
     errorList.appendChild(addonError);
   }
 }
 
 const showBanner = () => {
-  const makeBr = () => document.createElement("br");
+  const makeBr   = () => document.createElement("br");
 
   const notifOuterBody = document.createElement("div");
   const notifInnerBody = Object.assign(document.createElement("div"), {
@@ -313,34 +333,34 @@ const showBanner = () => {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-shadow: none;
     box-shadow: 0 0 20px 0px #0000009e;
-    line-height: 1em;`,
+    line-height: 1em;`
   });
   // v1.14.0 TODO in line 365
   const notifImage = Object.assign(document.createElement("img"), {
     // alt: chrome.i18n.getMessage("hexColorPickerAlt"),
     src: chrome.runtime.getURL("/images/cs/icon.svg"),
-    style: "height: 150px; border-radius: 5px; padding: 20px",
+    style: "height: 150px; border-radius: 5px; padding: 20px"
   });
-  const notifText = Object.assign(document.createElement("div"), {
+  const notifText  = Object.assign(document.createElement("div"), {
     id: "sa-notification-text",
-    style: "margin: 12px;",
+    style: "margin: 12px;"
   });
   const notifTitle = Object.assign(document.createElement("span"), {
     style: "font-size: 18px; display: inline-block; margin-bottom: 12px;",
-    textContent: chrome.i18n.getMessage("extensionUpdate"),
+    textContent: chrome.i18n.getMessage("extensionUpdate")
   });
   const notifClose = Object.assign(document.createElement("span"), {
     style: `
     float: right;
-    cursor:pointer;
+    cursor: pointer;
     background-color: #ffffff26;
     line-height: 10px;
     width: 10px;
     text-align: center;
-    padding:5px;
+    padding: 5px;
     border-radius: 50%;`,
     title: chrome.i18n.getMessage("close"),
-    textContent: "x",
+    textContent: "x"
   });
   notifClose.addEventListener("click", () => notifInnerBody.remove(), { once: true });
 
@@ -350,7 +370,7 @@ const showBanner = () => {
     style: NOTIF_TEXT_STYLE + "font-weight: bold;",
     textContent: chrome.i18n
       .getMessage("extensionHasUpdated", DOLLARS)
-      .replace(/\$(\d+)/g, (_, i) => [chrome.runtime.getManifest().version][Number(i) - 1]),
+      .replace(/\$(\d+)/g, (_, i) => [chrome.runtime.getManifest().version][Number(i) - 1])
   });
   const notifInnerText1 = Object.assign(document.createElement("span"), {
     style: NOTIF_TEXT_STYLE,
@@ -365,43 +385,43 @@ const showBanner = () => {
             // TODO: remove `#addon-editor-dark-mode` next release
             href: "https://scratch.mit.edu/scratch-addons-extension/settings#addon-editor-dark-mode",
             target: "_blank",
-            textContent: chrome.i18n.getMessage("scratchAddonsSettings"),
+            textContent: chrome.i18n.getMessage("scratchAddonsSettings")
           }).outerHTML,
         ][Number(i) - 1]
-    ),
+    )
   });
-  const notifInnerText2 = Object.assign(document.createElement("span"), {
+  const notifInnerText2                                     = Object.assign(document.createElement("span"), {
     style: NOTIF_TEXT_STYLE,
     innerHTML: escapeHTML(chrome.i18n.getMessage("extensionUpdateInfo2", DOLLARS)).replace(
       "$1",
       Object.assign(document.createElement("a"), {
         href: "https://scratchaddons.com/translate",
         target: "_blank",
-        textContent: chrome.i18n.getMessage("helpTranslateScratchAddons"),
+        textContent: chrome.i18n.getMessage("helpTranslateScratchAddons")
       }).outerHTML
-    ),
+    )
   });
-  const notifFooter = Object.assign(document.createElement("span"), {
-    style: NOTIF_TEXT_STYLE,
+  const notifFooter                                         = Object.assign(document.createElement("span"), {
+    style: NOTIF_TEXT_STYLE
   });
-  const notifFooterChangelog = Object.assign(document.createElement("a"), {
-    href: `https://scratchaddons.com/changelog?versionname=${chrome.runtime.getManifest().version}-notif`,
+  const notifFooterChangelog                                = Object.assign(document.createElement("a"), {
+    href: `https: //scratchaddons.com/changelog?versionname =${chrome.runtime.getManifest().version}-notif`,
     target: "_blank",
     textContent: chrome.i18n.getMessage("changelog"),
-    style: "text-transform: capitalize;", // Convert to title case
+    style: "text-transform: capitalize;" // Convert to title case
   });
-  const notifFooterFeedback = Object.assign(document.createElement("a"), {
-    href: `https://scratchaddons.com/feedback?version=${chrome.runtime.getManifest().version}-notif`,
+  const notifFooterFeedback                            = Object.assign(document.createElement("a"), {
+    href: `https: //scratchaddons.com/feedback?version =${chrome.runtime.getManifest().version}-notif`,
     target: "_blank",
-    textContent: chrome.i18n.getMessage("feedback"),
+    textContent: chrome.i18n.getMessage("feedback")
   });
   const notifFooterTranslate = Object.assign(document.createElement("a"), {
     href: "https://scratchaddons.com/translate",
     target: "_blank",
-    textContent: chrome.i18n.getMessage("translate"),
+    textContent: chrome.i18n.getMessage("translate")
   });
-  const notifFooterLegal = Object.assign(document.createElement("small"), {
-    textContent: chrome.i18n.getMessage("notAffiliated"),
+  const notifFooterLegal     = Object.assign(document.createElement("small"), {
+    textContent: chrome.i18n.getMessage("notAffiliated")
   });
   notifFooter.appendChild(notifFooterChangelog);
   notifFooter.appendChild(document.createTextNode(" | "));
@@ -430,22 +450,23 @@ const showBanner = () => {
   document.body.appendChild(notifOuterBody);
 };
 
-const handleBanner = async () => {
-  const currentVersion = chrome.runtime.getManifest().version;
-  const [major, minor, _] = currentVersion.split(".");
+const handleBanner               = async () => {
+  const currentVersion           = chrome.runtime.getManifest().version;
+  const [major, minor, _]        = currentVersion.split(".");
   const currentVersionMajorMinor = `${major}.${minor}`;
   // Making this configurable in the future?
   // Using local because browser extensions may not be updated at the same time across browsers
   const settings = await promisify(chrome.storage.local.get.bind(chrome.storage.local))(["bannerSettings"]);
-  const force = !settings || !settings.bannerSettings;
+  const force    = !settings || !settings.bannerSettings;
 
   if (force || settings.bannerSettings.lastShown !== currentVersionMajorMinor) {
     console.log("Banner shown.");
     await promisify(chrome.storage.local.set.bind(chrome.storage.local))({
-      bannerSettings: Object.assign({}, settings.bannerSettings, { lastShown: currentVersionMajorMinor }),
+      bannerSettings: Object.assign({}, settings.bannerSettings, { lastShown: currentVersionMajorMinor })
     });
     showBanner();
   }
+
 };
 
 if (document.readyState !== "loading") {

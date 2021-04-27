@@ -1,1 +1,5 @@
-{"clones/clones":"clone:{cloneCount}","clones/@name":"Licznik klonów","clones/@description":"Dodaje licznik clonów do edytora"}
+{
+	"clones/clones": "clone:{cloneCount}",
+	"clones/@name": "Licznik klonów",
+	"clones/@description": "Dodaje licznik clonów do edytora"
+}

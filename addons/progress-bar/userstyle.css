@@ -1,43 +1,47 @@
 .u-progress-bar-outer {
-  width: 100%;
-  height: calc(1px * var(--progressBar-height));
-  box-sizing: border-box;
-  border: 1px solid white;
+    width: 100%;
+    height: calc(1px * var(--progressbar-height));
+    box-sizing: border-box;
+    border: 1px solid white;
 }
+
 .u-progress-bar-inner {
-  width: 0;
-  height: 100%;
-  background-color: white;
+    width: 0;
+    height: 100%;
+    background-color: white;
 }
 
 .u-progress-bar-top {
-  position: fixed;
-  z-index: 1000000; /* a lot */
-  top: 0;
-  left: 0;
-  width: 100%;
-  border: none;
-  transition: opacity 0.2s;
+    position: fixed;
+    z-index: 1000000; /* a lot */
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: none;
+    transition: opacity 0.2s;
 }
+
 .u-progress-bar-top .u-progress-bar-inner {
-  transition: width 0.2s;
+    transition: width 0.2s;
 }
 
 .u-progress-bar-caption {
-  margin: 5px 0;
-  height: 20px;
+    margin: 5px 0;
+    height: 20px;
 }
 
 [class^="loader_background"] .u-progress-bar-integrated {
-  margin: auto;
-  width: 250px;
+    margin: auto;
+    width: 250px;
 }
+
 [class^="inline-message_inline-message"].u-progress-bar-integrated {
-  min-width: 100px;
-  margin-top: 2px;
+    min-width: 100px;
+    margin-top: 2px;
 }
+
 .remix-button .u-progress-bar-integrated,
 [class^="alert_alert"] .u-progress-bar-integrated {
-  border-color: black;
-  background-color: black;
+    border-color: black;
+    background-color: black;
 }

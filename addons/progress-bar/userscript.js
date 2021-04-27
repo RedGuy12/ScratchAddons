@@ -1,9 +1,9 @@
 export default async function ({ addon, global, console, msg }) {
   const useTopBar = addon.settings.get("topbar");
 
-  const barOuter = document.createElement("div");
+  const barOuter     = document.createElement("div");
   barOuter.className = "u-progress-bar-outer";
-  const barInner = document.createElement("div");
+  const barInner     = document.createElement("div");
   barInner.className = "u-progress-bar-inner";
   barOuter.appendChild(barInner);
 
@@ -16,23 +16,27 @@ export default async function ({ addon, global, console, msg }) {
   }
 
   // We track the loading phase so that we can detect when the phase changed to reset and move the progress bar accordingly.
-  const NONE = "none";
-  const LOAD_JSON = "load-json";
+  const NONE        = "none";
+  const LOAD_JSON   = "load-json";
   const LOAD_ASSETS = "load-assets";
-  const SAVE_JSON = "save-json";
+  const SAVE_JSON   = "save-json";
   const SAVE_ASSETS = "save-assets";
-  const COPY = "copy";
-  const REMIX = "remix";
-  let loadingPhase = NONE;
+  const COPY        = "copy";
+  const REMIX       = "remix";
+  let loadingPhase  = NONE;
 
-  let totalTasks = 0;
+  let totalTasks    = 0;
   let finishedTasks = 0;
 
   let resetTimeout;
 
   function setProgress(progress) {
-    if (progress < 0) progress = 0;
-    if (progress > 1) progress = 1;
+    if (progress < 0) { progress = 0;
+    }
+
+    if (progress > 1) { progress = 1;
+    }
+
     if (useTopBar) {
       // The bar is always at least 10% visible to give an indication of something happening, even at 0% progress.
       barInner.style.width = 10 + progress * 90 + "%";
@@ -50,10 +54,11 @@ export default async function ({ addon, global, console, msg }) {
       if (loadingPhase === LOAD_ASSETS) {
         loadingCaption.innerText = msg("loading-assets", {
           loaded: finishedTasks,
-          loading: totalTasks,
+          loading: totalTasks
         });
       }
     }
+
     if (progress === 1) {
       loadingPhase = NONE;
       stopObserver();
@@ -64,11 +69,12 @@ export default async function ({ addon, global, console, msg }) {
     if (loadingPhase === newPhase) {
       return;
     }
+
     loadingPhase = newPhase;
     setProgress(0);
     inject();
     startObserver();
-    totalTasks = 0;
+    totalTasks    = 0;
     finishedTasks = 0;
   }
 
@@ -80,44 +86,46 @@ export default async function ({ addon, global, console, msg }) {
     barInner.style.width = "0";
   }
 
-  const loadingCaption = document.createElement("div");
+  const loadingCaption     = document.createElement("div");
   loadingCaption.innerText = msg("loading-project");
   loadingCaption.className = "u-progress-bar-caption";
 
   const PROJECT_REGEX = /^https:\/\/projects\.scratch\.mit\.edu\/\d+$/;
-  const REMIX_REGEX = /^https:\/\/projects\.scratch\.mit\.edu\/\?is_remix=1&original_id=\d+/;
-  const COPY_REGEX = /^https:\/\/projects\.scratch\.mit\.edu\/\?is_copy=1&original_id=\d+/;
-  const ASSET_REGEX = /^https:\/\/assets\.scratch\.mit\.edu\//;
+  const REMIX_REGEX   = /^https:\/\/projects\.scratch\.mit\.edu\/\?is_remix=1&original_id=\d+/;
+  const COPY_REGEX    = /^https:\/\/projects\.scratch\.mit\.edu\/\?is_copy=1&original_id=\d+/;
+  const ASSET_REGEX   = /^https:\/\/assets\.scratch\.mit\.edu\//;
 
   // Scratch uses fetch() to download the project JSON and upload project assets.
   const originalFetch = window.fetch;
-  window.fetch = (url, opts) => {
+  window.fetch        = (url, opts) => {
     if (typeof url === "string" && opts && typeof opts.method === "string") {
       if (opts.method.toLowerCase() === "get" && PROJECT_REGEX.test(url)) {
         // This is a request to get the project JSON.
         // Fetch does not support progress monitoring, so we use XMLHttpRequest instead.
         setLoadingPhase(LOAD_JSON);
         return new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
+          const xhr        = new XMLHttpRequest();
           xhr.responseType = "blob";
-          xhr.onload = () =>
+          xhr.onload       = () =>
             resolve(
               new Response(xhr.response, {
                 status: xhr.status,
-                statusText: xhr.statusText,
+                statusText: xhr.statusText
               })
             );
-          xhr.onerror = () => reject(new Error("xhr failed"));
-          xhr.onloadend = () => setProgress(1);
-          xhr.onprogress = (e) => {
+          xhr.onerror      = () => reject(new Error("xhr failed"));
+          xhr.onloadend    = () => setProgress(1);
+          xhr.onprogress   = (e) => {
             if (e.lengthComputable) {
               setProgress(e.loaded / e.total);
             }
+
           };
           xhr.open("GET", url);
           xhr.send();
         });
       }
+
       if (opts.method.toLowerCase() === "post" && ASSET_REGEX.test(url)) {
         // This is a request to upload an asset.
         // Sadly, it doesn't seem to be possible to monitor upload progress on these requests, even with XHR, as the asset endpoint
@@ -139,15 +147,14 @@ export default async function ({ addon, global, console, msg }) {
   };
 
   // Scratch uses XMLHttpRequest to upload the project JSON.
-  const originalOpen = XMLHttpRequest.prototype.open;
+  const originalOpen            = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function (...args) {
     const method = args[0];
-    const url = args[1];
+    const url    = args[1];
     if (typeof method === "string" && typeof url === "string") {
-      if (
-        (method.toLowerCase() === "put" && PROJECT_REGEX.test(url)) ||
-        (method.toLowerCase() === "post" && COPY_REGEX.test(url)) ||
-        (method.toLowerCase() === "post" && REMIX_REGEX.test(url))
+      if ((method.toLowerCase() === "put" && PROJECT_REGEX.test(url))
+          || (method.toLowerCase() === "post" && COPY_REGEX.test(url))
+          || (method.toLowerCase() === "post" && REMIX_REGEX.test(url))
       ) {
         // This is a request to save, remix, or copy a project.
         if (REMIX_REGEX.test(url)) {
@@ -157,6 +164,7 @@ export default async function ({ addon, global, console, msg }) {
         } else {
           setLoadingPhase(SAVE_JSON);
         }
+
         this.upload.addEventListener("loadend", (e) => {
           setProgress(1);
         });
@@ -164,6 +172,7 @@ export default async function ({ addon, global, console, msg }) {
           if (e.lengthComputable) {
             setProgress(e.loaded / e.total);
           }
+
         });
       }
     }
@@ -173,8 +182,8 @@ export default async function ({ addon, global, console, msg }) {
 
   // Scratch uses a Worker to fetch project assets.
   // As the worker may be constructed before we run, we have to patch postMessage to monitor message passing.
-  let foundWorker = false;
-  const originalPostMessage = Worker.prototype.postMessage;
+  let foundWorker              = false;
+  const originalPostMessage    = Worker.prototype.postMessage;
   Worker.prototype.postMessage = function (message, options) {
     if (message && typeof message.id === "string" && typeof message.url === "string") {
       // This is a message passed to the worker to start an asset download.
@@ -184,13 +193,14 @@ export default async function ({ addon, global, console, msg }) {
 
       // Add our own message handler once for this worker to monitor when assets have finished loading.
       if (!foundWorker) {
-        foundWorker = true;
+        foundWorker  = true;
         this.addEventListener("message", (e) => {
           const data = e.data;
           if (Array.isArray(data)) {
             finishedTasks += data.length;
             updateTasks();
           }
+
         });
       }
     }
@@ -235,17 +245,21 @@ export default async function ({ addon, global, console, msg }) {
   const mutationObserver = new MutationObserver(inject);
 
   async function startObserver() {
-    if (useTopBar) return;
+    if (useTopBar) { return;
+    }
+
     await addon.tab.waitForElement("body");
     inject();
     mutationObserver.observe(document.body, {
       childList: true,
-      subtree: true,
+      subtree: true
     });
   }
 
   function stopObserver() {
-    if (useTopBar) return;
+    if (useTopBar) { return;
+    }
+
     mutationObserver.disconnect();
   }
 }

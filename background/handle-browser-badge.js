@@ -5,14 +5,19 @@ scratchAddons.localEvents.addEventListener("badgeUpdateNeeded", () => {
   const hardcodedBadgeUser = "msg-count-badge";
   if (scratchAddons.localState.addonsEnabled[hardcodedBadgeUser] && !scratchAddons.muted) {
     let text = scratchAddons.localState.badges[hardcodedBadgeUser].text;
-    if (text === null || text === 0) text = "";
-    else if (typeof text === "number") text = String(text);
+    if (text === null || text === 0) { text = "";
+    } else if (typeof text === "number") { text = String(text);
+    }
+
     chrome.browserAction.setBadgeText({ text });
     let color = scratchAddons.localState.badges[hardcodedBadgeUser].color;
-    if (color === null) color = [140, 230, 140, 255];
+    if (color === null) { color = [140, 230, 140, 255];
+    }
+
     chrome.browserAction.setBadgeBackgroundColor({ color });
   } else {
     // Hide badge
     chrome.browserAction.setBadgeText({ text: "" });
   }
+
 });

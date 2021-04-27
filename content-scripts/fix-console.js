@@ -1,6 +1,6 @@
 function fixConsole() {
   window._realConsole = {
-    ...console,
+    ...console
   };
 }
 

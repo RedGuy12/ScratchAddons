@@ -1,1 +1,5 @@
-{"forum-quote-code-beautifier/@name":"Citas y bloques de código personalizados en los foros","forum-quote-code-beautifier/@description":"Muestra mejores citas y bloques de código en los foros.","forum-quote-code-beautifier/@settings-name-bordercolor":"Color del borde"}
+{
+	"forum-quote-code-beautifier/@name": "Citas y bloques de código personalizados en los foros",
+	"forum-quote-code-beautifier/@description": "Muestra mejores citas y bloques de código en los foros.",
+	"forum-quote-code-beautifier/@settings-name-bordercolor": "Color del borde"
+}

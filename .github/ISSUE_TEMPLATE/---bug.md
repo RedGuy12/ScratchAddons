@@ -1,10 +1,9 @@
 ---
 name: "\U0001F41B Bug"
 about: Report a bug
-title: ''
-labels: 'type: bug, status: needs triage'
-assignees: ''
-
+title: ""
+labels: "type: bug, status: needs triage"
+assignees: ""
 ---
 
 **Describe the bug**
@@ -30,9 +29,9 @@ assignees: ''
 
 **Device (please complete the following information):**
 
-- OS: [e.g. iOS]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 22]
+-   OS: [e.g. iOS]
+-   Browser [e.g. chrome, safari]
+-   Version [e.g. 22]
 
 **Additional context**
 

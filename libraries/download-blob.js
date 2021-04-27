@@ -10,10 +10,10 @@ export default (filename, blob) => {
     }
 
     if ('download' in HTMLAnchorElement.prototype) {
-        const url = window.URL.createObjectURL(blob);
-        downloadLink.href = url;
+        const url             = window.URL.createObjectURL(blob);
+        downloadLink.href     = url;
         downloadLink.download = filename;
-        downloadLink.type = blob.type;
+        downloadLink.type     = blob.type;
         downloadLink.click();
         // remove the link after a timeout to prevent a crash on iOS 13 Safari
         window.setTimeout(() => {
@@ -22,11 +22,11 @@ export default (filename, blob) => {
         }, 1000);
     } else {
         // iOS 12 Safari, open a new page and set href to data-uri
-        let popup = window.open('', '_blank');
-        const reader = new FileReader();
+        let popup        = window.open('', '_blank');
+        const reader     = new FileReader();
         reader.onloadend = function () {
             popup.location.href = reader.result;
-            popup = null;
+            popup               = null;
         };
         reader.readAsDataURL(blob);
     }

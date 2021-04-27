@@ -8,13 +8,13 @@ export default async function ({ addon, global, console, msg }) {
   addon.tab.displayNoneWhileDisabled(countContainerContainer, { display: "flex" });
 
   let countContainer = document.createElement("div");
-  let count = document.createElement("span");
-  let icon = document.createElement("span");
+  let count          = document.createElement("span");
+  let icon           = document.createElement("span");
 
   countContainerContainer.className = "clone-container-container";
-  countContainer.className = "clone-container";
-  count.className = "clone-count";
-  icon.className = "clone-icon";
+  countContainer.className          = "clone-container";
+  count.className                   = "clone-count";
+  icon.className                    = "clone-icon";
 
   countContainerContainer.appendChild(icon);
   countContainerContainer.appendChild(countContainer);
@@ -29,9 +29,11 @@ export default async function ({ addon, global, console, msg }) {
   function doCloneChecks() {
     const v = vm.runtime._cloneCounter;
     // performance
-    if (v === lastChecked) return false;
+    if (v === lastChecked) { return false;
+    }
+
     countContainerContainer.dataset.count = lastChecked = v;
-    count.dataset.str = cache[v] || "";
+    count.dataset.str                     = cache[v] || "";
     return true;
   }
 
@@ -42,12 +44,15 @@ export default async function ({ addon, global, console, msg }) {
         elem.appendChild(countContainerContainer);
       }
     }
+
   };
   vm.runtime.on("targetWasRemoved", (t) => {
     // Fix bug with inaccurate clone counter
-    if (t.isOriginal) vm.runtime.changeCloneCounter(1);
+    if (t.isOriginal) { vm.runtime.changeCloneCounter(1);
+    }
+
   });
-  const oldStep = vm.runtime.constructor.prototype._step;
+  const oldStep                          = vm.runtime.constructor.prototype._step;
   vm.runtime.constructor.prototype._step = function (...args) {
     check();
     return oldStep.call(this, ...args);

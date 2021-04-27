@@ -3,7 +3,7 @@ import ThumbSetter from "../../libraries/animated-thumb.js";
 export default async function ({ addon, global, console, msg }) {
   while (true) {
     let nav = await addon.tab.waitForElement("[class^='menu-bar_main-menu']", {
-      markAsSeen: true,
+      markAsSeen: true
     });
     if (!document.querySelector("[class^='author-info_username-line']")) {
       let setthumb = document.createElement("div");
@@ -23,7 +23,7 @@ export default async function ({ addon, global, console, msg }) {
       let thumbcontent = document.createElement("div");
       setthumb.classList.add(addon.tab.scratchClass("button_content"));
       thumbinner.append(thumbcontent);
-      let thumbspan = document.createElement("span");
+      let thumbspan       = document.createElement("span");
       thumbspan.innerText = msg("set-thumbnail");
       thumbcontent.append(thumbspan);
       nav.append(setthumb);

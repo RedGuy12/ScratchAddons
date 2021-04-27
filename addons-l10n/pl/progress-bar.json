@@ -1,1 +1,4 @@
-{"progress-bar/@description":"Dodaje pasek postępu do wczytywania i zapisywania projektów.","progress-bar/@settings-name-height":"Wysokość paska postępu (px)"}
+{
+	"progress-bar/@description": "Dodaje pasek postępu do wczytywania i zapisywania projektów.",
+	"progress-bar/@settings-name-height": "Wysokość paska postępu (px)"
+}

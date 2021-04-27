@@ -21,14 +21,16 @@ a.social-messages-profile-link,
 .social-form,
 body:not(.sa-body-editor) .join-flow-title,
 .initiatives-section .initiatives-tools .subsection-tag.collaborator {
-  color: #fff;
+    color: #FFF;
 }
+
 #view,
 .outer #projectBox,
 .tips-getting-started,
 .tips-activity-guides {
-  background: #202020;
+    background: #202020;
 }
+
 .box .box-header,
 .gray-area,
 #footer,
@@ -39,8 +41,9 @@ body:not(.sa-body-editor) .join-flow-title,
 .download .installation,
 body:not(.sa-body-editor) .gender-radio-row,
 .wedo .banner {
-  background: #333;
+    background: #333;
 }
+
 .thumbnail .thumbnail-loves::before,
 .thumbnail .thumbnail-favorites::before,
 .thumbnail .thumbnail-remixes::before,
@@ -52,20 +55,24 @@ body:not(.sa-body-editor) .gender-radio-row,
 img.tips-icon,
 .tabs li:not(.active) .tab-icon,
 body:not(.sa-body-editor) .stage-header_stage-button-icon_3zzFK {
-  filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
 }
+
 .project-loves.loved::before,
 .project-favorites.favorited::before {
-  filter: none;
+    filter: none;
 }
+
 .comment .comment-body .comment-bottom-row .comment-time {
-  color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.4);
 }
+
 .credits .logo-grid {
-  /* Some logos don't look well on dark background */
-  background: #f7f6f8;
-  color: #575e75;
+    /* Some logos don't look well on dark background */
+    background: #F7F6F8;
+    color: #575E75;
 }
+
 .box,
 .box .box-content,
 body:not(.sa-body-editor) .button.white,
@@ -88,26 +95,32 @@ body:not(.sa-body-editor) .modal-content,
 .card,
 .extension-landing .project-card,
 body:not(.sa-body-editor) .stage-header_stage-button_hkl9B {
-  background: #282828;
+    background: #282828;
 }
+
 .comment-text::after {
-  border-color: #282828;
+    border-color: #282828;
 }
+
 .tabs li,
 .tabs li:hover,
 .tabs li.active:hover {
-  color: #fff;
+    color: #FFF;
 }
+
 .tabs li:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
 }
+
 .outer .categories li {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
+
 .outer .categories li:hover,
 .supporters-section .supporters-level hr {
-  background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
 }
+
 .box,
 .box .box-header,
 #footer, /* for infinite scrolling fixed footer */
@@ -138,61 +151,74 @@ input[type="checkbox"].formik-checkbox,
 .extension-landing .project-card,
 body:not(.sa-body-editor) .stage_stage_1fD7k,
 body:not(.sa-body-editor) .stage-header_stage-button_hkl9B {
-  border-color: #606060;
+    border-color: #606060;
 }
+
 .box .box-header {
-  border-top-color: transparent;
+    border-top-color: transparent;
 }
+
 .inplace-input,
 .inplace-textarea,
 .textarea,
 .modal {
-  background: #282828;
-  color: #fff;
+    background: #282828;
+    color: #FFF;
 }
+
 body:not(.sa-body-editor) .select select,
 body:not(.sa-body-editor) .select select:hover,
 body:not(.sa-body-editor) .select select:focus,
 body:not(.sa-body-editor) .select select option,
 .select .join-flow-join-flow-select {
-  color: #fff;
-  background-color: #282828;
+    color: #FFF;
+    background-color: #282828;
 }
+
 .social-message-icon {
-  opacity: 0.5;
+    opacity: 0.5;
 }
+
 .intro-banner {
-  background: transparent;
+    background: transparent;
 }
+
 .developers .title-banner.masthead {
-  background: #075e46;
+    background: #075E46;
 }
+
 .comment .comment-body .comment-bubble.comment-bubble-reported,
 .comment .comment-body .comment-bubble.comment-bubble-reported::before {
-  background: #371528;
-  border-color: #601;
+    background: #371528;
+    border-color: #601;
 }
+
 .replies.collapsed > .comment:last-of-type::after {
-  background: linear-gradient(rgba(37, 44, 55, 0), #252c37);
+    background: linear-gradient(rgba(37, 44, 55, 0), #252C37);
 }
+
 .studio-list-bottom-gradient {
-  background: linear-gradient(rgba(40, 40, 40, 0), #282828);
+    background: linear-gradient(rgba(40, 40, 40, 0), #282828);
 }
+
 .join-flow-privacy-message {
-  color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);
 }
+
 .emoji[src$="meow.png"] {
-  content: url(%addon-self-dir%/assets/meow.png);
+    content: url(%addon-self-dir%/assets/meow.png);
 }
+
 .emoji[src$="gobo.png"] {
-  content: url(%addon-self-dir%/assets/gobo.png);
+    content: url(%addon-self-dir%/assets/gobo.png);
 }
+
 .emoji[src$="waffle.png"] {
-  content: url(%addon-self-dir%/assets/waffle.png);
+    content: url(%addon-self-dir%/assets/waffle.png);
 }
 
 .project-info-alert,
 .monitor_label_ci1ok, /* for some strange reason, variable names inherit their color from the body, unlike list title names */
 .monitor_list-empty_1UKsB {
-  color: #575e75;
+    color: #575E75;
 }

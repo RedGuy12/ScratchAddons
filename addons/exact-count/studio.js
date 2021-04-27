@@ -11,7 +11,7 @@ export default async function ({ addon, global, console }) {
           let count = 40 * page + pageLen;
           callback(count);
         } else {
-          page -= delta;
+          page  -= delta;
           delta /= 10;
           countProjects(url, page + delta, delta, callback);
         }

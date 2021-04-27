@@ -6,6 +6,7 @@
 export default class UndoGroup {
   /**
    * Start an Undo group - begin recording
+   *
    * @param workspace the workspace
    */
   static startUndoGroup(workspace) {
@@ -17,6 +18,7 @@ export default class UndoGroup {
 
   /**
    * End an Undo group - stops recording
+   *
    * @param workspace the workspace
    */
   static endUndoGroup(workspace) {
@@ -28,20 +30,23 @@ export default class UndoGroup {
       for (let i = undoStack.length - 1; i >= 0 && !undoStack[i]._devtoolsLastUndo; i--) {
         undoStack[i].group = group;
       }
+
     }, 0);
   }
 }
 
 /**
  * https://github.com/LLK/scratch-blocks/blob/f159a1779e5391b502d374fb2fdd0cb5ca43d6a2/core/events.js#L182
+ *
  * @returns {string}
  * @private
  */
 function generateUID() {
   const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%()*+,-./:;=?@[]^_`{|}~";
-  let result = "";
+  let result       = "";
   for (let i = 0; i < 20; i++) {
     result += CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
   }
+
   return result;
 }

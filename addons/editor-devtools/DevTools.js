@@ -9,28 +9,28 @@ import UndoGroup from "./blockly/UndoGroup.js";
 export default class DevTools {
   constructor(addon, msg, m, helpHTML) {
     this.addon = addon;
-    this.msg = msg;
-    this.m = m;
+    this.msg   = msg;
+    this.m     = m;
     /**
      * @type {VirtualMachine}
      */
-    this.vm = addon.tab.traps.vm;
-    this.utils = new Utils(addon);
+    this.vm         = addon.tab.traps.vm;
+    this.utils      = new Utils(addon);
     this.domHelpers = new DomHelpers(addon);
-    this.multi = new Multi(this.utils);
+    this.multi      = new Multi(this.utils);
 
-    this._helpHTML = helpHTML;
-    this.find = null;
-    this.findInp = null;
-    this.ddOut = null;
-    this.dd = null;
-    this.codeTab = null;
-    this.costTab = null;
+    this._helpHTML   = helpHTML;
+    this.find        = null;
+    this.findInp     = null;
+    this.ddOut       = null;
+    this.dd          = null;
+    this.codeTab     = null;
+    this.costTab     = null;
     this.costTabBody = null;
-    this.selVarID = null;
-    this.floatInp = null;
+    this.selVarID    = null;
+    this.floatInp    = null;
     this.blockCursor = null;
-    this.canShare = false;
+    this.canShare    = false;
 
     this.mouseXY = { x: 0, y: 0 };
   }
@@ -59,6 +59,7 @@ export default class DevTools {
         document.getElementById("s3devHelpPop").remove();
       });
     }
+
     e.preventDefault();
   }
 
@@ -66,17 +67,17 @@ export default class DevTools {
     let costumes = this.costTabBody.querySelectorAll("div[class^='sprite-selector-item_sprite-name']");
     // this.costTab[0].click();
 
-    let myBlocks = [];
+    let myBlocks           = [];
     let myBlocksByProcCode = {};
 
     /**
-     * @param cls
-     * @param txt
-     * @param root
+     * @param   cls
+     * @param   txt
+     * @param   root
      * @returns BlockItem
      */
     function addBlock(cls, txt, root) {
-      let id = root.className;
+      let id    = root.className;
       let items = new BlockItem(cls, txt, id, 0);
       myBlocks.push(items);
       myBlocksByProcCode[txt] = items;
@@ -94,39 +95,42 @@ export default class DevTools {
 
   /**
    * Fetch the scratch 3 block list
+   *
    * @returns jsonFetch object
    */
   getScratchBlocks() {
     // Access Blockly!
 
-    let myBlocks = [];
+    let myBlocks           = [];
     let myBlocksByProcCode = {};
 
     // todo - get blockyly from an svg???
 
-    let wksp = this.utils.getWorkspace();
+    let wksp      = this.utils.getWorkspace();
     let topBlocks = wksp.getTopBlocks();
 
     // console.log(topBlocks);
 
     /**
-     * @param cls
-     * @param txt
-     * @param root
+     * @param   cls
+     * @param   txt
+     * @param   root
      * @returns BlockItem
      */
     function addBlock(cls, txt, root) {
-      let id = root.id ? root.id : root.getId ? root.getId() : null;
+      let id    = root.id ? root.id : root.getId ? root.getId() : null;
       let clone = myBlocksByProcCode[txt];
       if (clone) {
         if (!clone.clones) {
           clone.clones = [];
         }
+
         clone.clones.push(id);
         return clone;
       }
+
       let items = new BlockItem(cls, txt, id, 0);
-      items.y = root.getRelativeToSurfaceXY ? root.getRelativeToSurfaceXY().y : null;
+      items.y   = root.getRelativeToSurfaceXY ? root.getRelativeToSurfaceXY().y : null;
       myBlocks.push(items);
       myBlocksByProcCode[txt] = items;
       return items;
@@ -138,18 +142,20 @@ export default class DevTools {
       for (const fieldRow of fields.fieldRow) {
         desc = (desc ? desc + " " : "") + fieldRow.getText();
       }
+
       return desc;
     }
 
     for (const root of topBlocks) {
       if (root.type === "procedures_definition") {
-        let fields = root.inputList[0];
+        let fields   = root.inputList[0];
         let typeDesc = fields.fieldRow[0].getText();
-        let label = root.getChildren()[0];
+        let label    = root.getChildren()[0];
         let procCode = label.getProcCode();
         if (!procCode) {
           continue;
         }
+
         addBlock("define", typeDesc + " " + procCode, root);
         continue;
       }
@@ -170,6 +176,7 @@ export default class DevTools {
         } catch (e) {
           // eat
         }
+
         continue;
       }
 
@@ -240,12 +247,15 @@ export default class DevTools {
       if (t !== 0) {
         return t;
       }
+
       if (a.lower < b.lower) {
         return -1;
       }
+
       if (a.lower > b.lower) {
         return 1;
       }
+
       return a.y - b.y;
     });
 
@@ -274,9 +284,9 @@ export default class DevTools {
      */
     const procs = scratchBlocks.procs;
     for (const proc of procs) {
-      let li = document.createElement("li");
+      let li       = document.createElement("li");
       li.innerText = proc.procCode;
-      li.data = proc;
+      li.data      = proc;
       li.className = proc.cls;
       if (focusID) {
         if (proc.matchesID(focusID)) {
@@ -286,10 +296,11 @@ export default class DevTools {
           li.style.display = "none";
         }
       }
+
       this.dd.appendChild(li);
     }
 
-    let label = document.getElementById("s3devFindLabel");
+    let label          = document.getElementById("s3devFindLabel");
     this.utils.offsetX = this.ddOut.getBoundingClientRect().right - label.getBoundingClientRect().left + 26;
     this.utils.offsetY = 32;
 
@@ -332,8 +343,9 @@ export default class DevTools {
     if (float) {
       float.remove();
     }
+
     this.floatInp = null;
-    rhdd2 = 0;
+    rhdd2         = 0;
   }
 
   dom_removeChildren(myNode) {
@@ -344,10 +356,11 @@ export default class DevTools {
 
   /**
    * A nicely ordered version of the top blocks
+   *
    * @returns {[Blockly.Block]}
    */
   getTopBlocks() {
-    let result = this.getOrderedTopBlockColumns();
+    let result  = this.getOrderedTopBlockColumns();
     let columns = result.cols;
     /**
      * @type {[[Blockly.Block]]}
@@ -356,6 +369,7 @@ export default class DevTools {
     for (const col of columns) {
       topBlocks = topBlocks.concat(col.blocks);
     }
+
     return topBlocks;
   }
 
@@ -380,16 +394,16 @@ export default class DevTools {
     }
 
     let makeSpaceForBlock = dataId && workspace.getBlockById(dataId);
-    makeSpaceForBlock = makeSpaceForBlock && makeSpaceForBlock.getRootBlock();
+    makeSpaceForBlock     = makeSpaceForBlock && makeSpaceForBlock.getRootBlock();
 
     UndoGroup.startUndoGroup(workspace);
 
-    let result = this.getOrderedTopBlockColumns(true);
-    let columns = result.cols;
+    let result      = this.getOrderedTopBlockColumns(true);
+    let columns     = result.cols;
     let orphanCount = result.orphans.blocks.length;
     if (orphanCount > 0 && !dataId) {
       let message = this.msg("orphaned", {
-        count: orphanCount,
+        count: orphanCount
       });
       if (confirm(message)) {
         for (const block of result.orphans.blocks) {
@@ -405,21 +419,22 @@ export default class DevTools {
     let maxWidths = result.maxWidths;
 
     for (const column of columns) {
-      let cursorY = 64;
+      let cursorY  = 64;
       let maxWidth = 0;
 
       for (const block of column.blocks) {
-        let extraWidth = block === makeSpaceForBlock ? 380 : 0;
+        let extraWidth  = block === makeSpaceForBlock ? 380 : 0;
         let extraHeight = block === makeSpaceForBlock ? 480 : 72;
-        let xy = block.getRelativeToSurfaceXY();
+        let xy          = block.getRelativeToSurfaceXY();
         if (cursorX - xy.x !== 0 || cursorY - xy.y !== 0) {
           block.moveBy(cursorX - xy.x, cursorY - xy.y);
         }
+
         let heightWidth = block.getHeightWidth();
-        cursorY += heightWidth.height + extraHeight;
+        cursorY        += heightWidth.height + extraHeight;
 
         let maxWidthWithComments = maxWidths[block.id] || 0;
-        maxWidth = Math.max(maxWidth, Math.max(heightWidth.width + extraWidth, maxWidthWithComments));
+        maxWidth                 = Math.max(maxWidth, Math.max(heightWidth.width + extraWidth, maxWidthWithComments));
       }
 
       cursorX += maxWidth + 96;
@@ -437,8 +452,8 @@ export default class DevTools {
     setTimeout(() => {
       // Locate unused local variables...
       let workspace = this.utils.getWorkspace();
-      let map = workspace.getVariableMap();
-      let vars = map.getVariablesOfType("");
+      let map       = workspace.getVariableMap();
+      let vars      = map.getVariablesOfType("");
 
       let unusedLocals = [];
 
@@ -453,16 +468,18 @@ export default class DevTools {
 
       if (unusedLocals.length > 0 && !dataId) {
         const unusedCount = unusedLocals.length;
-        let message = this.msg("unused-var", {
-          count: unusedCount,
+        let message       = this.msg("unused-var", {
+          count: unusedCount
         });
         for (let i = 0; i < unusedLocals.length; i++) {
           let orphan = unusedLocals[i];
           if (i > 0) {
             message += ", ";
           }
+
           message += orphan.name;
         }
+
         if (confirm(message)) {
           for (const orphan of unusedLocals) {
             workspace.deleteVariableById(orphan.getId());
@@ -476,7 +493,8 @@ export default class DevTools {
 
   /**
    * Badly Ophaned - might want to delete these!
-   * @param topBlock
+   *
+   * @param   topBlock
    * @returns {boolean}
    */
   isBlockAnOrphan(topBlock) {
@@ -485,11 +503,12 @@ export default class DevTools {
 
   /**
    * Split the top blocks into ordered columns
-   * @param separateOrphans true to keep all orphans separate
+   *
+   * @param   separateOrphans true to keep all orphans separate
    * @returns {{orphans: {blocks: [Block], x: number, count: number}, cols: [Col]}}
    */
   getOrderedTopBlockColumns(separateOrphans) {
-    let w = this.utils.getWorkspace();
+    let w         = this.utils.getWorkspace();
     let topBlocks = w.getTopBlocks();
     let maxWidths = {};
 
@@ -509,8 +528,8 @@ export default class DevTools {
           let right = comment.getBoundingRectangle().bottomRight.x;
 
           // Get top block for stack...
-          let root = comment.block_.getRootBlock();
-          let left = root.getBoundingRectangle().topLeft.x;
+          let root           = comment.block_.getRootBlock();
+          let left           = root.getBoundingRectangle().topLeft.x;
           maxWidths[root.id] = Math.max(right - left, maxWidths[root.id] || 0);
         }
       }
@@ -521,9 +540,9 @@ export default class DevTools {
     /**
      * @type {Col[]}
      */
-    let cols = [];
+    let cols        = [];
     const TOLERANCE = 256;
-    let orphans = { x: -999999, count: 0, blocks: [] };
+    let orphans     = { x: -999999, count: 0, blocks: [] };
 
     for (const topBlock of topBlocks) {
       // let r = b.getBoundingRectangle();
@@ -531,7 +550,7 @@ export default class DevTools {
       /**
        * @type {Col}
        */
-      let bestCol = null;
+      let bestCol   = null;
       let bestError = TOLERANCE;
 
       if (separateOrphans && this.isBlockAnOrphan(topBlock)) {
@@ -544,7 +563,7 @@ export default class DevTools {
         let err = Math.abs(position.x - col.x);
         if (err < bestError) {
           bestError = err;
-          bestCol = col;
+          bestCol   = col;
         }
       }
 
@@ -573,7 +592,8 @@ export default class DevTools {
 
   /**
    * Find all the uses of a named variable.
-   * @param {string} id ID of the variable to find.
+   *
+   * @param  {string} id ID of the variable to find.
    * @return {!Array.<!Blockly.Block>} Array of block usages.
    */
   getVariableUsesById(id) {
@@ -581,10 +601,14 @@ export default class DevTools {
 
     let topBlocks = this.getTopBlocks(true); // todo: Confirm this was the right getTopBlocks?
     for (const topBlock of topBlocks) {
-      /** @type {!Array<!Blockly.Block>} */
+      /**
+ * @type {!Array<!Blockly.Block>}
+*/
       let kids = topBlock.getDescendants();
       for (const block of kids) {
-        /** @type {!Array<!Blockly.VariableModel>} */
+        /**
+ * @type {!Array<!Blockly.VariableModel>}
+*/
         let blockVariables = block.getVarModels();
         if (blockVariables) {
           for (const blockVar of blockVariables) {
@@ -601,19 +625,22 @@ export default class DevTools {
 
   /**
    * Find all the uses of a named procedure.
-   * @param {string} id ID of the variable to find.
+   *
+   * @param  {string} id ID of the variable to find.
    * @return {!Array.<!Blockly.Block>} Array of block usages.
    */
   getCallsToProcedureById(id) {
-    let w = this.utils.getWorkspace();
+    let w         = this.utils.getWorkspace();
     let procBlock = w.getBlockById(id);
-    let label = procBlock.getChildren()[0];
-    let procCode = label.getProcCode();
+    let label     = procBlock.getChildren()[0];
+    let procCode  = label.getProcCode();
 
-    let uses = [procBlock]; // Definition First, then calls to it
+    let uses      = [procBlock]; // Definition First, then calls to it
     let topBlocks = this.getTopBlocks(true);
     for (const topBlock of topBlocks) {
-      /** @type {!Array<!Blockly.Block>} */
+      /**
+ * @type {!Array<!Blockly.Block>}
+*/
       let kids = topBlock.getDescendants();
       for (const block of kids) {
         if (block.type === "procedures_call") {
@@ -629,7 +656,8 @@ export default class DevTools {
 
   /**
    * Find all the uses of a named procedure.
-   * @param {string} name name of the variable to find.
+   *
+   * @param  {string} name name of the variable to find.
    * @return {!Array.<!Blockly.Block>} Array of block usages.
    */
   getCallsToEventsByName(name) {
@@ -666,15 +694,18 @@ export default class DevTools {
 
   /**
    * Find all the evern broadcasters.
+   *
    * @return {[{eventName:string, block:Block}]} Array of event names and blocks.
    */
   getCallsToEvents() {
-    const uses = []; // Definition First, then calls to it
+    const uses  = []; // Definition First, then calls to it
     const found = {};
 
     let topBlocks = this.getTopBlocks(true);
     for (const topBlock of topBlocks) {
-      /** @type {!Array<!Blockly.Block>} */
+      /**
+ * @type {!Array<!Blockly.Block>}
+*/
       let kids = topBlock.getDescendants();
       for (const block of kids) {
         if (block.type === "event_broadcast" || block.type === "event_broadcastandwait") {
@@ -698,11 +729,12 @@ export default class DevTools {
       if (nav) {
         nav.remove();
       }
+
       li.insertAdjacentHTML(
         "beforeend",
         `
-                    <span id="s3devMulti" class="s3devMulti">
-                        <span id="s3devMultiLeft" class="s3devNav">◀</span><span id="s3devMultiCount"></span><span id="s3devMultiRight" class="s3devNav">▶</span>
+                    <span id     ="s3devMulti" class="s3devMulti">
+                        <span id ="s3devMultiLeft" class="s3devNav">◀</span><span id="s3devMultiCount"></span><span id="s3devMultiRight" class="s3devNav">▶</span>
                     </span>
                 `
       );
@@ -719,6 +751,7 @@ export default class DevTools {
             break;
           }
         }
+
         // multi.idx = blocks.indexOf(instanceBlock);
       }
 
@@ -733,6 +766,7 @@ export default class DevTools {
 
   /**
    * Move a costume to the top or bottom of the list
+   *
    * @param top true for the top, false for the bottom
    * @param selected optional parameter to pass in the costume div to be moved
    */
@@ -743,13 +777,15 @@ export default class DevTools {
       if (selected.length === 0) {
         return;
       }
+
       selected = selected[0].querySelectorAll("div[class^='sprite-selector-item_sprite-name']")[0];
     }
+
     let costumes = this.costTabBody.querySelectorAll("div[class^='sprite-selector-item_sprite-name']");
 
     // First scroll sprite view to reveal top or bottom otherwise this won't work.
-    let scroller = selected.closest("div[class*=selector_list-area]");
-    let lastScroll = scroller.scrollTop;
+    let scroller       = selected.closest("div[class*=selector_list-area]");
+    let lastScroll     = scroller.scrollTop;
     scroller.scrollTop = top ? 0 : scroller.scrollHeight;
 
     this.domHelpers.triggerDragAndDrop(selected, costumes[top ? 0 : costumes.length - 1], undefined);
@@ -772,7 +808,7 @@ export default class DevTools {
     if (cls === "costume") {
       // Viewing costumes - jump to selected costume
       let costumes = this.costTabBody.querySelectorAll("div[class^='sprite-selector-item_sprite-name']");
-      let costume = costumes[li.data.y];
+      let costume  = costumes[li.data.y];
       if (costume) {
         costume.click();
         setTimeout(() => {
@@ -780,7 +816,7 @@ export default class DevTools {
           costume.parentElement.parentElement.scrollIntoView({
             behavior: "auto",
             block: "center",
-            inline: "start",
+            inline: "start"
           });
           wrapper.scrollTop = 0;
         }, 10);
@@ -816,12 +852,14 @@ export default class DevTools {
           }
         }
       }
+
       this.buildNavigationCarousel(nav, li, blocks, instanceBlock);
     } else if (li.data.clones) {
       let blocks = [workspace.getBlockById(li.data.labelID)];
       for (const cloneID of li.data.clones) {
         blocks.push(workspace.getBlockById(cloneID));
       }
+
       this.buildNavigationCarousel(nav, li, blocks, instanceBlock);
     } else {
       this.multi.blocks = null;
@@ -845,9 +883,11 @@ export default class DevTools {
       if (!li || li === this.dd) {
         return;
       }
+
       if (li.data) {
         break;
       }
+
       li = li.parentNode;
     }
 
@@ -855,7 +895,7 @@ export default class DevTools {
     // e.navKey is set when this is called from the keyboard handler...
     if (!e.navKey) {
       let sel = this.dd.getElementsByClassName("sel");
-      sel = sel.length > 0 ? sel[0] : null;
+      sel     = sel.length > 0 ? sel[0] : null;
       if (sel && sel !== li) {
         try {
           sel.classList.remove("sel");
@@ -864,6 +904,7 @@ export default class DevTools {
           console.error(e);
         }
       }
+
       if (li !== sel) {
         li.classList.add("sel");
       }
@@ -874,11 +915,13 @@ export default class DevTools {
       e.preventDefault();
       e.cancelBubble = true;
     }
+
     return false;
   }
 
   /**
    * Based on wksp.centerOnBlock(li.data.labelID);
+   *
    * @param e
    * @param force if true, the view always moves, otherwise only move if the selected element is not entirely visible
    */
@@ -899,7 +942,7 @@ export default class DevTools {
       return;
     }
 
-    prevVal = val;
+    prevVal           = val;
     this.multi.blocks = null;
 
     //
@@ -908,19 +951,21 @@ export default class DevTools {
     let listLI = this.dd.getElementsByTagName("li");
     for (const li of listLI) {
       let procCode = li.data.procCode;
-      let i = li.data.lower.indexOf(val);
+      let i        = li.data.lower.indexOf(val);
       if (i >= 0) {
         li.style.display = "block";
         this.dom_removeChildren(li);
         if (i > 0) {
           li.appendChild(document.createTextNode(procCode.substring(0, i)));
         }
+
         let bText = document.createElement("b");
         bText.appendChild(document.createTextNode(procCode.substr(i, val.length)));
         li.appendChild(bText);
         if (i + val.length < procCode.length) {
           li.appendChild(document.createTextNode(procCode.substr(i + val.length)));
         }
+
         // li.innerHTML = enc(procCode.substring(0, i)) + '<b>' + enc(procCode.substr(i, val.length)) + "</b>" + enc(procCode.substr(i + val.length));
       } else {
         li.style.display = "none";
@@ -930,6 +975,7 @@ export default class DevTools {
 
   /**
    * Select previous or next item in the drop down filter list
+   *
    * @param dir direction of navigation: -1=up, 1=down
    */
   navigateFilter(dir) {
@@ -941,13 +987,16 @@ export default class DevTools {
       nxt = this.dd.children[0];
       dir = 1;
     }
+
     while (nxt && nxt.style.display === "none") {
       nxt = dir === -1 ? nxt.previousSibling : nxt.nextSibling;
     }
+
     if (nxt) {
       for (const i of sel) {
         i.classList.remove("sel");
       }
+
       nxt.classList.add("sel");
       this.dropDownClick({ target: nxt, navKey: true });
       // centerTop(nxt.data.labelID);
@@ -992,6 +1041,7 @@ export default class DevTools {
       if (sel.length === 0) {
         this.navigateFilter(1);
       }
+
       // noinspection JSUnresolvedFunction
       document.activeElement.blur();
       e.preventDefault();
@@ -1007,6 +1057,7 @@ export default class DevTools {
         // noinspection JSUnresolvedFunction
         document.activeElement.blur();
       }
+
       e.preventDefault();
       return;
     }
@@ -1066,17 +1117,19 @@ export default class DevTools {
 
   /**
    * Quick and dirty replace all instances of one variable / list with another variable / list
+   *
    * @param varId original variable name
    * @param newVarName new variable name
    * @param type type of variable ("" = variable, anything else is a list?
    */
   doReplaceVariable(varId, newVarName, type) {
     let wksp = this.utils.getWorkspace();
-    let v = wksp.getVariable(newVarName, type);
+    let v    = wksp.getVariable(newVarName, type);
     if (!v) {
       alert(this.msg("var-not-exist"));
       return;
     }
+
     let newVId = v.getId();
 
     UndoGroup.startUndoGroup(wksp);
@@ -1092,6 +1145,7 @@ export default class DevTools {
         // ignore
       }
     }
+
     UndoGroup.endUndoGroup(wksp);
   }
 
@@ -1200,7 +1254,8 @@ export default class DevTools {
 
   /**
    * Click Event Handler - User has clicked the replace variable option - ask for the variable to replace with...
-   * @param e the event
+   *
+   * @param   e the event
    * @returns {boolean} cancelled?
    */
   clickReplace(e) {
@@ -1208,12 +1263,13 @@ export default class DevTools {
     this.hidePopups(wksp);
 
     setTimeout(() => {
-      let wksp = this.utils.getWorkspace();
-      let v = wksp.getVariableById(this.selVarID);
+      let wksp    = this.utils.getWorkspace();
+      let v       = wksp.getVariableById(this.selVarID);
       let varName = window.prompt(this.msg("replace", { name: v.name }));
       if (varName) {
         this.doReplaceVariable(this.selVarID, varName, v.type);
       }
+
     }, 0);
     e.preventDefault();
     return false;
@@ -1221,15 +1277,17 @@ export default class DevTools {
 
   /**
    * Returns a Set of the top blocks in this workspace / sprite
+   *
    * @returns {Set<any>} Set of top blocks
    */
   getTopBlockIDs() {
-    let wksp = this.utils.getWorkspace();
+    let wksp      = this.utils.getWorkspace();
     let topBlocks = wksp.getTopBlocks();
-    let ids = new Set();
+    let ids       = new Set();
     for (const block of topBlocks) {
       ids.add(block.id);
     }
+
     return ids;
   }
 
@@ -1237,13 +1295,15 @@ export default class DevTools {
    * Initiates a drag event for all block stacks except those in the set of ids.
    * But why? - Because we know all the ids of the existing stacks before we paste / duplicate - so we can find the
    * new stack by excluding all the known ones.
+   *
    * @param ids Set of previously known ids
    */
   beginDragOfNewBlocksNotInIDs(ids) {
     if (!this.addon.settings.get("enablePasteBlocksAtMouse")) {
       return;
     }
-    let wksp = this.utils.getWorkspace();
+
+    let wksp      = this.utils.getWorkspace();
     let topBlocks = wksp.getTopBlocks();
     for (const block of topBlocks) {
       if (!ids.has(block.id)) {
@@ -1264,14 +1324,14 @@ export default class DevTools {
     function switchCostume(up) {
       // todo: select previous costume
       let selected = this.costTabBody.querySelector("div[class*='sprite-selector-item_is-selected']");
-      let node = up ? selected.parentNode.previousSibling : selected.parentNode.nextSibling;
+      let node     = up ? selected.parentNode.previousSibling : selected.parentNode.nextSibling;
       if (node) {
         let wrapper = node.closest("div[class*=gui_flex-wrapper]");
         node.querySelector("div[class^='sprite-selector-item_sprite-name']").click();
         node.scrollIntoView({
           behavior: "auto",
           block: "center",
-          inline: "start",
+          inline: "start"
         });
         wrapper.scrollTop = 0;
       }
@@ -1305,6 +1365,7 @@ export default class DevTools {
       if (document.activeElement.tagName === "INPUT") {
         return;
       }
+
       // todo: if (!this.addon.settings.get("enableCtrlLeftRightNav")) {
       //         return;
       //       }
@@ -1313,6 +1374,7 @@ export default class DevTools {
       } else if (this.isCostumeEditor()) {
         switchCostume(true);
       }
+
       e.cancelBubble = true;
       e.preventDefault();
       return true;
@@ -1323,6 +1385,7 @@ export default class DevTools {
       if (document.activeElement.tagName === "INPUT") {
         return;
       }
+
       // todo: if (!this.addon.settings.get("enableCtrlLeftRightNav")) {
       //         return;
       //       }
@@ -1331,6 +1394,7 @@ export default class DevTools {
       } else if (this.isCostumeEditor()) {
         switchCostume(false);
       }
+
       e.cancelBubble = true;
       e.preventDefault();
       return true;
@@ -1377,24 +1441,24 @@ export default class DevTools {
           contextMenu.insertAdjacentHTML(
             "beforeend",
             `
-                            <div class="${this.addon.tab.scratchClass(
+                            <div class   ="${this.addon.tab.scratchClass(
                               "context-menu_menu-item",
                               "context-menu_menu-item-bordered",
                               {
-                                others: ["react-contextmenu-item", "s3devSTT"],
+                                others: ["react-contextmenu-item", "s3devSTT"]
                               }
                             )}" role="menuitem"
-                                tabindex="-1" aria-disabled="false"><span>${this.m("top")}</span></div>
-                            <div class="${this.addon.tab.scratchClass("context-menu_menu-item", {
-                              others: ["react-contextmenu-item", "s3devSTT"],
+                                tabindex ="-1" aria-disabled="false"><span>${this.m("top")}</span></div>
+                            <div class   ="${this.addon.tab.scratchClass("context-menu_menu-item", {
+                              others: ["react-contextmenu-item", "s3devSTT"]
                             })}" role="menuitem"
-                                tabindex="-1" aria-disabled="false"><span>${this.m("bottom")}</span></div>
+                                tabindex ="-1" aria-disabled="false"><span>${this.m("bottom")}</span></div>
                         `
           );
         }
       }
 
-      let blockSvg = e.target.closest("[data-id]");
+      let blockSvg     = e.target.closest("[data-id]");
       let isBackground = !blockSvg && e.target.closest("svg.blocklySvg");
       if (blockSvg || isBackground) {
         let dataId = blockSvg && blockSvg.getAttribute("data-id");
@@ -1405,14 +1469,16 @@ export default class DevTools {
             if (!widget) {
               return;
             }
+
             let blocklyContextMenu = widget.querySelector("div.blocklyContextMenu");
             if (!blocklyContextMenu) {
               return;
             }
+
             if (isBackground) {
               let cleanupPlus = this.addon.settings.get("enableCleanUpPlus");
 
-              let nodes = blocklyContextMenu.children;
+              let nodes         = blocklyContextMenu.children;
               const realBlockly = await this.addon.tab.traps.getBlockly();
               if (cleanupPlus) {
                 for (const node of nodes) {
@@ -1422,23 +1488,23 @@ export default class DevTools {
                   }
                 }
               }
-              let html = cleanupPlus
-                ? `
-                  <div id="s3devCleanUp" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
-                      <div class="goog-menuitem-content" style="user-select: none;">${this.m("clean-plus")}</div>
-                  </div>
-              `
-                : "";
 
-              html += `
-                  <div id="s3devPaste" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none;">
-                      <div class="goog-menuitem-content" style="user-select: none;">${this.m("paste")}</div>
+              let html    = cleanupPlus
+                ? `
+                  <div id ="s3devCleanUp" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
+                      <div class ="goog-menuitem-content" style="user-select: none;">${this.m("clean-plus")}</div>
+                  </div>
+              `: "";
+
+              html       += `
+                  <div id ="s3devPaste" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none;">
+                      <div class ="goog-menuitem-content" style="user-select: none;">${this.m("paste")}</div>
                   </div>
               `;
               blocklyContextMenu.insertAdjacentHTML("beforeend", html);
             } else {
-              let wksp = this.utils.getWorkspace();
-              let block = wksp.getBlockById(dataId);
+              let wksp     = this.utils.getWorkspace();
+              let block    = wksp.getBlockById(dataId);
               let isFlyOut = block.workspace.isFlyout;
 
               /* todo - look at this menu code ***** !!!!!
@@ -1474,17 +1540,17 @@ export default class DevTools {
                 blocklyContextMenu.insertAdjacentHTML(
                   "beforeend",
                   `
-                    <div id="s3devMakeSpace" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
-                        <div class="goog-menuitem-content" style="user-select: none;">${this.m("make-space")}</div>
+                    <div id ="s3devMakeSpace" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
+                        <div class ="goog-menuitem-content" style="user-select: none;">${this.m("make-space")}</div>
                     </div>
-                    <div id="s3devCopy" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
-                        <div class="goog-menuitem-content" style="user-select: none;">${this.m("copy-all")}</div>
+                    <div id        ="s3devCopy" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
+                        <div class ="goog-menuitem-content" style="user-select: none;">${this.m("copy-all")}</div>
                     </div>
-                    <div id="s3devCopyBlock" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none;">
-                        <div class="goog-menuitem-content" style="user-select: none;">${this.m("copy-block")}</div>
+                    <div id        ="s3devCopyBlock" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none;">
+                        <div class ="goog-menuitem-content" style="user-select: none;">${this.m("copy-block")}</div>
                     </div>
-                    <div id="s3devCutBlock" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none;">
-                        <div class="goog-menuitem-content" style="user-select: none;">${this.m("cut-block")}</div>
+                    <div id        ="s3devCutBlock" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none;">
+                        <div class ="goog-menuitem-content" style="user-select: none;">${this.m("cut-block")}</div>
                     </div>
                   `
                 );
@@ -1495,20 +1561,20 @@ export default class DevTools {
                 blocklyContextMenu.insertAdjacentHTML(
                   "beforeend",
                   `
-                        <div id="s3devReplaceAllVars" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
-                            <div class="goog-menuitem-content" style="user-select: none;">${this.m("swap", {
-                              var: block.getCategory() === "data" ? this.m("variables") : this.m("lists"),
+                        <div id ="s3devReplaceAllVars" class="goog-menuitem s3dev-mi" role="menuitem" style="user-select: none; border-top: 1px solid hsla(0, 0%, 0%, 0.15);">
+                            <div class ="goog-menuitem-content" style="user-select: none;">${this.m("swap", {
+                              var: block.getCategory() === "data" ? this.m("variables") : this.m("lists")
                             })}</div>
                         </div>
                   `
                 );
-                this.selVarID = block.getVars()[0];
+                this.selVarID          = block.getVars()[0];
               }
             }
 
             if (blocklyContextMenu.children.length < 15) {
               blocklyContextMenu.style.maxHeight = "none";
-              widget.style.height = blocklyContextMenu.getBoundingClientRect().height + 12 + "px";
+              widget.style.height                = blocklyContextMenu.getBoundingClientRect().height + 12 + "px";
               blocklyContextMenu.style.maxHeight = "";
             }
 
@@ -1516,26 +1582,31 @@ export default class DevTools {
             if (copyDiv) {
               copyDiv.addEventListener("click", (...e) => this.doCleanUp(...e));
             }
+
             copyDiv = blocklyContextMenu.querySelector("div#s3devMakeSpace");
             if (copyDiv) {
               copyDiv.addEventListener("click", (e) => this.doCleanUp(e, dataId));
             }
+
             copyDiv = blocklyContextMenu.querySelector("div#s3devCopy");
             if (copyDiv) {
               copyDiv.addEventListener("click", (...e) => eventCopyClick(...e));
             }
+
             copyDiv = blocklyContextMenu.querySelector("div#s3devCopyBlock");
             if (copyDiv) {
               copyDiv.addEventListener("click", (e) => {
                 eventCopyClick(e, 1);
               });
             }
+
             copyDiv = blocklyContextMenu.querySelector("div#s3devCutBlock");
             if (copyDiv) {
               copyDiv.addEventListener("click", (e) => {
                 eventCopyClick(e, 2);
               });
             }
+
             copyDiv = blocklyContextMenu.querySelector("div#s3devReplaceAllVars");
             if (copyDiv) {
               copyDiv.addEventListener("click", (...e) => this.clickReplace(...e));
@@ -1561,12 +1632,14 @@ export default class DevTools {
                     if (next) {
                       wksp.undo(); // undo the unplug above...
                     }
+
                     if (blockOnly === 2) {
                       let block = wksp.getBlockById(dataId);
                       UndoGroup.startUndoGroup(wksp);
                       block.dispose(true);
                       UndoGroup.endUndoGroup(wksp);
                     }
+
                   }, 0);
                 }
               }
@@ -1584,7 +1657,7 @@ export default class DevTools {
                   new KeyboardEvent("keydown", {
                     keyCode: 86,
                     ctrlKey: true,
-                    griff: true,
+                    griff: true
                   })
                 );
 
@@ -1593,6 +1666,7 @@ export default class DevTools {
                 }, 10);
               });
             }
+
           }, 1);
         }
       }
@@ -1660,15 +1734,15 @@ export default class DevTools {
     document.body.insertAdjacentHTML(
       "beforeend",
       `
-            <div id="s3devFloatingBar">
-                <label class='title s3devLabel' id=s3devInsertLabel>
-                    <span style="display:none;">${this.m("insert")} </span>
-                    <span id=s3devInsert class="s3devWrap">
-                        <div id='s3devIDDOut' class="s3devDDOut">
-                            <input id='s3devIInp' class="${this.addon.tab.scratchClass("input_input-form", {
-                              others: "s3devInp",
+            <div id ="s3devFloatingBar">
+                <label class          ='title s3devLabel' id=s3devInsertLabel>
+                    <span style       ="display:none;">${this.m("insert")} </span>
+                    <span id          =s3devInsert class="s3devWrap">
+                        <div id       ='s3devIDDOut' class="s3devDDOut">
+                            <input id ='s3devIInp' class="${this.addon.tab.scratchClass("input_input-form", {
+                              others: "s3devInp"
                             })}" type='search' placeholder='${this.m("start-typing")}' autocomplete='off'>
-                            <ul id='s3devIDD' class="s3devDD"></ul>
+                            <ul id ='s3devIDD' class="s3devDD"></ul>
                         </div>
                     </span>
                 </label>
@@ -1676,9 +1750,9 @@ export default class DevTools {
         `
     );
 
-    floatBar = document.getElementById("s3devFloatingBar");
+    floatBar            = document.getElementById("s3devFloatingBar");
     floatBar.style.left = this.mouseXY.x + 16 + "px";
-    floatBar.style.top = this.mouseXY.y - 8 + "px";
+    floatBar.style.top  = this.mouseXY.y - 8 + "px";
 
     this.floatInp = document.getElementById("s3devIInp");
     this.floatInp.focus();
@@ -1704,6 +1778,7 @@ export default class DevTools {
         this.blockCursor = null; // Clear the cursor if using the mouse
         this.middleClickWorkspace(e);
       }
+
       return;
     }
 
@@ -1711,9 +1786,9 @@ export default class DevTools {
       return;
     }
 
-    let w = this.utils.getWorkspace();
+    let w      = this.utils.getWorkspace();
     let dataId = blockSvg.getAttribute("data-id");
-    let block = w.getBlockById(dataId);
+    let block  = w.getBlockById(dataId);
     if (!block) {
       return;
     }
@@ -1728,11 +1803,11 @@ export default class DevTools {
         // todo: navigate to definition
         let findProcCode = block.getProcCode();
 
-        let wksp = this.utils.getWorkspace();
+        let wksp      = this.utils.getWorkspace();
         let topBlocks = wksp.getTopBlocks();
         for (const root of topBlocks) {
           if (root.type === "procedures_definition") {
-            let label = root.getChildren()[0];
+            let label    = root.getChildren()[0];
             let procCode = label.getProcCode();
             if (procCode && procCode === findProcCode) {
               // Found... navigate to it!
@@ -1755,10 +1830,9 @@ export default class DevTools {
         return;
       }
 
-      if (
-        block.type === "data_variable" ||
-        block.type === "data_changevariableby" ||
-        block.type === "data_setvariableto"
+      if (block.type === "data_variable"
+          || block.type === "data_changevariableby"
+          || block.type === "data_setvariableto"
       ) {
         let id = block.getVars()[0];
 
@@ -1775,10 +1849,9 @@ export default class DevTools {
         return;
       }
 
-      if (
-        block.type === "event_whenbroadcastreceived" ||
-        block.type === "event_broadcastandwait" ||
-        block.type === "event_broadcast"
+      if (block.type === "event_whenbroadcastreceived"
+          || block.type === "event_broadcastandwait"
+          || block.type === "event_broadcast"
       ) {
         // todo: actually index the broadcasts...!
         let id = block.id;
@@ -1807,6 +1880,7 @@ export default class DevTools {
       default:
         return block.startHat_ ? "hat" : "block";
     }
+
   }
 
   buildFloatingFilterList(e, floatBar) {
@@ -1820,11 +1894,11 @@ export default class DevTools {
     // 107 blocks, not in order... but we can sort by y value or description right :)
 
     let fullDom = Blockly.Xml.workspaceToDom(t.flyout_.getWorkspace());
-    const doms = {};
+    const doms  = {};
     for (const x of fullDom.children) {
       if (x.tagName === "BLOCK") {
         // let type = x.getAttribute('type');
-        let id = x.getAttribute("id");
+        let id   = x.getAttribute("id");
         doms[id] = x;
       }
     }
@@ -1847,7 +1921,7 @@ export default class DevTools {
     //DROPDOWN_BLOCK_LIST_MAX_ROWS
 
     for (const option of options) {
-      const li = document.createElement("li");
+      const li   = document.createElement("li");
       const desc = option.desc;
 
       // bType = hat block reporter boolean
@@ -1857,13 +1931,14 @@ export default class DevTools {
       count++;
 
       li.innerText = desc;
-      li.data = { text: desc, lower: " " + desc.toLowerCase(), option: option };
+      li.data      = { text: desc, lower: " " + desc.toLowerCase(), option: option };
       li.className =
         "var " + (option.block.isScratchExtension ? "extension" : option.block.getCategory()) + " " + bType; // proc.cls;
       if (count > DROPDOWN_BLOCK_LIST_MAX_ROWS) {
         // Limit maximum number of rows to prevent lag when no filter is applied
         li.style.display = "none";
       }
+
       dd.appendChild(li);
     }
 
@@ -1875,9 +1950,10 @@ export default class DevTools {
 
   /**
    * Flesh out a blocks description - duplicate up blocks with contained picklists (like list drop downs)
-   * @param block
-   * @param options
-   * @param doms
+   *
+   * @param   block
+   * @param   options
+   * @param   doms
    * @returns {string}
    */
   getBlockText(block, options, doms) {
@@ -1901,7 +1977,7 @@ export default class DevTools {
           let text;
 
           if (!picklist && field.className_ === "blocklyText blocklyDropdownText") {
-            picklist = field.getOptions();
+            picklist  = field.getOptions();
             pickField = field.name;
             if (picklist && picklist.length > 0) {
               text = "^^";
@@ -1922,6 +1998,7 @@ export default class DevTools {
           }
         }
       }
+
     };
 
     process(block);
@@ -1929,21 +2006,21 @@ export default class DevTools {
     if (picklist) {
       for (const item of picklist) {
         let code = item[1];
-        if (
-          typeof code !== "string" || // Audio Record is a function!
-          code === "DELETE_VARIABLE_ID" ||
-          code === "RENAME_VARIABLE_ID" ||
-          code === "NEW_BROADCAST_MESSAGE_ID" ||
-          code === "NEW_BROADCAST_MESSAGE_ID"
+        if (typeof code !== "string"  // Audio Record is a function!
+            || code === "DELETE_VARIABLE_ID"
+            || code === "RENAME_VARIABLE_ID"
+            || code === "NEW_BROADCAST_MESSAGE_ID"
+            || code === "NEW_BROADCAST_MESSAGE_ID"
         ) {
           continue; // Skip these
         }
+
         options.push({
           desc: desc.replace("^^", item[0]),
           block: block,
           dom: dom,
           option: item,
-          pickField: pickField,
+          pickField: pickField
         });
       }
     } else {
@@ -1959,22 +2036,26 @@ export default class DevTools {
       e.preventDefault();
       return;
     }
+
     if (e.keyCode === 40) {
       this.navigateFloatFilter(1);
       e.preventDefault();
       return;
     }
+
     if (e.keyCode === 13) {
       // Enter
-      let dd = document.getElementById("s3devIDD");
+      let dd  = document.getElementById("s3devIDD");
       let sel = dd.querySelector(".sel");
       if (sel) {
         this.dropDownFloatClick(e);
       }
+
       e.cancelBubble = true;
       e.preventDefault();
       return;
     }
+
     if (e.keyCode === 27) {
       // Escape
       let findInp = document.getElementById("s3devIInp");
@@ -1984,13 +2065,15 @@ export default class DevTools {
       } else {
         this.reallyHideFloatDropDown(true);
       }
+
       e.preventDefault();
       return;
     }
+
   }
 
   navigateFloatFilter(dir) {
-    let dd = document.getElementById("s3devIDD");
+    let dd  = document.getElementById("s3devIDD");
     let sel = dd.getElementsByClassName("sel");
     let nxt;
     if (sel.length > 0 && sel[0].style.display !== "none") {
@@ -1999,20 +2082,25 @@ export default class DevTools {
       nxt = dd.children[0];
       dir = 1;
     }
+
     while (nxt && nxt.style.display === "none") {
       nxt = dir === -1 ? nxt.previousSibling : nxt.nextSibling;
     }
+
     if (nxt) {
       for (const i of sel) {
         i.classList.remove("sel");
       }
+
       nxt.classList.add("sel");
       // centerTop(nxt.data.labelID);
     }
+
   }
 
   /**
    * This is a feature in progress - can we have a virtual cursor that allows the next injected element position be automated
+   *
    * @param block a blockly block
    * @param typ type
    */
@@ -2037,6 +2125,7 @@ export default class DevTools {
 
   /**
    * Inject the selected block into the script
+   *
    * @param e
    */
   dropDownFloatClick(e) {
@@ -2057,15 +2146,15 @@ export default class DevTools {
 
     if (!sel || !sel.data) {
       let dd = document.getElementById("s3devIDD");
-      sel = dd.querySelector(".sel");
+      sel    = dd.querySelector(".sel");
     }
 
     if (!sel) {
       return;
     }
 
-    const xml = new XML();
-    let x = xml.xmlDoc.firstChild;
+    const xml  = new XML();
+    let x      = xml.xmlDoc.firstChild;
     let option = sel.data.option;
     // block:option.block, dom:option.dom, option:option.option
     if (option.option) {
@@ -2118,32 +2207,33 @@ export default class DevTools {
       return;
     }
 
-    prevVal = val;
+    prevVal           = val;
     this.multi.blocks = null;
 
     let dd = document.getElementById("s3devIDD");
-    let p = dd.parentNode;
+    let p  = dd.parentNode;
     dd.remove();
 
     let count = 0;
 
-    let split = val.split(" ");
+    let split  = val.split(" ");
     let listLI = dd.getElementsByTagName("li");
     for (const li of listLI) {
       const procCode = li.data.text;
-      const lower = li.data.lower;
+      const lower    = li.data.lower;
       // let i = li.data.lower.indexOf(val);
       // let array = regExp.exec(li.data.lower);
 
-      let im = 0;
+      let im    = 0;
       let match = [];
       for (let si = 0; si < split.length; si++) {
         let find = " " + split[si];
-        let idx = lower.indexOf(find, im);
+        let idx  = lower.indexOf(find, im);
         if (idx === -1) {
           match = null;
           break;
         }
+
         match.push(idx);
         im = idx + find.length;
       }
@@ -2160,8 +2250,9 @@ export default class DevTools {
             li.appendChild(document.createTextNode(procCode.substring(i, im)));
             i = im;
           }
+
           let bText = document.createElement("b");
-          let len = split[iM].length;
+          let len   = split[iM].length;
           bText.appendChild(document.createTextNode(procCode.substr(i, len)));
           li.appendChild(bText);
           i += len;
@@ -2176,18 +2267,20 @@ export default class DevTools {
         } else {
           li.classList.remove("sel");
         }
+
         count++;
       } else {
         li.style.display = "none";
         li.classList.remove("sel");
       }
     }
+
     p.append(dd);
   }
 
   // Loop until the DOM is ready for us...
   initInner() {
-    let root = document.querySelector("ul[class*=gui_tab-list_]");
+    let root    = document.querySelector("ul[class*=gui_tab-list_]");
     let guiTabs = root && root.childNodes;
     if (!guiTabs || guiTabs.length < 3) {
       setTimeout(() => this.initInner(), 1000);
@@ -2199,8 +2292,8 @@ export default class DevTools {
       this.domHelpers.unbindAllEvents();
     }
 
-    this.codeTab = guiTabs[0];
-    this.costTab = guiTabs[1];
+    this.codeTab     = guiTabs[0];
+    this.costTab     = guiTabs[1];
     this.costTabBody = document.querySelector("div[aria-labelledby=" + this.costTab.id + "]");
 
     if (!document.getElementById("s3devFind")) {
@@ -2208,38 +2301,37 @@ export default class DevTools {
       root.insertAdjacentHTML(
         "beforeend",
         `
-                <div id="s3devToolBar">
-                    <label class='title s3devLabel' id=s3devFindLabel>
+                <div id ="s3devToolBar">
+                    <label class          ='title s3devLabel' id=s3devFindLabel>
                         <span>${this.m("find")} ${
           this.addon.self._isDevtoolsExtension
-            ? ""
-            : '<a href="#" class="s3devAction" id="s3devHelp" style="/*s-a*/ margin-left: 0; font-size: 10px; /*s-a*/">(?)</a>'
+            ? ""            : '<a href="#" class="s3devAction" id="s3devHelp" style="/*s-a*/ margin-left: 0; font-size: 10px; /*s-a*/">(?)</a>'
         } </span>
-                        <span id=s3devFind class="s3devWrap">
-                            <div id='s3devDDOut' class="s3devDDOut">
-                                <input id='s3devInp' class="${this.addon.tab.scratchClass("input_input-form", {
-                                  others: "s3devInp",
+                        <span id          =s3devFind class="s3devWrap">
+                            <div id       ='s3devDDOut' class="s3devDDOut">
+                                <input id ='s3devInp' class="${this.addon.tab.scratchClass("input_input-form", {
+                                  others: "s3devInp"
                                 })}" type='search' placeholder='${this.m("find-placeholder")}' autocomplete='off'>
-                                <ul id='s3devDD' class="s3devDD"></ul>
+                                <ul id ='s3devDD' class ="s3devDD"></ul>
                             </div>
                         </span>
-                        <a id="s3devDeep" class="s3devAction s3devHide" href="#">${this.m("deep")}</a>
+                        <a id                           ="s3devDeep" class ="s3devAction s3devHide" href="#">${this.m("deep")}</a>
                         <div ${
                           this.addon.self._isDevtoolsExtension ? "" : 'style="display: none;"'
-                        }><a href="#" class="s3devAction" id="s3devHelp"><b>${this.m("help")}</b></a>
-                        <a href="https://www.youtube.com/griffpatch" class="s3devAction" target="_blank" id="s3devHelp">${this.m(
+                        }><a href                                          ="#" class ="s3devAction" id="s3devHelp"><b>${this.m("help")}</b></a>
+                        <a href                                                       ="https://www.youtube.com/griffpatch" class ="s3devAction" target="_blank" id="s3devHelp">${this.m(
                           "tutorials"
                         )}</a></div>
                     </label>
-<!--                    <a id="s3devCleanUp" class="s3devAction" href="#">Clean Up</a>-->
-<!--                    <a id="s3devReplace" class="s3devAction s3devHide" href="#">Replace All</a>-->
+<!--                    <a id                                                                                                     ="s3devCleanUp" class="s3devAction" href="#">Clean Up</a>-->
+<!--                    <a id                                                                                                     ="s3devReplace" class="s3devAction s3devHide" href="#">Replace All</a>-->
                 </div>
             `
       );
 
-      this.find = document.getElementById("s3devFind");
+      this.find    = document.getElementById("s3devFind");
       this.findInp = document.getElementById("s3devInp");
-      this.ddOut = document.getElementById("s3devDDOut");
+      this.ddOut   = document.getElementById("s3devDDOut");
       this.domHelpers.bindOnce(this.ddOut, "mousedown", (...e) => this.dropDownClick(...e), undefined);
       this.dd = document.getElementById("s3devDD");
 
@@ -2270,9 +2362,9 @@ export default class DevTools {
 
 class Multi {
   constructor(utils) {
-    this.idx = 0;
+    this.idx    = 0;
     this.blocks = null;
-    this.selID = null;
+    this.selID  = null;
     /**
      * @type {Utils}
      */
@@ -2280,9 +2372,9 @@ class Multi {
   }
 
   update() {
-    const count = document.getElementById("s3devMultiCount");
+    const count     = document.getElementById("s3devMultiCount");
     count.innerText = this.blocks && this.blocks.length > 0 ? enc(this.idx + 1 + " / " + this.blocks.length) : "0";
-    this.selID = this.idx < this.blocks.length ? this.blocks[this.idx].id : null;
+    this.selID      = this.idx < this.blocks.length ? this.blocks[this.idx].id : null;
   }
 
   navLeft(e) {
@@ -2299,10 +2391,12 @@ class Multi {
       this.update();
       this.utils.scrollBlockIntoView(this.blocks[this.idx]);
     }
+
     if (e) {
       e.cancelBubble = true;
       e.preventDefault();
     }
+
     return false;
   }
 }
@@ -2316,6 +2410,7 @@ class Col {
   constructor(x, count, blocks) {
     /**
      * x position (for ordering)
+     *
      * @type {Number}
      */
     this.x = x;
@@ -2332,8 +2427,8 @@ class Col {
 
 const DROPDOWN_BLOCK_LIST_MAX_ROWS = 25;
 
-let rhdd = 0;
-let rhdd2 = 0;
+let rhdd    = 0;
+let rhdd2   = 0;
 let prevVal = "";
 
 function enc(str) {

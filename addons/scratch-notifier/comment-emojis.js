@@ -26,5 +26,5 @@ export default Object.assign(Object.create(null), {
   "love-it-cat.png": "😻",
   "fav-it-cat.png": "🤩",
   "rainbow-cat.png": "[rainbow cat emoji]",
-  "pizza-cat.png": "[cat eating pizza emoji]",
+  "pizza-cat.png": "[cat eating pizza emoji]"
 });

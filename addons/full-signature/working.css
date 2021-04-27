@@ -1,15 +1,15 @@
 .activity-stream {
-  overflow-y: scroll !important;
+    overflow-y: scroll !important;
 }
 
 ul.activity-stream div {
-  width: 90%;
+    width: 90%;
 }
 
 .load-more-wibd {
-  outline: none;
+    outline: none;
 }
 
 .load-more-wibd-container {
-  text-align: center;
+    text-align: center;
 }

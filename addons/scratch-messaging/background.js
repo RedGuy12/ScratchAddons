@@ -4,13 +4,13 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   let lastDateTime;
   let data;
   let pendingAuthChange = false;
-  let addonEnabled = true;
+  let addonEnabled      = true;
 
   const getDefaultData = () => ({
     messages: [],
     lastMsgCount: null,
     username: addon.auth.username,
-    ready: false,
+    ready: false
   });
 
   addon.auth.addEventListener("change", () => (pendingAuthChange = true));
@@ -19,7 +19,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
 
   function resetData() {
     lastDateTime = null;
-    data = getDefaultData();
+    data         = getDefaultData();
   }
 
   async function routine() {
@@ -46,62 +46,81 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   }
 
   async function checkMessages({ checkOld = false } = {}) {
-    if (!addon.auth.isLoggedIn) return;
+    if (!addon.auth.isLoggedIn) { return;
+    }
 
     // Check if message count changed, if not, return
     const msgCount = await addon.account.getMsgCount();
-    if (data.lastMsgCount === msgCount) return;
+    if (data.lastMsgCount === msgCount) { return;
+    }
+
     data.lastMsgCount = msgCount;
 
     let checkedMessages = [];
-    data.ready = false;
+    data.ready          = false;
 
     if (checkOld) {
       const messagesToCheck = msgCount > 1000 ? 1000 : msgCount < 41 ? 40 : msgCount;
-      const seenMessageIds = [];
+      const seenMessageIds  = [];
       for (let checkedPages = 0; seenMessageIds.length < messagesToCheck; checkedPages++) {
         const messagesPage = await addon.account.getMessages({ offset: checkedPages * 40 });
-        if (messagesPage === null || messagesPage.length === 0) break;
+        if (messagesPage === null || messagesPage.length === 0) { break;
+        }
+
         for (const message of messagesPage) {
           // Make sure we don't add the same message twice,
           // it could happen since we request through pages
           if (!seenMessageIds.includes(message.id)) {
             seenMessageIds.push(message.id);
             checkedMessages.push(message);
-            if (seenMessageIds.length === msgCount && msgCount > 39) break;
+            if (seenMessageIds.length === msgCount && msgCount > 39) { break;
+            }
           }
         }
-        if (messagesPage.length !== 40) break;
+
+        if (messagesPage.length !== 40) { break;
+        }
       }
     } else {
       checkedMessages = await addon.account.getMessages({ offset: 0 });
     }
-    if (checkedMessages === null) return;
-    if (!checkOld && lastDateTime === null) lastDateTime = new Date(checkedMessages[0].datetime_created).getTime();
-    else {
+
+    if (checkedMessages === null) { return;
+    }
+
+    if (!checkOld && lastDateTime === null) { lastDateTime = new Date(checkedMessages[0].datetime_created).getTime();
+    } else {
       for (const message of checkedMessages) {
-        if (!checkOld && new Date(message.datetime_created).getTime() <= lastDateTime) break;
-        if (checkOld) data.messages.push(message);
-        else data.messages.unshift(message);
+        if (!checkOld && new Date(message.datetime_created).getTime() <= lastDateTime) { break;
+        }
+
+        if (checkOld) { data.messages.push(message);
+        } else { data.messages.unshift(message);
+        }
       }
+
       if (data.messages.length > 40 && msgCount < 41) {
         // Remove extra messages
         data.messages.length = 40;
       }
+
       if (data.messages.length > 1000) {
         data.messages.length = 1000;
       }
     }
+
     lastDateTime = new Date(checkedMessages[0].datetime_created).getTime();
-    data.ready = true;
+    data.ready   = true;
   }
 
   const messageListener = (request, sender, sendResponse) => {
-    if (!request.scratchMessaging) return;
+    if (!request.scratchMessaging) { return;
+    }
+
     const popupRequest = request.scratchMessaging;
-    if (popupRequest === "getData")
+    if (popupRequest === "getData") {
       sendResponse(data.ready ? data : { error: addon.auth.isLoggedIn ? "notReady" : "loggedOut" });
-    else if (popupRequest.postComment) {
+    } else if (popupRequest.postComment) {
       sendComment(popupRequest.postComment).then((status) => sendResponse(status));
       return true;
     } else if (popupRequest.retrieveComments) {
@@ -119,6 +138,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
         .catch((err) => sendResponse(err));
       return true;
     }
+
   };
   chrome.runtime.onMessage.addListener(messageListener);
   addon.self.addEventListener("disabled", () => {
@@ -127,22 +147,23 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   });
 
   async function retrieveComments(resourceType, resourceId, commentIds, page = 1, commentsObj = {}) {
-    const res = await fetch(
-      `https://scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/?page=${page}&nocache=${Date.now()}`
+    const res                                                                         = await fetch(
+      `https: //scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/?page =${page}&nocache=${Date.now()}`
     );
     const text = await res.text();
-    const dom = new DOMParser().parseFromString(text, "text/html");
+    const dom  = new DOMParser().parseFromString(text, "text/html");
     for (const commentChain of dom.querySelectorAll(".top-level-reply:not(.removed)")) {
       if (commentIds.length === 0) {
         // We found all comments we had to look for
         return commentsObj;
       }
-      let foundComment = false;
+
+      let foundComment    = false;
       const parentComment = commentChain.querySelector("div");
-      const parentId = Number(parentComment.getAttribute("data-comment-id"));
+      const parentId      = Number(parentComment.getAttribute("data-comment-id"));
 
       const childrenComments = {};
-      const children = commentChain.querySelectorAll("li.reply:not(.removed)");
+      const children         = commentChain.querySelectorAll("li.reply:not(.removed)");
       for (const child of children) {
         const childId = Number(child.querySelector("div").getAttribute("data-comment-id"));
         if (commentIds.includes(childId)) {
@@ -152,7 +173,8 @@ export default async function ({ addon, global, console, setTimeout, setInterval
             1
           );
         }
-        const author = child.querySelector(".name").textContent.trim();
+
+        const author                                      = child.querySelector(".name").textContent.trim();
         childrenComments[`${resourceType[0]}_${childId}`] = {
           author: author.replace(/\*/g, ""),
           authorId: Number(child.querySelector(".reply").getAttribute("data-commentee-id")),
@@ -160,7 +182,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
           date: child.querySelector(".time").getAttribute("title"),
           children: null,
           childOf: `${resourceType[0]}_${parentId}`,
-          scratchTeam: author.includes("*"),
+          scratchTeam: author.includes("*")
         };
       }
 
@@ -173,7 +195,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
       }
 
       if (foundComment) {
-        const parentAuthor = parentComment.querySelector(".name").textContent.trim();
+        const parentAuthor                            = parentComment.querySelector(".name").textContent.trim();
         commentsObj[`${resourceType[0]}_${parentId}`] = {
           author: parentAuthor.replace(/\*/g, ""),
           authorId: Number(parentComment.querySelector(".reply").getAttribute("data-commentee-id")),
@@ -181,16 +203,17 @@ export default async function ({ addon, global, console, setTimeout, setInterval
           date: parentComment.querySelector(".time").getAttribute("title"),
           children: Object.keys(childrenComments),
           childOf: null,
-          scratchTeam: parentAuthor.includes("*"),
+          scratchTeam: parentAuthor.includes("*")
         };
         for (const childCommentId of Object.keys(childrenComments)) {
           commentsObj[childCommentId] = childrenComments[childCommentId];
         }
       }
     }
+
     // We haven't found some comments
-    if (page < 3) return await retrieveComments(resourceType, resourceId, commentIds, ++page, commentsObj);
-    else {
+    if (page < 3) { return await retrieveComments(resourceType, resourceId, commentIds, ++page, commentsObj);
+    } else {
       console.log(
         "Could not find all comments for ",
         resourceType,
@@ -208,14 +231,15 @@ export default async function ({ addon, global, console, setTimeout, setInterval
     if (matches) {
       for (const match of matches) {
         // Replace Scratch emojis with Unicode emojis
-        const src = match.match(/\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/)[1];
+        const src         = match.match(/\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/)[1];
         const splitString = src.split("/");
-        const imageName = splitString[splitString.length - 1];
+        const imageName   = splitString[splitString.length - 1];
         if (commentEmojis[imageName]) {
           value = value.replace(match, commentEmojis[imageName]);
         }
       }
     }
+
     value = value.replace(/\n/g, " ").trim(); // Remove newlines
     value = value.replace(/<a href="\//g, '<a href="https://scratch.mit.edu/');
     return value;
@@ -225,21 +249,22 @@ export default async function ({ addon, global, console, setTimeout, setInterval
     return new Promise((resolve) => {
       // For some weird reason, this only works with XHR in Chrome...
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", `https://scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/add/?sareferer`, true);
+      xhr.open("POST", `https: //scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/add/?sareferer`, true);
       xhr.setRequestHeader("x-csrftoken", addon.auth.csrfToken);
       xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
 
       xhr.onload = function () {
         if (xhr.status === 200) {
           try {
-            const dom = new DOMParser().parseFromString(xhr.responseText, "text/html");
+            const dom       = new DOMParser().parseFromString(xhr.responseText, "text/html");
             const commentId = Number(dom.querySelector(".comment ").getAttribute("data-comment-id"));
-            const content = fixCommentContent(dom.querySelector(".content").innerHTML);
+            const content   = fixCommentContent(dom.querySelector(".content").innerHTML);
             resolve({ commentId, username: addon.auth.username, userId: addon.auth.userId, content });
           } catch (err) {
             resolve({ error: err });
           }
-        } else resolve({ error: xhr.status });
+        } else { resolve({ error: xhr.status });
+        }
       };
 
       xhr.send(JSON.stringify({ content, parent_id, commentee_id }));
@@ -249,14 +274,15 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   function deleteComment({ resourceType, resourceId, commentId }) {
     return new Promise((resolve) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", `https://scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/del/?sareferer`, true);
+      xhr.open("POST", `https: //scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/del/?sareferer`, true);
       xhr.setRequestHeader("x-csrftoken", addon.auth.csrfToken);
       xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
 
       xhr.onload = function () {
         if (xhr.status === 200) {
           resolve(200);
-        } else resolve({ error: xhr.status });
+        } else { resolve({ error: xhr.status });
+        }
       };
 
       xhr.send(JSON.stringify({ id: String(commentId) }));

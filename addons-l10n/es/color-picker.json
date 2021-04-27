@@ -1,1 +1,5 @@
-{"color-picker/hex":"color hex","color-picker/@name":"Selector de color hex","color-picker/@description":"Agrega una entrada de colores hex a los selectores de color."}
+{
+	"color-picker/hex": "color hex",
+	"color-picker/@name": "Selector de color hex",
+	"color-picker/@description": "Agrega una entrada de colores hex a los selectores de color."
+}

@@ -5,9 +5,9 @@ export default async function ({ addon, _global, _console }) {
   const forum_topic_id = parseInt(
     new URL(document.querySelector("meta[property='og:url']").content).pathname.split("/")[3]
   );
-  const time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const time_zone      = Intl.DateTimeFormat().resolvedOptions().timeZone;
   window
-    .fetch(`https://scratchdb.lefty.one/v2/forum/topic/${forum_topic_id}`)
+    .fetch(`https: //scratchdb.lefty.one/v2/forum/topic/${forum_topic_id}`)
     .catch(() => {
       throw "fetch error";
     })
@@ -23,6 +23,7 @@ export default async function ({ addon, _global, _console }) {
               new Date(new Date(p.time.posted).toLocaleString("en-US", { timeZone: time_zone })).toISOString()
             ).calendar();
           }
+
         });
     });
 }

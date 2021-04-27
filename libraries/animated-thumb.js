@@ -1,13 +1,13 @@
 export default class ThumbSetter {
     constructor (messagesFn, projectId) {
-        this._input = null;
-        this.msg = messagesFn;
+        this._input    = null;
+        this.msg       = messagesFn;
         this.projectId = projectId || location.pathname.replace(/\D/g,'');
     }
 
     addFileInput () {
-        const input = this._input = document.createElement("input");
-        input.type = "file";
+        const input  = this._input = document.createElement("input");
+        input.type   = "file";
         input.accept = "image/*";
         input.classList.add("sa-animated-thumb-input");
         input.addEventListener("change", this.onInput.bind(this), {once: true});
@@ -15,7 +15,8 @@ export default class ThumbSetter {
     }
 
     showInput () {
-        if (this._input) this._input.click();
+        if (this._input) { this._input.click();
+        }
     }
 
     onInput () {
@@ -23,6 +24,7 @@ export default class ThumbSetter {
         if (this._input && this._input.files && this._input.files[0]) {
             promise = this.upload(this._input.files[0]);
         }
+
         promise.finally(() => this.removeFileInput());
     }
 
@@ -41,7 +43,7 @@ export default class ThumbSetter {
     async upload (file) {
         try {
             const resp = await fetch(
-                `https://scratch.mit.edu/internalapi/project/thumbnail/${this.projectId}/set/`,
+                `https: //scratch.mit.edu/internalapi/project/thumbnail/${this.projectId}/set/`,
                 {
                     method: "POST",
                     body: file,
@@ -52,7 +54,7 @@ export default class ThumbSetter {
                 }
             );
             if (!resp.ok) {
-              const err = new Error(`Server responded with: ${resp.status}`);
+              const err  = new Error(`Server responded with: ${resp.status}`);
               err.status = resp.status;
               throw err;
             }
@@ -70,8 +72,10 @@ export default class ThumbSetter {
                 alert(this.msg("thumb-error"));
                 throw e;
             }
+
             return;
         }
+
         alert(this.msg("thumb-success"));
     }
 }

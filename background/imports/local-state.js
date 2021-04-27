@@ -5,11 +5,11 @@ const _localState = {
   ready: {
     auth: false,
     manifests: false,
-    addonSettings: false,
+    addonSettings: false
   },
   allReady: false,
   addonsEnabled: {},
-  badges: {},
+  badges: {}
 };
 
 class StateProxy {
@@ -17,7 +17,9 @@ class StateProxy {
     this.name = name;
   }
   get(target, key) {
-    if (key === "_target") return target;
+    if (key === "_target") { return target;
+    }
+
     if (typeof target[key] === "object" && target[key] !== null) {
       return new Proxy(target[key], new StateProxy(`${this.name}.${key}`));
     } else {
@@ -26,7 +28,7 @@ class StateProxy {
   }
   set(target, key, value) {
     const oldValue = target[key];
-    target[key] = value;
+    target[key]    = value;
 
     if (JSON.stringify(oldValue) !== JSON.stringify(value)) {
       stateChange(this.name, key, value);
@@ -37,7 +39,7 @@ class StateProxy {
 }
 
 function stateChange(parentObjectPath, key, value) {
-  const objectPath = `${parentObjectPath}.${key}`;
+  const objectPath    = `${parentObjectPath}.${key}`;
   const objectPathArr = objectPath.split(".").slice(2);
   console.log(`%c${objectPath}`, "font-weight: bold;", "is now: ", objectPathArr[0] === "auth" ? "[redacted]" : value);
   if (objectPathArr[0] === "ready" && Object.values(scratchAddons.localState.ready).every((x) => x === true)) {
@@ -45,6 +47,7 @@ function stateChange(parentObjectPath, key, value) {
     _localState.allReady = true;
     scratchAddons.localEvents.dispatchEvent(new CustomEvent("ready"));
   }
+
   if (objectPathArr[0] === "badges") {
     scratchAddons.localEvents.dispatchEvent(new CustomEvent("badgeUpdateNeeded"));
   }

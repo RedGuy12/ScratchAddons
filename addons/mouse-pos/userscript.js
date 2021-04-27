@@ -19,7 +19,7 @@ export default async function ({ addon, global, console }) {
       x = setx;
       showUpdatedValue();
       this.__scratchX = setx;
-    },
+    }
   });
 
   Object.defineProperty(vm.runtime.ioDevices.mouse, "_scratchY", {
@@ -30,7 +30,7 @@ export default async function ({ addon, global, console }) {
       y = sety;
       showUpdatedValue();
       this.__scratchY = sety;
-    },
+    }
   });
 
   hideInSmallStageMode({ addon });
@@ -44,10 +44,10 @@ export default async function ({ addon, global, console }) {
       addon.tab.displayNoneWhileDisabled(posContainerContainer, { display: "flex" });
 
       var posContainer = document.createElement("div");
-      pos = document.createElement("span");
+      pos              = document.createElement("span");
 
       posContainerContainer.className = "pos-container-container";
-      posContainer.className = "pos-container";
+      posContainer.className          = "pos-container";
 
       posContainerContainer.appendChild(posContainer);
       posContainer.appendChild(pos);

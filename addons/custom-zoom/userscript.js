@@ -1,29 +1,32 @@
 export default async function ({ addon, global, console }) {
   let controlsRect;
   let previousIsHovered = false;
-  const speeds = {
+  const speeds          = {
     none: "0s",
     short: "0.25s",
     default: "0.5s",
-    long: "1s",
+    long: "1s"
   };
 
-  const customZoomAreaElement = document.createElement("div");
+  const customZoomAreaElement     = document.createElement("div");
   customZoomAreaElement.className = "sa-custom-zoom-area";
 
   function update() {
     document.removeEventListener("mousemove", onMouseMove);
 
-    if (addon.tab.editorMode !== "editor") return;
+    if (addon.tab.editorMode !== "editor") { return;
+    }
 
-    Blockly.getMainWorkspace().options.zoomOptions.maxScale = addon.settings.get("maxZoom") / 100;
-    Blockly.getMainWorkspace().options.zoomOptions.minScale = addon.settings.get("minZoom") / 100;
+    Blockly.getMainWorkspace().options.zoomOptions.maxScale   = addon.settings.get("maxZoom") / 100;
+    Blockly.getMainWorkspace().options.zoomOptions.minScale   = addon.settings.get("minZoom") / 100;
     Blockly.getMainWorkspace().options.zoomOptions.startScale = addon.settings.get("startZoom") / 100;
     Blockly.getMainWorkspace().options.zoomOptions.scaleSpeed = 1.2 * (addon.settings.get("zoomSpeed") / 100);
 
     const svgGroup = getZoomControls();
     const autohide = addon.settings.get("autohide");
-    if (svgGroup) svgGroup.classList.toggle("sa-custom-zoom-hidden", autohide);
+    if (svgGroup) { svgGroup.classList.toggle("sa-custom-zoom-hidden", autohide);
+    }
+
     if (autohide) {
       const injectionDiv = document.querySelector(".injectionDiv");
       injectionDiv.appendChild(customZoomAreaElement);
@@ -34,7 +37,9 @@ export default async function ({ addon, global, console }) {
 
   function getZoomControls() {
     const zoomControls = Blockly.getMainWorkspace().zoomControls_;
-    if (zoomControls) return zoomControls.svgGroup_;
+    if (zoomControls) { return zoomControls.svgGroup_;
+    }
+
     return null;
   }
 
@@ -43,7 +48,7 @@ export default async function ({ addon, global, console }) {
       e.x > controlsRect.left && e.x < controlsRect.right && e.y > controlsRect.top && e.y < controlsRect.bottom;
     if (isHovered !== previousIsHovered) {
       previousIsHovered = isHovered;
-      const svgGroup = getZoomControls();
+      const svgGroup    = getZoomControls();
       if (svgGroup) {
         svgGroup.style.setProperty("--sa-custom-zoom-speed", speeds[addon.settings.get("speed")]);
         svgGroup.classList.toggle("sa-custom-zoom-hidden", !isHovered);
@@ -65,6 +70,7 @@ export default async function ({ addon, global, console }) {
   if (document.querySelector('[class^="backpack_backpack-container"]')) {
     window.dispatchEvent(new Event("resize"));
   }
+
   update();
   addon.tab.addEventListener("urlChange", update);
   addon.settings.addEventListener("change", update);

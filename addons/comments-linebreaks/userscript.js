@@ -1,6 +1,6 @@
 export default async function ({ addon, global, console }) {
   while (true) {
-    let comment = await addon.tab.waitForElement(".comment .content, .comment-content", { markAsSeen: true });
+    let comment              = await addon.tab.waitForElement(".comment .content, .comment-content", { markAsSeen: true });
     comment.style.whiteSpace = "break-spaces";
     if (!comment.classList.contains("comment-content")) {
       let nodes = comment.childNodes;
@@ -15,6 +15,7 @@ export default async function ({ addon, global, console }) {
             if (child === nodes[nodes.length - 1]) {
               child.textContent = child.textContent.trimEnd();
             }
+
             const firstA = Array.prototype.find.call(
               nodes,
               (n) => n instanceof HTMLAnchorElement && (!n.previousSibling || !n.previousSibling.textContent)

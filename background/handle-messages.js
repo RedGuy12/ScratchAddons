@@ -1,47 +1,54 @@
 const COUNT_CHECK_INTERVAL = 30000;
-const MSGS_CHECK_INTERVAL = 120000; // Ignored if message count change has been seen
+const MSGS_CHECK_INTERVAL  = 120000; // Ignored if message count change has been seen
 
 // For getMsgCount
-let lastCountCheck = null;
-let lastMsgCount = null;
+let lastCountCheck         = null;
+let lastMsgCount           = null;
 let currentlyCheckingCount = false;
 let lastCheckUsernameCount = null;
-const msgCountPromises = [];
+const msgCountPromises     = [];
 
 // For getMessages. These only apply for offset 0.
-let lastMessagesCheck = null;
-let lastMsgsArray = null;
+let lastMessagesCheck         = null;
+let lastMsgsArray             = null;
 let currentlyCheckingMessages = false;
 let lastCheckUsernameMessages = null;
-const msgsArrayPromises = [];
+const msgsArrayPromises       = [];
 
 scratchAddons.methods.getMsgCount = function () {
   const newPromise = new Promise((resolve) => msgCountPromises.push(resolve));
-  if (!currentlyCheckingCount)
+  if (!currentlyCheckingCount) {
     updateMsgCount().then((value) => {
       msgCountPromises.forEach((resolve) => resolve(value));
       msgCountPromises.length = 0;
-      currentlyCheckingCount = false;
+      currentlyCheckingCount  = false;
     });
+  }
+
   return newPromise;
 };
 async function updateMsgCount() {
   currentlyCheckingCount = true;
-  const username = scratchAddons.globalState.auth.username;
+  const username         = scratchAddons.globalState.auth.username;
   if (!username) {
-    lastMsgCount = null;
+    lastMsgCount           = null;
     lastCheckUsernameCount = null;
     return null;
   }
+
   try {
     if (Date.now() - lastCountCheck > COUNT_CHECK_INTERVAL || username !== lastCheckUsernameCount) {
-      const res = await fetch(`https://api.scratch.mit.edu/users/${username}/messages/count?timestamp=${Date.now()}`);
-      if (!res.ok) return null;
+      const res = await fetch(`https: //api.scratch.mit.edu/users/${username}/messages/count?timestamp=${Date.now()}`);
+      if (!res.ok) { return null;
+      }
+
       const json = await res.json();
-      if (json.count !== lastMsgCount) lastMessagesCheck = null;
-      lastCountCheck = Date.now();
+      if (json.count !== lastMsgCount) { lastMessagesCheck = null;
+      }
+
+      lastCountCheck         = Date.now();
       lastCheckUsernameCount = username;
-      lastMsgCount = json.count;
+      lastMsgCount           = json.count;
       return json.count;
     } else {
       return lastMsgCount;
@@ -54,41 +61,44 @@ async function updateMsgCount() {
 scratchAddons.methods.clearMessages = async function () {
   const res = await fetch("https://scratch.mit.edu/site-api/messages/messages-clear/?sareferer", {
     method: "POST",
-    headers: { "x-csrftoken": scratchAddons.globalState.auth.csrfToken, "x-requested-with": "XMLHttpRequest" },
+    headers: { "x-csrftoken": scratchAddons.globalState.auth.csrfToken, "x-requested-with": "XMLHttpRequest" }
   });
   if (res.ok) {
     lastCountCheck = Date.now();
-    lastMsgCount = 0;
+    lastMsgCount   = 0;
   }
 };
 
 scratchAddons.methods.getMessages = async function ({ offset = 0 } = {}) {
-  if (offset !== 0) return await requestMessages({ offset });
-  else {
+  if (offset !== 0) { return await requestMessages({ offset });
+  } else {
     const newPromise = new Promise((resolve) => msgsArrayPromises.push(resolve));
-    if (!currentlyCheckingMessages)
+    if (!currentlyCheckingMessages) {
       checkMessages({ offset }).then((value) => {
         msgsArrayPromises.forEach((resolve) => resolve(value));
-        msgsArrayPromises.length = 0;
+        msgsArrayPromises.length  = 0;
         currentlyCheckingMessages = false;
       });
+    }
+
     return newPromise;
   }
 };
 async function checkMessages(options) {
   currentlyCheckingMessages = true;
-  const username = scratchAddons.globalState.auth.username;
+  const username            = scratchAddons.globalState.auth.username;
   if (!username) {
-    lastMsgsArray = null;
+    lastMsgsArray             = null;
     lastCheckUsernameMessages = null;
     return null;
   }
+
   try {
     if (Date.now() - lastMessagesCheck > MSGS_CHECK_INTERVAL || username !== lastCheckUsernameMessages) {
-      const json = await requestMessages(options);
-      lastMessagesCheck = Date.now();
+      const json                = await requestMessages(options);
+      lastMessagesCheck         = Date.now();
       lastCheckUsernameMessages = username;
-      lastMsgsArray = json;
+      lastMsgsArray             = json;
       return json;
     } else {
       return lastMsgsArray;
@@ -100,15 +110,17 @@ async function checkMessages(options) {
 }
 async function requestMessages(options) {
   try {
-    const res = await fetch(
-      `https://api.scratch.mit.edu/users/${scratchAddons.globalState.auth.username}/messages?limit=40&offset=${options.offset}`,
+    const res                                                                                       = await fetch(
+      `https: //api.scratch.mit.edu/users/${scratchAddons.globalState.auth.username}/messages?limit =40&offset=${options.offset}`,
       {
         headers: {
-          "X-Token": scratchAddons.globalState.auth.xToken,
-        },
+          "X-Token": scratchAddons.globalState.auth.xToken
+        }
       }
     );
-    if (!res.ok) return null;
+    if (!res.ok) { return null;
+    }
+
     const json = await res.json();
     return json;
   } catch (err) {

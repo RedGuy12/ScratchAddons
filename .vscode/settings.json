@@ -1,0 +1,9 @@
+{
+	"json.schemas": [
+		{
+			"fileMatch": ["/addons/*/addon.json"],
+			"url": "https://github.com/ScratchAddons/manifest-schema/raw/master/1/1.9.json"
+		}
+	],
+	"json.schemaDownload.enable": true
+}

@@ -1,10 +1,10 @@
-let dangorain = false,
+let dangorain        = false,
   dangoContainerLeft,
   dangoContainerRight,
   visibleDangos,
   noticeTimeout;
-const div = () => document.createElement("div");
-const noticeText = div();
+const div            = () => document.createElement("div");
+const noticeText     = div();
 noticeText.className = "sa-dango-notice";
 
 const checkForDango = (text) => {
@@ -14,34 +14,41 @@ const checkForDango = (text) => {
       dangoContainerRight?.remove();
       noticeText?.remove();
     }
+
     dangorain = false;
     return;
   }
-  if (dangorain) return;
-  dangorain = true;
-  dangoContainerLeft = div();
+
+  if (dangorain) { return;
+  }
+
+  dangorain                    = true;
+  dangoContainerLeft           = div();
   dangoContainerLeft.className = "sa-dangos-left";
   for (let i = 0; i < 20; i++) {
-    const dango = div();
-    dango.className = "sa-dango";
-    dango.style.left = (i % 10) * 10 + "%";
+    const dango                = div();
+    dango.className            = "sa-dango";
+    dango.style.left           = (i % 10) * 10 + "%";
     dango.style.animationDelay = `${Math.random() * 8}s, ${Math.random() * 8}s`;
     dangoContainerLeft.append(dango);
   }
+
   setEltWidth(dangoContainerLeft);
 
-  dangoContainerRight = dangoContainerLeft.cloneNode(true);
+  dangoContainerRight           = dangoContainerLeft.cloneNode(true);
   dangoContainerRight.className = "sa-dangos-right";
 
   document.querySelector("#content").append(dangoContainerLeft, dangoContainerRight);
   // if (!localStorage.getItem("scratchAddonsAprilFoolsModal2021")) document.querySelector("#content").append(noticeText);
 };
 const setEltWidth = (elt) => {
-  if (!elt) return;
-  let sideWidth = (document.body.clientWidth - document.querySelector("#profile-data").clientWidth) / 2;
-  sideWidth = sideWidth - 25;
+  if (!elt) { return;
+  }
+
+  let sideWidth   = (document.body.clientWidth - document.querySelector("#profile-data").clientWidth) / 2;
+  sideWidth       = sideWidth - 25;
   elt.style.width = sideWidth + "px";
-  visibleDangos = sideWidth > 0;
+  visibleDangos   = sideWidth > 0;
   if (visibleDangos) {
     clearTimeout(noticeTimeout);
     /* if (!old && !localStorage.getItem("scratchAddonsAprilFoolsModal2021")) {
@@ -55,6 +62,7 @@ const setEltWidth = (elt) => {
       noticeText?.remove();
     }, 1000);
   }
+
 };
 addEventListener("resize", () => {
   setEltWidth(dangoContainerLeft);
@@ -62,28 +70,28 @@ addEventListener("resize", () => {
 });
 
 export default async function ({ addon, global, console, msg }) {
-  const notifClose = Object.assign(document.createElement("span"), {
+  const notifClose           = Object.assign(document.createElement("span"), {
     style: `
     float: right;
-    cursor:pointer;
+    cursor: pointer;
     background-color: #ffffff26;
     line-height: 10px;
     width: 10px;
     text-align: center;
-    padding:5px;
+    padding: 5px;
     border-radius: 50%;`,
-    textContent: "x",
+    textContent: "x"
   });
-  notifClose.onclick = () => {
+  notifClose.onclick         = () => {
     noticeText.style.display = "none";
     localStorage.setItem("scratchAddonsAprilFoolsModal2021", "true");
   };
   noticeText.appendChild(notifClose);
-  const boldSpan = document.createElement("span");
-  boldSpan.innerText = ""; // msg("addedBy");
+  const boldSpan            = document.createElement("span");
+  boldSpan.innerText        = ""; // msg("addedBy");
   boldSpan.style.fontWeight = "bold";
   noticeText.appendChild(boldSpan);
-  const normalSpan = document.createElement("span");
+  const normalSpan     = document.createElement("span");
   normalSpan.innerText = ""; // `\n${msg("happyAprilFools")}\n${msg("howToGet")}\n${msg("howToStop")}`;
   noticeText.appendChild(normalSpan);
 
@@ -97,6 +105,7 @@ export default async function ({ addon, global, console, msg }) {
       const ps = document.querySelectorAll("p.overview");
       return `${ps[0].textContent}/${ps[1].textContent}`;
     }
+
   };
 
   checkForDango(getAboutMeAndWiwo());

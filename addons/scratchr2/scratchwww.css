@@ -4,12 +4,14 @@ a:visited,
 .news li h4,
 .intro-banner .intro-button,
 .comment .comment-body .comment-bottom-row .comment-reply {
-  color: var(--scratchr2-linkColor);
+    color: var(--scratchr2-linkcolor);
 }
+
 a:hover,
 .news li:hover h4 {
-  color: var(--scratchr2-activeColor);
+    color: var(--scratchr2-activecolor);
 }
+
 #navigation,
 #navigation .dropdown,
 #navigation .dropdown.with-arrow::before,
@@ -24,12 +26,14 @@ a:hover,
 .title-banner.mod-conference,
 #footer .inner .media li,
 .wedo .top-banner {
-  background-color: var(--scratchr2-primaryColor);
-  color: #fff;
+    background-color: var(--scratchr2-primarycolor);
+    color: #FFF;
 }
+
 .banner-button {
-  background-color: #ffab1a;
+    background-color: #FFAB1A;
 }
+
 a.social-messages-profile-link {
-  color: inherit;
+    color: inherit;
 }

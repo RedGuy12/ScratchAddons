@@ -12,9 +12,9 @@ export default async function ({ addon, global, console }) {
   while (true) {
     projectNotes = await addon.tab.waitForElement(".project-notes", { markAsSeen: true });
 
-    const labels = document.querySelectorAll(".project-textlabel");
+    const labels       = document.querySelectorAll(".project-textlabel");
     const descriptions = document.querySelectorAll(".description-block");
-    const tabButtons = [];
+    const tabButtons   = [];
     const sectionCount = descriptions.length;
     for (const label of labels) {
       label.remove();
@@ -31,7 +31,7 @@ export default async function ({ addon, global, console }) {
     for (let i = 0; i < sectionCount; i++) {
       const tab = document.createElement("div");
       tab.classList.add("tab-choice-sa");
-      const inner = document.createElement("span");
+      const inner     = document.createElement("span");
       inner.innerText = labels[i].innerText;
       tab.appendChild(inner);
       tab.addEventListener("click", () => selectTab(i));

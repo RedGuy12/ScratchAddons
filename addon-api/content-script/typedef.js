@@ -1,11 +1,14 @@
-/** @typedef {import("./Addon.js").default} UserscriptAddon */
+/**
+ * @typedef {import("./Addon.js").default} UserscriptAddon
+ */
 // prettier-ignore
 /**
  * Userscripts must default-export an async function
  * that takes this object as a sole argument, e.g.
  * export default async function (util)
  * Note that commonly it is done by using detructing syntax.
- * @typedef {object} UserscriptUtilities
+ *
+ * @typedef  {object} UserscriptUtilities
  * @property {UserscriptAddon} addon - APIs for addons
  * @property {function} msg - Gets localized message from addons-l10n folder. Supports placeholders and plurals.
  * @property {string} msg.locale - Current locale used by msg function.

@@ -1,1 +1,5 @@
-{"curator-link/@name":"Link de curador","curator-link/@description":"Cria um link clicável para o curador da página inicial.","curator-link/@settings-name-styleAsNormalText":"Camuflar como texto normal"}
+{
+	"curator-link/@name": "Link de curador",
+	"curator-link/@description": "Cria um link clicável para o curador da página inicial.",
+	"curator-link/@settings-name-styleAsNormalText": "Camuflar como texto normal"
+}

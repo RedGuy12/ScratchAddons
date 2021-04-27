@@ -1,18 +1,23 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.replaceTabWithUrl) chrome.tabs.update(sender.tab.id, { url: request.replaceTabWithUrl });
+  if (request.replaceTabWithUrl) { chrome.tabs.update(sender.tab.id, { url: request.replaceTabWithUrl });
+  }
 });
 
 function getL10NURLs() {
   const langCode = scratchAddons.globalState.auth.scratchLang.toLowerCase();
-  const urls = [chrome.runtime.getURL(`addons-l10n/${langCode}`)];
+  const urls     = [chrome.runtime.getURL(`addons-l10n/${langCode}`)];
   if (langCode === "pt") {
     urls.push(chrome.runtime.getURL(`addons-l10n/pt-br`));
   }
+
   if (langCode.includes("-")) {
     urls.push(chrome.runtime.getURL(`addons-l10n/${langCode.split("-")[0]}`));
   }
+
   const enJSON = chrome.runtime.getURL("addons-l10n/en");
-  if (!urls.includes(enJSON)) urls.push(enJSON);
+  if (!urls.includes(enJSON)) { urls.push(enJSON);
+  }
+
   return urls;
 }
 
@@ -33,15 +38,17 @@ scratchAddons.localEvents.addEventListener("addonDynamicEnable", ({ detail }) =>
                     userstyles,
                     addonId,
                     injectAsStyleElt: !!manifest.injectAsStyleElt,
-                    index: scratchAddons.manifests.findIndex((addon) => addon.addonId === addonId),
-                  },
+                    index: scratchAddons.manifests.findIndex((addon) => addon.addonId === addonId)
+                  }
                 },
                 { frameId: 0 }
               );
             })();
           }
+
         });
       }
+
     })
   );
 });
@@ -52,6 +59,7 @@ scratchAddons.localEvents.addEventListener("addonDynamicDisable", ({ detail }) =
       if (tab.url || (!tab.url && typeof browser !== "undefined")) {
         chrome.tabs.sendMessage(tab.id, { dynamicAddonDisable: { addonId } }, { frameId: 0 });
       }
+
     })
   );
 });
@@ -72,15 +80,17 @@ scratchAddons.localEvents.addEventListener("updateUserstylesSettingsChange", ({ 
                     userstyles,
                     addonId,
                     injectAsStyleElt: !!manifest.injectAsStyleElt,
-                    index: scratchAddons.manifests.findIndex((addon) => addon.addonId === addonId),
-                  },
+                    index: scratchAddons.manifests.findIndex((addon) => addon.addonId === addonId)
+                  }
                 },
                 { frameId: 0 }
               );
             })();
           }
+
         });
       }
+
     })
   );
 });
@@ -90,18 +100,20 @@ async function getAddonData({ addonId, manifest, url }) {
 
   const userscripts = [];
   for (const script of manifest.userscripts || []) {
-    if (userscriptMatches({ url }, script, addonId))
+    if (userscriptMatches({ url }, script, addonId)) {
       userscripts.push({
         url: script.url,
-        runAtComplete: typeof script.runAtComplete === "boolean" ? script.runAtComplete : true,
+        runAtComplete: typeof script.runAtComplete === "boolean" ? script.runAtComplete : true
       });
+    }
   }
+
   const userstyles = [];
   for (const style of manifest.userstyles || []) {
-    if (userscriptMatches({ url }, style, addonId))
+    if (userscriptMatches({ url }, style, addonId)) {
       if (manifest.injectAsStyleElt) {
         // Reserve index in array to avoid race conditions (#700)
-        const arrLength = userstyles.push(null);
+        const arrLength  = userstyles.push(null);
         const indexToUse = arrLength - 1;
         promises.push(
           fetch(chrome.runtime.getURL(`/addons/${addonId}/${style.url}`))
@@ -110,42 +122,49 @@ async function getAddonData({ addonId, manifest, url }) {
               // Replace %addon-self-dir% for relative URLs
               text = text.replace(/\%addon-self-dir\%/g, chrome.runtime.getURL(`addons/${addonId}`));
               // Provide source url
-              text += `\n/*# sourceURL=${style.url} */`;
+              text                  += `\n/*# sourceURL=${style.url} */`;
               userstyles[indexToUse] = text;
             })
         );
       } else {
         userstyles.push(chrome.runtime.getURL(`/addons/${addonId}/${style.url}`));
       }
+    }
   }
+
   await Promise.all(promises);
 
   return { userscripts, userstyles };
 }
 
 async function getContentScriptInfo(url) {
-  const data = {
+  const data     = {
     url,
     l10njson: getL10NURLs(),
     globalState: {},
     addonsWithUserscripts: [],
-    addonsWithUserstyles: [],
+    addonsWithUserstyles: []
   };
   const promises = [];
   scratchAddons.manifests.forEach(async ({ addonId, manifest }, i) => {
-    if (!scratchAddons.localState.addonsEnabled[addonId]) return;
+    if (!scratchAddons.localState.addonsEnabled[addonId]) { return;
+    }
+
     const promise = getAddonData({ addonId, manifest, url });
     promises.push(promise);
     const { userscripts, userstyles } = await promise;
-    if (userscripts.length) data.addonsWithUserscripts.push({ addonId, scripts: userscripts });
+    if (userscripts.length) { data.addonsWithUserscripts.push({ addonId, scripts: userscripts });
+    }
 
-    if (userstyles.length)
+    if (userstyles.length) {
       data.addonsWithUserstyles.push({
         addonId,
         styles: userstyles,
         injectAsStyleElt: manifest.injectAsStyleElt,
-        index: i,
+        index: i
       });
+    }
+
   });
 
   await Promise.all(promises);
@@ -167,8 +186,10 @@ const csInfoCache = new Map();
 // (example: on browser startup, with a Scratch page opening on startup).
 chrome.webRequest.onBeforeRequest.addListener(
   async (request) => {
-    if (!scratchAddons.localState.allReady) return;
-    const identity = createCsIdentity({ tabId: request.tabId, frameId: request.frameId, url: request.url });
+    if (!scratchAddons.localState.allReady) { return;
+    }
+
+    const identity   = createCsIdentity({ tabId: request.tabId, frameId: request.frameId, url: request.url });
     const loadingObj = { loading: true };
     csInfoCache.set(identity, loadingObj);
     const info = await getContentScriptInfo(request.url);
@@ -177,12 +198,13 @@ chrome.webRequest.onBeforeRequest.addListener(
       // place in the csInfoCache map while the promise resolved
       return;
     }
+
     csInfoCache.set(identity, { loading: false, info, timestamp: Date.now() });
     scratchAddons.localEvents.dispatchEvent(new CustomEvent("csInfoCacheUpdated"));
   },
   {
     urls: ["https://scratch.mit.edu/*"],
-    types: ["main_frame", "sub_frame"],
+    types: ["main_frame", "sub_frame"]
   }
 );
 
@@ -196,25 +218,29 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     csInfoCache.forEach((obj, key) => {
       if (!obj.loading) {
         const currentTimestamp = Date.now();
-        const objTimestamp = obj.timestamp;
+        const objTimestamp     = obj.timestamp;
         if (currentTimestamp - objTimestamp > 45000) {
           csInfoCache.delete(key);
         }
       }
+
     });
   }
+
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (!request.contentScriptReady) return;
+  if (!request.contentScriptReady) { return;
+  }
+
   if (scratchAddons.localState.allReady) {
-    const identity = createCsIdentity({
+    const identity      = createCsIdentity({
       tabId: sender.tab.id,
       frameId: sender.frameId,
-      url: request.contentScriptReady.url,
+      url: request.contentScriptReady.url
     });
     const getCacheEntry = () => csInfoCache.get(identity);
-    let cacheEntry = getCacheEntry();
+    let cacheEntry      = getCacheEntry();
     if (cacheEntry) {
       if (cacheEntry.loading) {
         scratchAddons.localEvents.addEventListener("csInfoCacheUpdated", function thisFunction() {
@@ -247,37 +273,47 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     );
     return true;
   }
+
 });
 
 function userscriptMatches(data, scriptOrStyle, addonId) {
   if (scriptOrStyle.settingMatch) {
     const { id, value } = scriptOrStyle.settingMatch;
-    if (scratchAddons.globalState.addonSettings[addonId][id] !== value) return false;
+    if (scratchAddons.globalState.addonSettings[addonId][id] !== value) { return false;
+    }
   }
+
   const url = data.url;
   for (const match of scriptOrStyle.matches) {
-    if (urlMatchesPattern(match, url)) return true;
+    if (urlMatchesPattern(match, url)) { return true;
+    }
   }
+
   return false;
 }
 
 function urlMatchesPattern(pattern, url) {
   const patternUrl = new URL(pattern);
-  const urlUrl = new URL(url);
+  const urlUrl     = new URL(url);
   // We assume both URLs start with https://scratch.mit.edu
 
   const patternPath = patternUrl.pathname.split("/");
-  const urlPath = urlUrl.pathname.split("/");
+  const urlPath     = urlUrl.pathname.split("/");
   // Implicit slash at the end of the URL path, if it's not there
-  if (urlPath[urlPath.length - 1] !== "") urlPath.push("");
+  if (urlPath[urlPath.length - 1] !== "") { urlPath.push("");
+  }
+
   // Implicit slash at the end of the pattern, unless it's a wildcard
-  if (patternPath[patternPath.length - 1] !== "" && patternPath[patternPath.length - 1] !== "*") patternPath.push("");
+  if (patternPath[patternPath.length - 1] !== "" && patternPath[patternPath.length - 1] !== "*") { patternPath.push("");
+  }
 
   while (patternPath.length) {
     // shift() removes the first item of an array, and returns it
     const patternItem = patternPath.shift();
-    const urlItem = urlPath.shift();
-    if (patternItem !== urlItem && patternItem !== "*") return false;
+    const urlItem     = urlPath.shift();
+    if (patternItem !== urlItem && patternItem !== "*") { return false;
+    }
   }
+
   return true;
 }

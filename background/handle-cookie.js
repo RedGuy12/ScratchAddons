@@ -6,11 +6,11 @@ if (Object.prototype.hasOwnProperty.call(chrome.webRequest.OnBeforeSendHeadersOp
 
 chrome.webRequest.onHeadersReceived.addListener(
   (details) => ({
-    responseHeaders: details.responseHeaders.filter((header) => header.name.toLowerCase() !== "set-cookie"),
+    responseHeaders: details.responseHeaders.filter((header) => header.name.toLowerCase() !== "set-cookie")
   }),
   {
     urls: ["https://scratch.mit.edu/site-api/comments/*"],
-    types: ["xmlhttprequest", "main_frame", "image", "sub_frame"],
+    types: ["xmlhttprequest", "main_frame", "image", "sub_frame"]
   },
   specs
 );
