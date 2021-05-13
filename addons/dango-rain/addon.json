@@ -11,27 +11,27 @@
   "credits": [
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     },
     {
       "name": "World_Languages",
-      "link": "https://scratch.mit.edu/users/World_Languages"
+      "link": "https://localhost:8333/users/World_Languages"
     },
     {
       "name": "griffpatch",
-      "link": "https://scratch.mit.edu/users/griffpatch"
+      "link": "https://localhost:8333/users/griffpatch"
     }
   ],
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/users/*/"]
+      "matches": ["https://localhost:8333/users/*/"]
     }
   ],
   "userstyles": [
     {
       "url": "style.css",
-      "matches": ["https://scratch.mit.edu/users/*/"]
+      "matches": ["https://localhost:8333/users/*/"]
     }
   ],
   "tags": ["easterEgg"],

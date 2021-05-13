@@ -77,7 +77,7 @@ function appendSearch(box, query, page, term, msg) {
         postBox.appendChild(boxHead);
 
         let boxLink = document.createElement("a");
-        boxLink.setAttribute("href", `https://scratch.mit.edu/discuss/post/${post.id}`);
+        boxLink.setAttribute("href", `https://localhost:8333/discuss/post/${post.id}`);
         boxLink.appendChild(document.createTextNode(`${post.topic.category} » ${post.topic.title}`));
         boxHead.appendChild(boxLink);
 
@@ -101,7 +101,7 @@ function appendSearch(box, query, page, term, msg) {
 
         postLeftDl.appendChild(createTextBox(msg("username"), "black username", 1));
         let userLink = document.createElement("a"); // this one is an `a` and not a `span`, so it isnt in the createTextBox function
-        userLink.setAttribute("href", `https://scratch.mit.edu/users/${post.username}`);
+        userLink.setAttribute("href", `https://localhost:8333/users/${post.username}`);
         userLink.appendChild(document.createTextNode(post.username));
         postLeftDl.appendChild(userLink);
 

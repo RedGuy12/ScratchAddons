@@ -4,17 +4,17 @@
   "credits": [
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     },
     {
       "name": "9gr",
-      "link": "https://scratch.mit.edu/users/9gr"
+      "link": "https://localhost:8333/users/9gr"
     }
   ],
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "tags": ["community"],

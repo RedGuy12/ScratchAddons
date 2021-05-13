@@ -52,7 +52,7 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: url(https://scratch.mit.edu/images/nav-notifications.png) no-repeat center center;
+  background: url(https://localhost:8333/images/nav-notifications.png) no-repeat center center;
   background-size: 45%;
 }
 #navigation .messages > a:hover::before {

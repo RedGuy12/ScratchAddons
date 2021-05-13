@@ -5,17 +5,17 @@
   "credits": [
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     }
   ],
   "userscripts": [
     {
       "url": "projectstats.js",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     },
     {
       "url": "blockcount.js",
-      "matches": ["https://scratch.mit.edu/projects/*"],
+      "matches": ["https://localhost:8333/projects/*"],
       "settingMatch": {
         "id": "editorCount",
         "value": true
@@ -25,7 +25,7 @@
   "userstyles": [
     {
       "url": "userscript.css",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "settings": [

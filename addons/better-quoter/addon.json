@@ -4,17 +4,17 @@
   "credits": [
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     },
     {
       "name": "pufferfish101007",
-      "link": "https://scratch.mit.edu/users/pufferfish101007"
+      "link": "https://localhost:8333/users/pufferfish101007"
     }
   ],
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"]
+      "matches": ["https://localhost:8333/discuss/topic/*"]
     }
   ],
   "tags": ["forums", "community"],

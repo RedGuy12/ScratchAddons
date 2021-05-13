@@ -52,5 +52,5 @@
   text-decoration: underline;
 }
 #page-500 img:last-child {
-  content: url("https://scratch.mit.edu/images/logo_sm.png");
+  content: url("https://localhost:8333/images/logo_sm.png");
 }

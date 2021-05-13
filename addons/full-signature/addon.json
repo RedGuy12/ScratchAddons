@@ -10,7 +10,7 @@
     },
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     },
     {
       "name": "RedGuy7",
@@ -46,7 +46,7 @@
   "userscripts": [
     {
       "url": "working.js",
-      "matches": ["https://scratch.mit.edu/users/*"],
+      "matches": ["https://localhost:8333/users/*"],
       "settingMatch": {
         "id": "whatworkingon",
         "value": true
@@ -54,7 +54,7 @@
     },
     {
       "url": "happen.js",
-      "matches": ["https://scratch.mit.edu/"],
+      "matches": ["https://localhost:8333/"],
       "runAtComplete": false,
       "settingMatch": {
         "id": "whathappen",
@@ -65,7 +65,7 @@
   "userstyles": [
     {
       "url": "signature.css",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*", "https://scratch.mit.edu/discuss/settings/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*", "https://localhost:8333/discuss/settings/*"],
       "settingMatch": {
         "id": "signature",
         "value": true
@@ -73,7 +73,7 @@
     },
     {
       "url": "blocks.css",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*"],
       "settingMatch": {
         "id": "blocks",
         "value": true
@@ -81,7 +81,7 @@
     },
     {
       "url": "working.css",
-      "matches": ["https://scratch.mit.edu/users/*"],
+      "matches": ["https://localhost:8333/users/*"],
       "settingMatch": {
         "id": "whatworkingon",
         "value": true
@@ -89,7 +89,7 @@
     },
     {
       "url": "happen.css",
-      "matches": ["https://scratch.mit.edu/"],
+      "matches": ["https://localhost:8333/"],
       "settingMatch": {
         "id": "whathappen",
         "value": true

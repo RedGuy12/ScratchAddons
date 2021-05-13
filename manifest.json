@@ -20,13 +20,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://scratch.mit.edu/*"],
+      "matches": ["http://localhost:8333/*"],
       "run_at": "document_start",
       "js": ["libraries/comlink.js", "content-scripts/cs.js"],
       "all_frames": true
     },
     {
-      "matches": ["https://scratch.mit.edu/*"],
+      "matches": ["http://localhost:8333/*"],
       "run_at": "document_start",
       "js": ["content-scripts/prototype-handler.js", "content-scripts/load-redux.js", "content-scripts/fix-console.js"],
       "all_frames": true
@@ -39,7 +39,7 @@
   "homepage_url": "https://scratchaddons.com",
   "incognito": "not_allowed",
   "permissions": [
-    "https://scratch.mit.edu/*",
+    "http://localhost:8333/*",
     "https://api.scratch.mit.edu/*",
     "https://clouddata.scratch.mit.edu/*",
     "cookies",

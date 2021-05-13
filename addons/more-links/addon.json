@@ -1,6 +1,6 @@
 {
   "name": "More links",
-  "description": "Adds links for URLs pointing outside scratch.mit.edu.",
+  "description": "Adds links for URLs pointing outside localhost:8333.",
   "credits": [
     {
       "name": "Hans5958"
@@ -10,9 +10,9 @@
     {
       "url": "userscript.js",
       "matches": [
-        "https://scratch.mit.edu/projects/*",
-        "https://scratch.mit.edu/studios/*",
-        "https://scratch.mit.edu/users/*"
+        "https://localhost:8333/projects/*",
+        "https://localhost:8333/studios-playground/*",
+        "https://localhost:8333/users/*"
       ]
     }
   ],

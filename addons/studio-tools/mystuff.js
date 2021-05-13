@@ -9,7 +9,7 @@ export default async function ({ addon, global, console, msg }) {
       leaveButton.addEventListener("click", async function (e) {
         if (confirm(msg("leave-confirm"))) {
           await fetch(
-            `https://scratch.mit.edu/site-api/users/curators-in/${leaveButton.getAttribute(
+            `https://localhost:8333/site-api/users/curators-in/${leaveButton.getAttribute(
               "data-id"
             )}/remove/?usernames=${Scratch.INIT_DATA.LOGGED_IN_USER.model.username}`,
             { method: "PUT", headers: { "x-csrftoken": addon.auth.csrfToken, "x-requested-with": "XMLHttpRequest" } }

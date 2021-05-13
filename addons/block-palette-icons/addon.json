@@ -8,7 +8,7 @@
   "userstyles": [
     {
       "url": "userstyle.css",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "l10n": true,

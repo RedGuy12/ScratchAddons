@@ -11,11 +11,11 @@
   "credits": [
     {
       "name": "Jeffalo",
-      "link": "https://scratch.mit.edu/users/Jeffalo"
+      "link": "https://localhost:8333/users/Jeffalo"
     },
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     }
   ],
   "dynamicEnable": true,
@@ -23,7 +23,7 @@
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "settings": [

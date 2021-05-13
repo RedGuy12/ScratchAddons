@@ -14,7 +14,7 @@ export default async function ({ addon, global, console, msg }) {
         remixtree.id = "scratchAddonsRemixTreeBtn";
         remixtree.appendChild(remixtreeSpan);
         remixtree.addEventListener("click", () => {
-          window.location.href = `https://scratch.mit.edu/projects/${
+          window.location.href = `https://localhost:8333/projects/${
             window.location.href.split("projects")[1].split("/")[1]
           }/remixtree`;
         });

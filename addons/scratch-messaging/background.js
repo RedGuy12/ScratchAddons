@@ -128,7 +128,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
 
   async function retrieveComments(resourceType, resourceId, commentIds, page = 1, commentsObj = {}) {
     const res = await fetch(
-      `https://scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/?page=${page}&nocache=${Date.now()}`
+      `https://localhost:8333/site-api/comments/${resourceType}/${resourceId}/?page=${page}&nocache=${Date.now()}`
     );
     const text = await res.text();
     const dom = new DOMParser().parseFromString(text, "text/html");
@@ -217,7 +217,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
       }
     }
     value = value.replace(/\n/g, " ").trim(); // Remove newlines
-    value = value.replace(/<a href="\//g, '<a href="https://scratch.mit.edu/');
+    value = value.replace(/<a href="\//g, '<a href="https://localhost:8333/');
     return value;
   }
 
@@ -225,7 +225,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
     return new Promise((resolve) => {
       // For some weird reason, this only works with XHR in Chrome...
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", `https://scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/add/?sareferer`, true);
+      xhr.open("POST", `https://localhost:8333/site-api/comments/${resourceType}/${resourceId}/add/?sareferer`, true);
       xhr.setRequestHeader("x-csrftoken", addon.auth.csrfToken);
       xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
 
@@ -249,7 +249,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   function deleteComment({ resourceType, resourceId, commentId }) {
     return new Promise((resolve) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", `https://scratch.mit.edu/site-api/comments/${resourceType}/${resourceId}/del/?sareferer`, true);
+      xhr.open("POST", `https://localhost:8333/site-api/comments/${resourceType}/${resourceId}/del/?sareferer`, true);
       xhr.setRequestHeader("x-csrftoken", addon.auth.csrfToken);
       xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
 

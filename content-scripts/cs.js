@@ -1,5 +1,5 @@
 try {
-  if (window.parent.location.origin !== "https://scratch.mit.edu") throw "Scratch Addons: not first party iframe";
+  if (window.parent.location.origin !== "http://localhost:8333") throw "Scratch Addons: not first party iframe";
 } catch {
   throw "Scratch Addons: not first party iframe";
 }
@@ -386,7 +386,7 @@ const showBanner = () => {
             .outerHTML,
           Object.assign(document.createElement("a"), {
             // TODO: remove `#addon-editor-dark-mode` next release
-            href: "https://scratch.mit.edu/scratch-addons-extension/settings#addon-editor-dark-mode",
+            href: "http://localhost:8333/scratch-addons-extension/settings#addon-editor-dark-mode",
             target: "_blank",
             textContent: chrome.i18n.getMessage("scratchAddonsSettings"),
           }).outerHTML,
@@ -477,7 +477,7 @@ if (document.readyState !== "loading") {
 }
 
 const isProfile = pathArr[0] === "users" && pathArr[2] === "";
-const isStudioComments = pathArr[0] === "studios" && pathArr[2] === "comments";
+const isStudioComments = pathArr[0] === "studios-playground" && pathArr[2] === "comments";
 const isProject = pathArr[0] === "projects";
 
 if (isProfile || isStudioComments || isProject) {
@@ -489,7 +489,7 @@ if (isProfile || isStudioComments || isProject) {
     return regex.test(limitedValue);
   };
   const extensionPolicyLink = document.createElement("a");
-  extensionPolicyLink.href = "https://scratch.mit.edu/discuss/topic/284272/";
+  extensionPolicyLink.href = "http://localhost:8333/discuss/topic/284272/";
   extensionPolicyLink.target = "_blank";
   extensionPolicyLink.innerText = chrome.i18n.getMessage("captureCommentPolicy");
   Object.assign(extensionPolicyLink.style, {

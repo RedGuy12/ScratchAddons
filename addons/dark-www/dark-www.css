@@ -275,7 +275,8 @@ select {
   border-bottom: 1px solid #000000;
 }
 
-.messages-social-list {
+.messages-social-list,
+.studio-messages-list {
   border: 1px solid #000000;
   background-color: #1a1b1f;
 }

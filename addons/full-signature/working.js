@@ -12,7 +12,7 @@ export default async function ({ addon, global, console, msg }) {
       function () {
         loadMore.style.visibility = "hidden";
         fetch(`
-        https://scratch.mit.edu/messages/ajax/user-activity/?user=${Scratch.INIT_DATA.PROFILE.model.id}&max=1000000`)
+        https://localhost:8333/messages/ajax/user-activity/?user=${Scratch.INIT_DATA.PROFILE.model.id}&max=1000000`)
           .then((response) => response.text())
           .then((response) => {
             let html = new DOMParser().parseFromString(response, "text/html");

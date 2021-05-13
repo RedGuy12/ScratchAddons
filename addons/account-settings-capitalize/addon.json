@@ -4,7 +4,7 @@
   "userstyles": [
     {
       "url": "style.css",
-      "matches": ["https://scratch.mit.edu/*"]
+      "matches": ["https://localhost:8333/*"]
     }
   ],
   "tags": ["easterEgg"],

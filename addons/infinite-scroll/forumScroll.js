@@ -14,9 +14,9 @@ export default async function ({ addon, global, console }) {
           let nextPage;
           if (location.search) {
             let search = location.search.replace(/(&|\?)page=[0-9]+/, "");
-            nextPage = `https://scratch.mit.edu${location.pathname}${search}&page=${page}`;
+            nextPage = `https://localhost:8333${location.pathname}${search}&page=${page}`;
           } else {
-            nextPage = `https://scratch.mit.edu${location.pathname}?page=${page}`;
+            nextPage = `https://localhost:8333${location.pathname}?page=${page}`;
           }
           window
             .fetch(nextPage)

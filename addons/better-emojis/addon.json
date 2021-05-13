@@ -5,13 +5,13 @@
   "credits": [
     {
       "name": "getbent",
-      "link": "https://scratch.mit.edu/users/getbent/"
+      "link": "https://localhost:8333/users/getbent/"
     }
   ],
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/*"]
+      "matches": ["https://localhost:8333/*"]
     }
   ],
   "enabledByDefault": false,

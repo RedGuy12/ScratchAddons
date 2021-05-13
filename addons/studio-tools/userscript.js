@@ -81,7 +81,7 @@ export default async function ({ addon, global, console, msg }) {
 
     document.getElementById("curator-action-bar").insertBefore(addedByExtension, leaveButton.nextSibling);
   } else {
-    const res = await fetch(`https://scratch.mit.edu/studios/${Scratch.INIT_DATA.GALLERY.model.id}/`);
+    const res = await fetch(`https://localhost:8333/studios-playground/${Scratch.INIT_DATA.GALLERY.model.id}/`);
     const text = await res.text();
     // Do not show if the user can't add projects (which would mean they can't leave)
     if (!text.includes('data-target="#projects"')) return;

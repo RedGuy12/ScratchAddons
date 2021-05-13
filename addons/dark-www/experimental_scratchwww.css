@@ -24,10 +24,11 @@ body:not(.sa-body-editor) .join-flow-title,
   color: #fff;
 }
 #view,
+.studio-page,
 .outer #projectBox,
 .tips-getting-started,
 .tips-activity-guides {
-  background: #202020;
+  background: #202020 !important;
 }
 .box .box-header,
 .gray-area,
@@ -80,6 +81,7 @@ body:not(.sa-body-editor) .modal-content,
 .ttt-tile,
 .about .body,
 .messages-social-list,
+.studio-messages-list,
 .comment-text,
 .comment .comment-body .comment-bubble,
 .comment .comment-body .comment-bubble::before,
@@ -88,7 +90,7 @@ body:not(.sa-body-editor) .modal-content,
 .card,
 .extension-landing .project-card,
 body:not(.sa-body-editor) .stage-header_stage-button_hkl9B {
-  background: #282828;
+  background: #282828!important;
 }
 .comment-text::after {
   border-color: #282828;
@@ -119,7 +121,7 @@ body:not(.sa-body-editor) .stage-header_stage-button_hkl9B {
 .about .body,
 .about .body img,
 .about .body iframe,
-.messages-social-list,
+.messages-social-list, .studio-messages-list,
 .social-message,
 .comment-text,
 .comment-text::before,
@@ -138,7 +140,7 @@ input[type="checkbox"].formik-checkbox,
 .extension-landing .project-card,
 body:not(.sa-body-editor) .stage_stage_1fD7k,
 body:not(.sa-body-editor) .stage-header_stage-button_hkl9B {
-  border-color: #606060;
+  border-color: #606060!important;
 }
 .box .box-header {
   border-top-color: transparent;

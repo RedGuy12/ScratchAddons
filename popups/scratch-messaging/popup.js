@@ -50,12 +50,12 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       };
     },
     methods: {
-      openProfile: (username) => window.open(`https://scratch.mit.edu/users/${username}/`),
+      openProfile: (username) => window.open(`https://localhost:8333/users/${username}/`),
       openComment() {
         const urlPath =
-          this.resourceType === "user" ? "users" : this.resourceType === "gallery" ? "studios" : "projects";
+          this.resourceType === "user" ? "users" : this.resourceType === "gallery" ? "studios-playground" : "projects";
         const commentPath = this.resourceType === "gallery" ? "comments/" : "";
-        const url = `https://scratch.mit.edu/${urlPath}/${
+        const url = `https://localhost:8333/${urlPath}/${
           this.resourceId
         }/${commentPath}#comments-${this.commentId.substring(2)}`;
         window.open(url);
@@ -208,7 +208,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       studioActivity: [],
       remixes: [],
       profiles: [],
-      studios: [],
+      studios-playground: [],
       projects: [],
 
       // For UI
@@ -251,7 +251,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
         this.studioActivity = [];
         this.remixes = [];
         this.profiles = [];
-        this.studios = [];
+        this.studios-playground = [];
         this.projects = [];
         this.analyzeMessages(newVal);
       },
@@ -324,10 +324,10 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       reloadPage() {
         location.reload();
       },
-      openProfile: (username) => window.open(`https://scratch.mit.edu/users/${username}/`),
-      openProject: (projectId) => window.open(`https://scratch.mit.edu/projects/${projectId}/`),
-      openStudio: (studioId, tab = "") => window.open(`https://scratch.mit.edu/studios/${studioId}/${tab}`),
-      openUnreadPostsForums: (topicId) => window.open(`https://scratch.mit.edu/discuss/topic/${topicId}/unread/`),
+      openProfile: (username) => window.open(`https://localhost:8333/users/${username}/`),
+      openProject: (projectId) => window.open(`https://localhost:8333/projects/${projectId}/`),
+      openStudio: (studioId, tab = "") => window.open(`https://localhost:8333/studios-playground/${studioId}/${tab}`),
+      openUnreadPostsForums: (topicId) => window.open(`https://localhost:8333/discuss/topic/${topicId}/unread/`),
 
       // Objects
       getProjectObject(projectId, title) {
@@ -359,7 +359,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
         return obj;
       },
       getStudioObject(studioId, title) {
-        const search = this.studios.find((obj) => obj.id === studioId);
+        const search = this.studios-playground.find((obj) => obj.id === studioId);
         if (search) return search;
         const obj = {
           id: studioId,
@@ -368,7 +368,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
           commentChains: [],
           loadedComments: false,
         };
-        this.studios.push(obj);
+        this.studios-playground.push(obj);
         return obj;
       },
 
@@ -422,7 +422,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
         const commentLocations = {
           0: [], // Projects
           1: [], // Profiles
-          2: [], // Studios
+          2: [], // studios-playground
         };
         const messagesToCheck =
           this.msgCount > 40 ? this.messages.length : showAll ? this.messages.length : this.msgCount;
@@ -507,7 +507,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
             this.commentsProgress = Math.round((locationsChecked / locationsToCheckAmt) * 100);
           }
         }
-        for (const studio of this.studios) {
+        for (const studio of this.studios-playground) {
           const location = commentLocations[2].find((obj) => obj.resourceId === studio.id);
           if (location) {
             await this.checkCommentLocation("gallery", location.resourceId, location.commentIds, studio);
@@ -528,11 +528,11 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       studioInviteHTML(invite) {
         const actor = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/users/${invite.actor}/"
+            href="https://localhost:8333/users/${invite.actor}/"
         >${invite.actor}</a>`;
         const title = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/studios/${invite.studioId}/curators/"
+            href="https://localhost:8333/studios-playground/${invite.studioId}/curators/"
             style="text-decoration: underline"
         >${escapeHTML(invite.studioTitle)}</a>`;
         return l10n.escaped("scratch-messaging/curate-invite", { actor, title });
@@ -540,11 +540,11 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       studioPromotionHTML(promotion) {
         const actor = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/users/${promotion.actor}/"
+            href="https://localhost:8333/users/${promotion.actor}/"
         >${promotion.actor}</a>`;
         const title = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/studios/${promotion.studioId}/curators/"
+            href="https://localhost:8333/studios-playground/${promotion.studioId}/curators/"
             style="text-decoration: underline"
         >${escapeHTML(promotion.studioTitle)}</a>`;
         return l10n.escaped("scratch-messaging/studio-promotion", { actor, title });
@@ -552,7 +552,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       forumHTML(forumTopic) {
         const title = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/discuss/topic/${forumTopic.topicId}/unread/"
+            href="https://localhost:8333/discuss/topic/${forumTopic.topicId}/unread/"
             style="text-decoration: underline"
         >${escapeHTML(forumTopic.topicTitle)}</a>`;
         return l10n.escaped("scratch-messaging/forum-new-post", { title });
@@ -560,7 +560,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       studioActivityHTML(studio) {
         const title = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/studios/${studio.studioId}/activity/"
+            href="https://localhost:8333/studios-playground/${studio.studioId}/activity/"
             style="text-decoration: underline"
         >${escapeHTML(studio.studioTitle)}</a>`;
         return l10n.escaped("scratch-messaging/new-activity", { title });
@@ -568,11 +568,11 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
       remixHTML(remix) {
         const actor = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/users/${remix.actor}/"
+            href="https://localhost:8333/users/${remix.actor}/"
         >${remix.actor}</a>`;
         const title = `<a target="_blank"
             rel="noopener noreferrer"
-            href="https://scratch.mit.edu/projects/${remix.projectId}/"
+            href="https://localhost:8333/projects/${remix.projectId}/"
             style="text-decoration: underline"
         >${escapeHTML(remix.remixTitle)}</a>`;
         return l10n.escaped("scratch-messaging/remix-as", {
@@ -602,7 +602,7 @@ import { escapeHTML } from "../../libraries/autoescaper.js";
           if (obj.loved) str += `<img class="small-icon colored" src="../../images/icons/heart.svg">`;
           if (obj.faved) str += `<img class="small-icon colored" src="../../images/icons/star.svg">`;
           str += " ";
-          str += `<a href="https://scratch.mit.edu/users/${obj.username}/">${obj.username}</a>`;
+          str += `<a href="https://localhost:8333/users/${obj.username}/">${obj.username}</a>`;
           if (i !== arr.length - 1) str += "<br>";
         });
         return str;

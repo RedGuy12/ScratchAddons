@@ -4,7 +4,7 @@
   "credits": [
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     },
     {
       "name": "Maximouse",
@@ -22,7 +22,7 @@
       "default": true
     },
     {
-      "name": "Exact count for studios",
+      "name": "Exact count for studios-playground",
       "id": "studio",
       "type": "boolean",
       "default": true
@@ -37,7 +37,7 @@
   "userscripts": [
     {
       "url": "user.js",
-      "matches": ["https://scratch.mit.edu/users/*/"],
+      "matches": ["https://localhost:8333/users/*/"],
       "settingMatch": {
         "id": "user",
         "value": true
@@ -45,7 +45,7 @@
     },
     {
       "url": "studio.js",
-      "matches": ["https://scratch.mit.edu/studios/*"],
+      "matches": ["https://localhost:8333/studios-playground/*"],
       "settingMatch": {
         "id": "studio",
         "value": true
@@ -53,7 +53,7 @@
     },
     {
       "url": "forum.js",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*"],
       "settingMatch": {
         "id": "forumuser",
         "value": true

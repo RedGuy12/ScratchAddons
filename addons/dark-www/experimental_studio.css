@@ -1,4 +1,4 @@
-/* Studios */
+/* studios */
 #gallery-cover-image {
   border-color: #606060;
 }
@@ -43,4 +43,13 @@
 ul.curators li {
   background: #282828;
   border: none;
+}
+
+.studio-project-tile {
+  background-color: black;
+  border-color: #313131;
+}
+
+.studio-project-tile .studio-project-username {
+  color: #8a95ba;
 }

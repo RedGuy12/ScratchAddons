@@ -19,7 +19,7 @@ export default async function ({ addon, global, console }) {
       appendOptions(page);
     });
     function appendOptions(page) {
-      fetch(`https://scratch.mit.edu/site-api/projects/all/?page=${page}&ascsort=&descsort=`)
+      fetch(`https://localhost:8333/site-api/projects/all/?page=${page}&ascsort=&descsort=`)
         .then((response) => {
           return response.json();
         })

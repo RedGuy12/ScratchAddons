@@ -10,19 +10,19 @@
   "userscripts": [
     {
       "url": "profile.js",
-      "matches": ["https://scratch.mit.edu/users/*/", "https://scratch.mit.edu/studios/*/comments"],
+      "matches": ["https://localhost:8333/users/*/"],
       "runAtComplete": false
     },
     {
       "url": "project.js",
-      "matches": ["https://scratch.mit.edu/projects/*"],
+      "matches": ["https://localhost:8333/projects/*", "https://localhost:8333/studios-playground/*"],
       "runAtComplete": false
     }
   ],
   "userstyles": [
     {
       "url": "project.css",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "tags": ["community", "recommended"],

@@ -1,12 +1,12 @@
 ﻿export default async function ({ addon, console }) {
   while (true) {
-    await addon.tab.waitForElement('a[href^="https://scratch.mit.edu/discuss/youtube/"], a[href^="/discuss/youtube/"]');
+    await addon.tab.waitForElement('a[href^="https://localhost:8333/discuss/youtube/"], a[href^="/discuss/youtube/"]');
     var elements = document.querySelectorAll(
-      'a[href^="https://scratch.mit.edu/discuss/youtube/"], a[href^="/discuss/youtube/"]'
+      'a[href^="https://localhost:8333/discuss/youtube/"], a[href^="/discuss/youtube/"]'
     );
     elements.forEach((element) => {
       element.href = element.href.replace(
-        "https://scratch.mit.edu/discuss/youtube/",
+        "https://localhost:8333/discuss/youtube/",
         "https://www.youtube.com/watch?v="
       );
     });

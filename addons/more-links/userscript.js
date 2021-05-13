@@ -1,6 +1,7 @@
 import { linkifyTextNode, linkifyTag } from "../../libraries/fast-linkify.js";
 
-export default async function ({ addon, console }) {
+export default async function ({addon, console}) {
+  window.addon=addon
   const pageType = document.location.pathname.substr(1).split("/")[0];
 
   switch (pageType) {
@@ -23,10 +24,6 @@ export default async function ({ addon, console }) {
           linkifyTextNode(element);
         }
       })();
-      break;
-
-    case "studios":
-      linkifyTag(document.querySelector("#description.read-only .overview"));
       break;
   }
 

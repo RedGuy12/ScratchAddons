@@ -90,35 +90,35 @@ export default async function ({ addon, global, console, setTimeout, setInterval
       switch (messageType) {
         case "forumpost":
           notificationTitle = msg("notif-forum", { title });
-          url = `https://scratch.mit.edu/discuss/topic/${element_id}/unread/`;
+          url = `https://localhost:8333/discuss/topic/${element_id}/unread/`;
           break;
         case "loveproject":
           notificationTitle = msg("notif-love", { actor, title });
-          url = `https://scratch.mit.edu/users/${actor}/`;
+          url = `https://localhost:8333/users/${actor}/`;
           break;
         case "favoriteproject":
           notificationTitle = msg("notif-fav", { actor, title });
-          url = `https://scratch.mit.edu/users/${actor}/`;
+          url = `https://localhost:8333/users/${actor}/`;
           break;
         case "followuser":
           notificationTitle = msg("notif-follow", { actor });
-          url = `https://scratch.mit.edu/users/${actor}/`;
+          url = `https://localhost:8333/users/${actor}/`;
           break;
         case "curatorinvite":
           notificationTitle = msg("notif-invite", { actor, title });
-          url = `https://scratch.mit.edu/studios/${element_id}/curators/`;
+          url = `https://localhost:8333/studios-playground/${element_id}/curators/`;
           break;
         case "becomeownerstudio":
           notificationTitle = msg("notif-promotion", { actor, title });
-          url = `https://scratch.mit.edu/studios/${element_id}/curators/`;
+          url = `https://localhost:8333/studios-playground/${element_id}/curators/`;
           break;
         case "remixproject":
           notificationTitle = msg("notif-remix", { actor, parent_title, title });
-          url = `https://scratch.mit.edu/projects/${element_id}/`;
+          url = `https://localhost:8333/projects/${element_id}/`;
           break;
         case "studioactivity":
           notificationTitle = msg("notif-studio", { title });
-          url = `https://scratch.mit.edu/studios/${element_id}/activity`;
+          url = `https://localhost:8333/studios-playground/${element_id}/activity`;
           break;
         default:
           notificationTitle = msg("notif-generic");
@@ -176,7 +176,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   async function openMessagesPage() {
     chrome.tabs.query(
       {
-        url: "https://scratch.mit.edu/messages*",
+        url: "https://localhost:8333/messages*",
       },
       (tabs) => {
         if (tabs[0]) {
@@ -185,11 +185,11 @@ export default async function ({ addon, global, console, setTimeout, setInterval
           });
           chrome.tabs.update(tabs[0].id, {
             active: true,
-            url: "https://scratch.mit.edu/messages/",
+            url: "https://localhost:8333/messages/",
           });
         } else {
           chrome.tabs.create({
-            url: "https://scratch.mit.edu/messages/",
+            url: "https://localhost:8333/messages/",
           });
         }
         msgCount = 0;
@@ -221,7 +221,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
             if (replyFor === null) messageType += "ownProjectNewComment";
             else if (replyFor === addon.auth.username) messageType += "projectReplyToSelf";
             else messageType += "ownProjectReplyToOther";
-            commentUrl = `https://scratch.mit.edu/projects/${message.comment_obj_id}/#comments-${message.comment_id}`;
+            commentUrl = `https://localhost:8333/projects/${message.comment_obj_id}/#comments-${message.comment_id}`;
           } else if (message.comment_type === 1) {
             const profile = message.comment_obj_title;
             const replyFor = message.commentee_username;
@@ -232,10 +232,10 @@ export default async function ({ addon, global, console, setTimeout, setInterval
             } else {
               messageType += "otherProfileReplyToSelf";
             }
-            commentUrl = `https://scratch.mit.edu/users/${message.comment_obj_title}/#comments-${message.comment_id}`;
+            commentUrl = `https://localhost:8333/users/${message.comment_obj_title}/#comments-${message.comment_id}`;
           } else if (message.comment_type === 2) {
             messageType += "studio";
-            commentUrl = `https://scratch.mit.edu/studios/${message.comment_obj_id}/comments/#comments-${message.comment_id}`;
+            commentUrl = `https://localhost:8333/studios-playground/${message.comment_obj_id}/comments/#comments-${message.comment_id}`;
           }
         }
 

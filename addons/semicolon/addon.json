@@ -10,13 +10,13 @@
   "userstyles": [
     {
       "url": "semicolon.css",
-      "matches": ["https://scratch.mit.edu/*"]
+      "matches": ["https://localhost:8333/*"]
     }
   ],
   "userscripts": [
     {
       "url": "semicolon.js",
-      "matches": ["https://scratch.mit.edu/*"]
+      "matches": ["https://localhost:8333/*"]
     }
   ],
   "tags": ["easterEgg"],

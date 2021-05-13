@@ -14,7 +14,7 @@
     },
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     }
   ],
   "dynamicEnable": true,
@@ -24,13 +24,13 @@
   "userscripts": [
     {
       "url": "theme3.js",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "userstyles": [
     {
       "url": "theme3.css",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "settings": [

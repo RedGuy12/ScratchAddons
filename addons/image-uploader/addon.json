@@ -9,7 +9,7 @@
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/discuss/*"]
+      "matches": ["https://localhost:8333/discuss/*"]
     }
   ],
   "tags": ["forums", "community"],

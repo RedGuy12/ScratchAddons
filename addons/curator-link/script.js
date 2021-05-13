@@ -8,7 +8,7 @@ export default async function ({ addon }) {
 
   const link = document.createElement("a");
   link.textContent = curator;
-  link.href = `https://scratch.mit.edu/users/${curator}`;
+  link.href = `https://localhost:8333/users/${curator}`;
   link.id = "curator-link";
 
   oldh4.innerHTML = escapeHTML(addon.tab.scratchMessage("splash.projectsCuratedBy")).replace(

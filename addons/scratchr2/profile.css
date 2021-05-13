@@ -22,10 +22,10 @@
   background-position: center center;
 }
 .slider-carousel-control.arrow-left {
-  background-image: url("https://scratch.mit.edu/svgs/carousel/prev_ui-dark-gray.svg");
+  background-image: url("https://localhost:8333/svgs/carousel/prev_ui-dark-gray.svg");
 }
 .slider-carousel-control.arrow-right {
-  background-image: url("https://scratch.mit.edu/svgs/carousel/next_ui-dark-gray.svg");
+  background-image: url("https://localhost:8333/svgs/carousel/next_ui-dark-gray.svg");
 }
 .slider-carousel .thumb span.title a {
   font-weight: bold /* instead of 800 */;

@@ -14,9 +14,9 @@
     {
       "url": "userstyle.css",
       "matches": [
-        "https://scratch.mit.edu/projects/*",
-        "https://scratch.mit.edu/users/*/",
-        "https://scratch.mit.edu/studios/*/comments"
+        "https://localhost:8333/projects/*",
+        "https://localhost:8333/users/*/",
+        "https://localhost:8333/studios-playground/*"
       ]
     }
   ],

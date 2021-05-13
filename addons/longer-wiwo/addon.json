@@ -10,7 +10,7 @@
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/users/*"]
+      "matches": ["https://localhost:8333/users/*"]
     }
   ],
   "tags": ["community"],

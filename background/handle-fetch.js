@@ -17,7 +17,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     if (details.url.endsWith("?sareferer") || details.url.endsWith("&sareferer")) {
       details.requestHeaders.push({
         name: "Referer",
-        value: "https://scratch.mit.edu/",
+        value: "http://localhost:8333/",
       });
       return {
         requestHeaders: details.requestHeaders,
@@ -25,7 +25,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     }
   },
   {
-    urls: ["https://scratch.mit.edu/*", "https://api.scratch.mit.edu/*", "https://clouddata.scratch.mit.edu/*"],
+    urls: ["http://localhost:8333/*", "https://api.scratch.mit.edu/*", "https://clouddata.scratch.mit.edu/*"],
     types: ["xmlhttprequest"],
   },
   extraInfoSpec
@@ -45,7 +45,7 @@ chrome.declarativeNetRequest.updateDynamicRules({
       requestHeaders: [{
         header: "Referer",
         operation: "set",
-        value: "https://scratch.mit.edu/"
+        value: "http://localhost:8333/"
       }]
     },
     condition: {

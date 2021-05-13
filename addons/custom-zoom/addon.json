@@ -5,20 +5,20 @@
   "credits": [
     {
       "name": "ErrorGamer2000",
-      "link": "https://scratch.mit.edu/users/ErrorGamer2000/"
+      "link": "https://localhost:8333/users/ErrorGamer2000/"
     }
   ],
   "enabledByDefault": false,
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "userstyles": [
     {
       "url": "style.css",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "settings": [

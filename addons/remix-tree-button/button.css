@@ -1,5 +1,5 @@
 .remixtree-button::before {
-  background-image: url("https://scratch.mit.edu/svgs/project/remix-white.svg");
+  background-image: url("https://localhost:8333/svgs/project/remix-white.svg");
   display: inline-block;
   margin-right: 0.25rem;
   background-repeat: no-repeat;

@@ -15,9 +15,9 @@ async function commentLoader(addon, heightControl, selector) {
 
 export default async function ({ addon, global, console }) {
   if (
-    window.location.pathname.split("/")[1] === "studios" &&
+    window.location.pathname.split("/")[1] === "studios-playground" &&
     window.location.pathname.split("/")[3] === "comments" &&
-    addon.settings.get("studioScroll")
+    addon.settings.get("studios-playgroundcroll")
   )
     commentLoader(addon, "#content", "#comments > div:nth-child(2) > ul > div");
   if (window.location.pathname.split("/")[1] === "users" && addon.settings.get("profileCommentScroll"))

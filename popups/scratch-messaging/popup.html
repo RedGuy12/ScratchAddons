@@ -79,7 +79,7 @@
         </div>
         <div class="message-type-details" v-show="messageTypeExtended.follows">
           <div class="username-list">
-            <a v-for="follower of follows" href="https://scratch.mit.edu/users/{{ follower }}">{{follower}}</a>
+            <a v-for="follower of follows" href="https://localhost:8333/users/{{ follower }}">{{follower}}</a>
           </div>
         </div>
       </div>
@@ -234,8 +234,12 @@
           </div>
         </div>
       </div>
-      <!-- Studios -->
-      <div class="message-type" v-for="studio of studios" v-show="studio.unreadComments && studio.loadedComments">
+      <!-- studios-playground -->
+      <div
+        class="message-type"
+        v-for="studio of studios-playground"
+        v-show="studio.unreadComments && studio.loadedComments"
+      >
         <div class="message-type-title">
           <a class="message-type-title-text" @click="openStudio(studio.id)">{{ studioText(studio.title) }}</a>
           <span class="float-right">
@@ -348,7 +352,7 @@
       <span v-show="markedAsRead" style="font-weight: bold"
         ><img class="small-icon" src="../../images/icons/read.svg" /> {{ uiMessages.markedAsReadMsg }}</span
       >&nbsp;&nbsp;|&nbsp;&nbsp;
-      <a href="https://scratch.mit.edu/messages" id="open-messages"
+      <a href="https://localhost:8333/messages" id="open-messages"
         >{{ uiMessages.openMessagesMsg }}&nbsp;&nbsp;<img src="../../images/icons/popout.svg" id="popout"
       /></a>
     </div>

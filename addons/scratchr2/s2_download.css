@@ -35,7 +35,7 @@ body {
   margin-right: auto;
 }
 .lg-msg::before {
-  content: "Scratch 2.0 is outdated. The current version of Scratch, 3.0, can be downloaded from https://scratch.mit.edu/download.";
+  content: "Scratch 2.0 is outdated. The current version of Scratch, 3.0, can be downloaded from https://localhost:8333/download.";
   display: block;
   margin-bottom: 20px;
   font-weight: bold;

@@ -1,7 +1,14 @@
 export default async function ({ addon, global, console }) {
   let user1 = window.location.href.substring(30, 100);
   let username = user1.substring(0, user1.indexOf("/"));
-  let details = ["projects", "favorites", "studios_following", "studios", "following", "followers"];
+  let details = [
+    "projects",
+    "favorites",
+    "studios-playground_following",
+    "studios-playground",
+    "following",
+    "followers",
+  ];
   for (let j = 0; j < details.length; j++) {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -26,7 +33,7 @@ export default async function ({ addon, global, console }) {
         }
       }
     };
-    xmlhttp.open("GET", `https://scratch.mit.edu/users/${username}/${details[j]}/`, true);
+    xmlhttp.open("GET", `https://localhost:8333/users/${username}/${details[j]}/`, true);
     xmlhttp.send();
   }
 }

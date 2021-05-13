@@ -20,16 +20,16 @@
     },
     {
       "name": "TheColaber",
-      "link": "https://scratch.mit.edu/users/TheColaber"
+      "link": "https://localhost:8333/users/TheColaber"
     }
   ],
   "userscripts": [
     {
-      "matches": ["https://scratch.mit.edu/projects/*"],
+      "matches": ["https://localhost:8333/projects/*"],
       "url": "userscript.js"
     },
     {
-      "matches": ["https://scratch.mit.edu/projects/*"],
+      "matches": ["https://localhost:8333/projects/*"],
       "url": "persistent-thumb.js",
       "settingMatch": {
         "id": "persistentThumb",
@@ -40,7 +40,7 @@
   "userstyles": [
     {
       "url": "userscript.css",
-      "matches": ["https://scratch.mit.edu/projects/*"]
+      "matches": ["https://localhost:8333/projects/*"]
     }
   ],
   "settings": [

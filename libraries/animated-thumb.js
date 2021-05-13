@@ -41,7 +41,7 @@ export default class ThumbSetter {
     async upload (file) {
         try {
             const resp = await fetch(
-                `https://scratch.mit.edu/internalapi/project/thumbnail/${this.projectId}/set/`,
+                `http://localhost:8333/internalapi/project/thumbnail/${this.projectId}/set/`,
                 {
                     method: "POST",
                     body: file,

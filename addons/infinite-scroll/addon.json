@@ -27,7 +27,7 @@
     },
     {
       "name": "Studio Comments",
-      "id": "studioScroll",
+      "id": "studios-playgroundcroll",
       "type": "boolean",
       "default": true
     },
@@ -47,7 +47,7 @@
   "userscripts": [
     {
       "url": "forumScroll.js",
-      "matches": ["https://scratch.mit.edu/discuss/*"],
+      "matches": ["https://localhost:8333/discuss/*"],
       "settingMatch": {
         "id": "forumScroll",
         "value": true
@@ -56,17 +56,17 @@
     {
       "url": "buttonScroll.js",
       "matches": [
-        "https://scratch.mit.edu/projects/*",
-        "https://scratch.mit.edu/studios/*/comments",
-        "https://scratch.mit.edu/users/*",
-        "https://scratch.mit.edu/messages"
+        "https://localhost:8333/projects/*",
+        "https://localhost:8333/studios-playground/*",
+        "https://localhost:8333/users/*",
+        "https://localhost:8333/messages"
       ]
     }
   ],
   "userstyles": [
     {
       "url": "userscript.css",
-      "matches": ["https://scratch.mit.edu/*"],
+      "matches": ["https://localhost:8333/*"],
       "settingMatch": {
         "id": "showFooter",
         "value": true

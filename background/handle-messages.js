@@ -52,7 +52,7 @@ async function updateMsgCount() {
   }
 }
 scratchAddons.methods.clearMessages = async function () {
-  const res = await fetch("https://scratch.mit.edu/site-api/messages/messages-clear/?sareferer", {
+  const res = await fetch("http://localhost:8333/site-api/messages/messages-clear/?sareferer", {
     method: "POST",
     headers: { "x-csrftoken": scratchAddons.globalState.auth.csrfToken, "x-requested-with": "XMLHttpRequest" },
   });

@@ -184,14 +184,14 @@ chrome.webRequest.onBeforeRequest.addListener(
     scratchAddons.localEvents.dispatchEvent(new CustomEvent("csInfoCacheUpdated"));
   },
   {
-    urls: ["https://scratch.mit.edu/*"],
+    urls: ["http://localhost:8333/*"],
     types: ["main_frame", "sub_frame"],
   }
 );
 
 // It is not uncommon to cache objects that will never be used
-// Example: going to https://scratch.mit.edu/studios/104 (no slash after 104)
-// will redirect to /studios/104/ (with a slash)
+// Example: going to http://localhost:8333/studios-playground/104 (no slash after 104)
+// will redirect to /studios-playground/104/ (with a slash)
 // If a cache entry is too old, remove it
 chrome.alarms.create("cleanCsInfoCache", { periodInMinutes: 1 });
 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -257,15 +257,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 const WELL_KNOWN_PATTERNS = {
   projects: /^\/projects\/(?:editor|\d+(?:\/(?:fullscreen|editor))?)\/?$/,
   projectEmbeds: /^\/projects\/\d+\/embed\/?$/,
-  studios: /^\/studios\/\d+(?:\/(?:projects|comments|curators|activity))?\/?$/,
-  studioComments: /^\/studios\/\d+\/comments\/?$/,
+  "studios-playground": /^\/studios-playground\/\d+(?:\/(?:projects|comments|curators|activity))?\/?$/,
+  studioComments: /^\/studios-playground\/\d+(?:\/(?:projects|comments|curators|activity))?\/?$/,
   profiles: /^\/users\/[\w-]+\/?$/,
   topics: /^\/discuss\/topic\/\d+\/?$/,
   newPostScreens: /^\/discuss\/(?:topic\/\d+|\d+\/topic\/add)\/?$/,
   editingScreens: /^\/discuss\/(?:topic\/\d+|\d+\/topic\/add|post\/\d+\/edit|settings\/[\w-]+)\/?$/,
   forums: /^\/discuss(?!\/m(?:$|\/))(?:\/.*)?$/,
   scratchWWWNoProject:
-    /^\/(?:about|annual-report|camp|conference\/20(?:1[79]|[2-9]\d|18(?:\/(?:[^\/]+\/details|expect|plan|schedule))?)|contact-us|credits|developers|dmca|download(?:\/scratch2)?|educators(?:\/faq|register|waiting)?|explore\/(?:project|studio)s\/\w+|info\/faq|community_guidelines|ideas|join|messages|parents|privacy_policy|research|scratch_1\.4|search\/(?:project|studio)s|sec|starter-projects|classes\/(?:complete_registration|[^\/]+\/register\/[^\/]+)|signup\/[^\/]+|terms_of_use|wedo(?:-legacy)?|ev3|microbit|vernier|boost)\/?$/,
+    /^\/(?:about|annual-report|camp|conference\/20(?:1[79]|[2-9]\d|18(?:\/(?:[^\/]+\/details|expect|plan|schedule))?)|studios-playground\/\d+(?:\/(?:projects|comments|curators|activity))?|contact-us|credits|developers|dmca|download(?:\/scratch2)?|educators(?:\/faq|register|waiting)?|explore\/(?:project|studio)s\/\w+|info\/faq|community_guidelines|ideas|join|messages|parents|privacy_policy|research|scratch_1\.4|search\/(?:project)s|sec|starter-projects|classes\/(?:complete_registration|[^\/]+\/register\/[^\/]+)|signup\/[^\/]+|terms_of_use|wedo(?:-legacy)?|ev3|microbit|vernier|boost)\/?$/,
 };
 
 const WELL_KNOWN_MATCHERS = {
@@ -289,7 +289,7 @@ function userscriptMatches(data, scriptOrStyle, addonId) {
   const parsedOrigin = parsedURL.origin;
   const originPath = parsedOrigin + parsedPathname;
   const matchURL = _scratchDomainImplied ? parsedPathname : originPath;
-  const scratchOrigin = "https://scratch.mit.edu";
+  const scratchOrigin = "http://localhost:8333";
   const isScratchOrigin = parsedOrigin === scratchOrigin;
   // "*" is used for any URL on Scratch origin
   if (matches === "*") return isScratchOrigin;
@@ -316,7 +316,7 @@ function userscriptMatches(data, scriptOrStyle, addonId) {
 
 function urlMatchesLegacyPattern(pattern, urlUrl) {
   const patternUrl = new URL(pattern);
-  // We assume both URLs start with https://scratch.mit.edu
+  // We assume both URLs start with http://localhost:8333
 
   const patternPath = patternUrl.pathname.split("/");
   const urlPath = urlUrl.pathname.split("/");

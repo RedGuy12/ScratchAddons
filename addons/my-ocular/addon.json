@@ -9,7 +9,7 @@
   "userscripts": [
     {
       "url": "discuss.js",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*"],
       "settingMatch": {
         "id": "discuss",
         "value": true
@@ -17,7 +17,7 @@
     },
     {
       "url": "profile.js",
-      "matches": ["https://scratch.mit.edu/users/*/"],
+      "matches": ["https://localhost:8333/users/*/"],
       "settingMatch": {
         "id": "profile",
         "value": true
@@ -25,7 +25,7 @@
     },
     {
       "url": "reactions.js",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*"],
       "settingMatch": {
         "id": "reactions",
         "value": true
@@ -35,7 +35,7 @@
   "userstyles": [
     {
       "url": "discuss.css",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*"],
       "settingMatch": {
         "id": "discuss",
         "value": true
@@ -43,7 +43,7 @@
     },
     {
       "url": "reactions.css",
-      "matches": ["https://scratch.mit.edu/discuss/topic/*"],
+      "matches": ["https://localhost:8333/discuss/topic/*"],
       "settingMatch": {
         "id": "reactions",
         "value": true

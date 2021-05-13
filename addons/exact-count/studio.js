@@ -20,11 +20,9 @@ export default async function ({ addon, global, console }) {
     request.send();
   }
 
-  if (document.querySelector("[data-count=projects]").innerText === "100+") {
-    const apiUrlPrefix =
-      "https://api.scratch.mit.edu/studios/" + /[0-9]+/.exec(location.pathname)[0] + "/projects/?limit=40&offset=";
-    countProjects(apiUrlPrefix, 0, 100, function (count) {
-      document.querySelector("[data-count=projects]").innerText = count;
-    });
-  }
+  const apiUrlPrefix =
+    "https://api.scratch.mit.edu/studios/" + /[0-9]+/.exec(location.pathname)[0] + "/projects/?limit=40&offset=";
+  countProjects(apiUrlPrefix, 0, 100, function (count) {
+    document.querySelector(".sub-nav.studio-tab-nav.sub-nav-align-left span").innerText += ` (${count})`;
+  });
 }

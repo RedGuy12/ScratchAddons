@@ -9,7 +9,7 @@ chrome.webRequest.onHeadersReceived.addListener(
     responseHeaders: details.responseHeaders.filter((header) => header.name.toLowerCase() !== "set-cookie"),
   }),
   {
-    urls: ["https://scratch.mit.edu/site-api/comments/*"],
+    urls: ["http://localhost:8333/site-api/comments/*"],
     types: ["xmlhttprequest", "main_frame", "image", "sub_frame"],
   },
   specs

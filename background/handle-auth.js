@@ -12,7 +12,7 @@ function getCookieValue(name) {
   return new Promise((resolve) => {
     chrome.cookies.get(
       {
-        url: "https://scratch.mit.edu/",
+        url: "http://localhost:8333/",
         name,
       },
       (cookie) => {
@@ -27,7 +27,7 @@ async function checkSession() {
   let res;
   let json;
   try {
-    res = await fetch("https://scratch.mit.edu/session/", {
+    res = await fetch("http://localhost:8333/session/", {
       headers: {
         "X-Requested-With": "XMLHttpRequest",
       },

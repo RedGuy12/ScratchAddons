@@ -40,7 +40,7 @@ export default async function ({ addon, msg }) {
   const loadScratch = () => {
     wrapperElement.dataset.player = "scratch";
     if (!showMenu) iframeElement.setAttribute("height", "260");
-    iframeElement.setAttribute("src", `https://scratch.mit.edu/projects/embed/${projectId}/?autostart=true`);
+    iframeElement.setAttribute("src", `https://localhost:8333/projects/embed/${projectId}/?autostart=true`);
 
     // Auto-start Scratch players (sadly need to be done automatically)
 
